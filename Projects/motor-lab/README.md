@@ -1,3 +1,27 @@
+# Motor Lab · v3.1 自动演示与同步对比
+
+工程根目录：`F:\ProjectA\Visualization-of-Science-and-Engineering\Projects\motor-lab`。
+此处是后续唯一开发目录，使用父目录 Git 仓库管理。
+
+## v3.1
+
+- 六类电机默认进入完整运行动画；12 秒后自动从第一幕开始，八幕结束后轮播下一类。
+- 自动讲解中连续展示运动、拆解、运镜、部件强调及画内字幕，可随时暂停或手动选择。
+- PMSM 三相按固定 A/B/C 颜色，以明暗表示电流绝对值，符号和亮点表示方向；桥图明暗不表示瞬时 PWM 开关状态。
+- 第 3/4/5 类的原理小图具有动态电流亮点、场轴/转子标记及支路动画。
+- 四组并排双三维对比，每组六幕：结构、电流、磁场、转子、负载、能量链。
+- 科学仪器主题的入场环形动画；遵循减少动态效果偏好。
+- `src/director.js` 管理自动导演、字幕与双模型对比。
+
+## Git 与发布
+
+从仓库根目录提交并推送 main 后，`.github/workflows/pages.yml` 自动重新生成离线页、校验物理关系并发布 GitHub Pages。
+发布路径：`/Visualization-of-Science-and-Engineering/motor-lab/`。
+构建：`python build.py`；检查：`node tests/check-model.cjs`。
+所有运行依赖仍内嵌在 index.html 中，三维模型与课程可离线使用。
+
+---
+
 # 电机原理 3D 实验室 · 离线版 v3.0
 
 直接双击 `index.html`，用支持 WebGL 的 Chrome、Edge、Firefox 或 Safari 打开。
