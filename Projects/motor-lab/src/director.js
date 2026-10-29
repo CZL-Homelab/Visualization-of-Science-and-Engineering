@@ -1,15 +1,16 @@
 /* Timed editorial direction. Camera and captions follow the same lesson clock. */
 let showcaseVisited=false,directorStep=-1,cameraSeed=0;
 window.onMotorEntry=()=>{showcaseVisited=false};
+window.onTourStart=()=>{showcaseVisited=true};
 window.updateSceneCaption=()=>{
  const s=courses[state.motor][teaching.step];
  $('#sceneCaption').innerHTML=`<span>${teaching.showcase?'完整运行展示 · 随后自动拆解讲解':`第 ${teaching.step+1} 幕 / 8 · ${s.focus&&engine?engine.info(s.focus)[0]:'结构 → 电流 → 磁场 → 转矩'}`}</span><b>${teaching.showcase?selected.name+' · 运行全景':s.title}</b><p>${teaching.showcase?selected.hint:s.watch}</p><div><button id="startFullTour">从头自动讲解</button><button id="holdDemo">${state.playing?'暂停演示':'继续演示'}</button></div>`;
- $('#startFullTour').onclick=()=>{teaching.showcase=false;goLesson(0,true);teaching.auto=true;state.playing=true;updateCourseTransport();updateSceneCaption()};
+ $('#startFullTour').onclick=()=>{teaching.showcase=false;showcaseVisited=true;goLesson(0,true);teaching.auto=true;state.playing=true;updateCourseTransport();updateSceneCaption()};
  $('#holdDemo').onclick=()=>{$('#play').click();updateSceneCaption()};
  directorStep=-1;
 };
 window.updateDirector=(elapsed,dt)=>{
- if(teaching.showcase){teaching.showcaseElapsed+=elapsed;if(teaching.showcaseElapsed>12){if(showcaseVisited){const i=motors.findIndex(m=>m.id===state.motor);choose(motors[(i+1)%6].id);showcaseVisited=false;}else{showcaseVisited=true;teaching.showcase=false;goLesson(0,true);teaching.auto=true;state.playing=true;updateCourseTransport();updateSceneCaption();}}}
+ if(teaching.showcase){teaching.showcaseElapsed+=elapsed;if(teaching.showcaseElapsed>12){if(showcaseVisited){const i=motors.findIndex(m=>m.id===state.motor);choose(motors[(i+1)%6].id);showcaseVisited=false;}else{showcaseVisited=true;teaching.showcase=false;showcaseVisited=true;goLesson(0,true);teaching.auto=true;state.playing=true;updateCourseTransport();updateSceneCaption();}}}
  if(teaching.auto&&engine&&!engine.controlsTouched){if(directorStep!==teaching.step){directorStep=teaching.step;cameraSeed=engine.desired.az;}if(courses[state.motor][teaching.step].view==='orbit'){engine.desired.az=cameraSeed+Math.sin(Math.min(1,teaching.elapsed/teaching.duration)*Math.PI)*.13;}if(teaching.step===0)state.explode=.25+.63*Math.min(1,teaching.elapsed/8);if(teaching.step===1)state.explode=.65+.35*Math.min(1,teaching.elapsed/7);$('#explode').value=Math.round(state.explode*100);$('#explodeOut').textContent=Math.round(state.explode*100)+'%';}
  updateComparison(dt,elapsed);
 };

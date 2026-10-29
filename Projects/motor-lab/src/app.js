@@ -52,7 +52,7 @@ $$('[data-mode]').forEach(b=>b.onclick=()=>{manual();setMode(b.dataset.mode);sel
 $('#clearPart').onclick=()=>{manual();selectPart(null)};
 $('#isolatePart').onclick=()=>{manual();if(!teaching.selected)return;teaching.isolated=!teaching.isolated;engine?.select(teaching.selected,teaching.isolated);$('#isolatePart').textContent=teaching.isolated?'返回完整模型':'单独查看';$('#isolatePart').setAttribute('aria-pressed',teaching.isolated);$('#scene').scrollIntoView({behavior:reducedMotion?'instant':'smooth',block:'center'});};
 $('#previousLesson').onclick=()=>goLesson(teaching.step-1);$('#nextLesson').onclick=()=>goLesson(teaching.step+1);
-$('#autoLesson').onclick=()=>{teaching.showcase=false;if(teaching.auto){manual();return;}if(teaching.step===7)goLesson(0);teaching.auto=true;teaching.elapsed=0;state.playing=courses[state.motor][teaching.step].run;updateMetrics();updateCourseTransport();speak();};
+$('#autoLesson').onclick=()=>{window.onTourStart?.();teaching.showcase=false;if(teaching.auto){manual();return;}if(teaching.step===7)goLesson(0);teaching.auto=true;teaching.elapsed=0;state.playing=courses[state.motor][teaching.step].run;updateMetrics();updateCourseTransport();speak();};
 $('#voice').onchange=e=>{teaching.voice=e.target.checked;if(teaching.voice)speak();else{cancelSpeech();$('#voiceStatus').textContent='语音已关闭 · 可继续阅读讲解';}};
 if(!('speechSynthesis' in window)){$('#voice').disabled=true;$('#voiceStatus').textContent='浏览器不支持语音，文字讲解可用';}
 document.addEventListener('visibilitychange',()=>{if(document.hidden){manual();}});

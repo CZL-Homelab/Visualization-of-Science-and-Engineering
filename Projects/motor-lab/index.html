@@ -14,10 +14,10 @@
 
 </style></head>
 <body><div class="arrival" aria-hidden="true"><div class="arrival-orbit"><i></i><i></i><i></i></div><b>MOTOR / LAB</b><span>从结构出发，追踪能量的运动。</span></div>
-<header><div class="brand"><b>◉</b>电机原理实验室<small>MOTOR / LAB</small></div><nav aria-label="主导航"><a href="#lab">3D 实验台</a><a href="#principles">工作原理</a><a href="#energy">效率与发热</a><a href="#compare">分类对比</a></nav><button id="download" class="download">↓ 下载离线网页</button></header>
+<header><div class="brand"><b>◉</b>电机原理实验室<small>MOTOR / LAB</small></div><nav aria-label="主导航"><a href="#lab">3D 实验台</a><a href="#principles">工作原理</a><a href="#energy">效率与发热</a><a href="#compare">分类对比</a><a href="#comparisonStudio">同步动效对比</a></nav><button id="download" class="download">↓ 下载离线网页</button></header>
 <main>
 <section class="hero" id="lab"><div><div class="eyebrow">MOTOR ANATOMY / 3D LEARNING STUDIO</div><h1>一层层拆开，一步步看懂。</h1><p>六类电机 · 48 个讲解步骤。沿着零件、电流、磁场和转矩，走完一台电机的工作过程。</p></div><span class="pill">可离线使用 · 无需安装</span></section>
-<section class="workspace" aria-label="电机交互实验台"><aside class="sidebar"><div class="label">选择电机 / MOTOR</div><div id="motorlist"></div><p class="smallnote">从右侧第 1 步开始。点“自动讲解”连续学习，或点击任意步骤与零件自由探索。</p></aside><div class="stage"><div class="stagehead"><h2 id="motorTitle"></h2><p id="motorSubtitle"></p></div><canvas id="scene" aria-label="三维电机，可拖动旋转、双指缩放，或使用下方零件列表" tabindex="0"></canvas>
+<section class="workspace" aria-label="电机交互实验台"><aside class="sidebar"><div class="label">选择电机 / MOTOR</div><div id="motorlist"></div><p class="smallnote">先看完整运行全景，随后自动拆解讲解。也可从头播放、暂停，或点选任意步骤与零件。</p></aside><div class="stage"><div class="stagehead"><h2 id="motorTitle"></h2><p id="motorSubtitle"></p></div><canvas id="scene" aria-label="三维电机，可拖动旋转、双指缩放，或使用下方零件列表" tabindex="0"></canvas>
 <div id="modelLabels" aria-hidden="true"></div><div id="sceneError" class="hide" role="alert"></div>
 <div class="scene-tools"><button id="fitView" title="使全部零件进入画面">适配画面</button><button id="fullView" title="放大实验台">放大实验台 ⛶</button></div>
 <div class="scene-status"><i></i><span id="sceneStatus">精细结构 / EXPLODED VIEW</span></div>
@@ -391,7 +391,7 @@ $$('[data-mode]').forEach(b=>b.onclick=()=>{manual();setMode(b.dataset.mode);sel
 $('#clearPart').onclick=()=>{manual();selectPart(null)};
 $('#isolatePart').onclick=()=>{manual();if(!teaching.selected)return;teaching.isolated=!teaching.isolated;engine?.select(teaching.selected,teaching.isolated);$('#isolatePart').textContent=teaching.isolated?'返回完整模型':'单独查看';$('#isolatePart').setAttribute('aria-pressed',teaching.isolated);$('#scene').scrollIntoView({behavior:reducedMotion?'instant':'smooth',block:'center'});};
 $('#previousLesson').onclick=()=>goLesson(teaching.step-1);$('#nextLesson').onclick=()=>goLesson(teaching.step+1);
-$('#autoLesson').onclick=()=>{teaching.showcase=false;if(teaching.auto){manual();return;}if(teaching.step===7)goLesson(0);teaching.auto=true;teaching.elapsed=0;state.playing=courses[state.motor][teaching.step].run;updateMetrics();updateCourseTransport();speak();};
+$('#autoLesson').onclick=()=>{window.onTourStart?.();teaching.showcase=false;if(teaching.auto){manual();return;}if(teaching.step===7)goLesson(0);teaching.auto=true;teaching.elapsed=0;state.playing=courses[state.motor][teaching.step].run;updateMetrics();updateCourseTransport();speak();};
 $('#voice').onchange=e=>{teaching.voice=e.target.checked;if(teaching.voice)speak();else{cancelSpeech();$('#voiceStatus').textContent='语音已关闭 · 可继续阅读讲解';}};
 if(!('speechSynthesis' in window)){$('#voice').disabled=true;$('#voiceStatus').textContent='浏览器不支持语音，文字讲解可用';}
 document.addEventListener('visibilitychange',()=>{if(document.hidden){manual();}});
@@ -408,15 +408,16 @@ choose('bldc');energy();requestAnimationFrame(animateScene);
 /* Timed editorial direction. Camera and captions follow the same lesson clock. */
 let showcaseVisited=false,directorStep=-1,cameraSeed=0;
 window.onMotorEntry=()=>{showcaseVisited=false};
+window.onTourStart=()=>{showcaseVisited=true};
 window.updateSceneCaption=()=>{
  const s=courses[state.motor][teaching.step];
  $('#sceneCaption').innerHTML=`<span>${teaching.showcase?'完整运行展示 · 随后自动拆解讲解':`第 ${teaching.step+1} 幕 / 8 · ${s.focus&&engine?engine.info(s.focus)[0]:'结构 → 电流 → 磁场 → 转矩'}`}</span><b>${teaching.showcase?selected.name+' · 运行全景':s.title}</b><p>${teaching.showcase?selected.hint:s.watch}</p><div><button id="startFullTour">从头自动讲解</button><button id="holdDemo">${state.playing?'暂停演示':'继续演示'}</button></div>`;
- $('#startFullTour').onclick=()=>{teaching.showcase=false;goLesson(0,true);teaching.auto=true;state.playing=true;updateCourseTransport();updateSceneCaption()};
+ $('#startFullTour').onclick=()=>{teaching.showcase=false;showcaseVisited=true;goLesson(0,true);teaching.auto=true;state.playing=true;updateCourseTransport();updateSceneCaption()};
  $('#holdDemo').onclick=()=>{$('#play').click();updateSceneCaption()};
  directorStep=-1;
 };
 window.updateDirector=(elapsed,dt)=>{
- if(teaching.showcase){teaching.showcaseElapsed+=elapsed;if(teaching.showcaseElapsed>12){if(showcaseVisited){const i=motors.findIndex(m=>m.id===state.motor);choose(motors[(i+1)%6].id);showcaseVisited=false;}else{showcaseVisited=true;teaching.showcase=false;goLesson(0,true);teaching.auto=true;state.playing=true;updateCourseTransport();updateSceneCaption();}}}
+ if(teaching.showcase){teaching.showcaseElapsed+=elapsed;if(teaching.showcaseElapsed>12){if(showcaseVisited){const i=motors.findIndex(m=>m.id===state.motor);choose(motors[(i+1)%6].id);showcaseVisited=false;}else{showcaseVisited=true;teaching.showcase=false;showcaseVisited=true;goLesson(0,true);teaching.auto=true;state.playing=true;updateCourseTransport();updateSceneCaption();}}}
  if(teaching.auto&&engine&&!engine.controlsTouched){if(directorStep!==teaching.step){directorStep=teaching.step;cameraSeed=engine.desired.az;}if(courses[state.motor][teaching.step].view==='orbit'){engine.desired.az=cameraSeed+Math.sin(Math.min(1,teaching.elapsed/teaching.duration)*Math.PI)*.13;}if(teaching.step===0)state.explode=.25+.63*Math.min(1,teaching.elapsed/8);if(teaching.step===1)state.explode=.65+.35*Math.min(1,teaching.elapsed/7);$('#explode').value=Math.round(state.explode*100);$('#explodeOut').textContent=Math.round(state.explode*100)+'%';}
  updateComparison(dt,elapsed);
 };
