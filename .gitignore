@@ -1,0 +1,25 @@
+# Local settings, credentials and operating-system files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+
+# Generated caches and temporary work (already tracked history is preserved)
+__pycache__/
+*.py[cod]
+.pytest_cache/
+node_modules/
+**/work/
+**/tmp/
+*.log
+_site/
+playwright-report/
+test-results/
+
+# Keep each project's documented deliverables, including motor-lab/index.html.

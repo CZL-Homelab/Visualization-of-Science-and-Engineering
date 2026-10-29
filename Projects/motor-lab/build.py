@@ -10,5 +10,6 @@ for name in ['vendor/three.min.js','src/core.js','src/courses.js','src/engine.js
     code=(root/name).read_text(encoding='utf-8').replace('</script','<\\/script')
     scripts.append('<script>\n'+code+'\n</script>')
 html=html.replace('<!-- LAB_SCRIPTS -->','\n'.join(scripts))
-(root/'index.html').write_text(html,encoding='utf-8')
+with (root/'index.html').open('w',encoding='utf-8',newline='\n') as output:
+    output.write(html)
 print(f'Built index.html ({len(html.encode("utf-8")):,} bytes), all resources embedded.')

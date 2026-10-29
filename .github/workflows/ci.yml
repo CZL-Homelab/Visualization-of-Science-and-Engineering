@@ -1,0 +1,37 @@
+name: Motor Lab checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    name: Motor Lab (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: Projects/motor-lab
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build offline artifact
+        run: python build.py
+      - name: Check JavaScript syntax
+        run: |
+          for script in src/*.js; do node --check "$script"; done
+      - name: Verify physical invariants and offline packaging
+        run: node tests/check-model.cjs
+      - name: Verify generated page is committed
+        run: git diff --exit-code -- index.html

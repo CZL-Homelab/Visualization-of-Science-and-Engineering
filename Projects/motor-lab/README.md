@@ -1,7 +1,9 @@
 # Motor Lab · v3.1 自动演示与同步对比
 
-工程根目录：`F:\ProjectA\Visualization-of-Science-and-Engineering\Projects\motor-lab`。
-此处是后续唯一开发目录，使用父目录 Git 仓库管理。
+主仓库：[CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering)。
+正式网站：[Motor Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/)。
+
+源码位于仓库的 `Projects/motor-lab/`。当前维护机目录为 `F:\ProjectA\Visualization-of-Science-and-Engineering\Projects\motor-lab`，其他开发者可克隆到任意路径。协作请先读根目录 [贡献指南](../../CONTRIBUTING.md) 和本目录 [AGENTS.md](AGENTS.md)。
 
 ## v3.1
 
@@ -15,8 +17,8 @@
 
 ## Git 与发布
 
-从仓库根目录提交并推送 main 后，`.github/workflows/pages.yml` 自动重新生成离线页、校验物理关系并发布 GitHub Pages。
-发布路径：`/Visualization-of-Science-and-Engineering/motor-lab/`。
+PR 合并到组织仓库 main（或在明确授权下推送 main）后，`.github/workflows/pages.yml` 自动重新生成离线页、校验物理关系并发布 GitHub Pages。
+发布地址：`https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/`。
 构建：`python build.py`；检查：`node tests/check-model.cjs`。
 所有运行依赖仍内嵌在 index.html 中，三维模型与课程可离线使用。
 

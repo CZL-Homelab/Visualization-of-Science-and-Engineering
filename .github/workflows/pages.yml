@@ -2,7 +2,7 @@ name: Publish engineering visualizations
 on:
   push:
     branches: [main]
-    paths: ['Projects/**', '.github/workflows/pages.yml']
+    paths: ['Projects/**', '.github/workflows/**', 'README.md', 'AGENTS.md', 'CONTRIBUTING.md', '.gitattributes']
   workflow_dispatch:
 permissions:
   contents: read
@@ -13,6 +13,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   publish:
+    if: github.repository == 'CZL-Homelab/Visualization-of-Science-and-Engineering'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -29,8 +30,7 @@ jobs:
         working-directory: Projects/motor-lab
         run: |
           python build.py
-          node --check src/app.js
-          node --check src/director.js
+          for script in src/*.js; do node --check "$script"; done
           node tests/check-model.cjs
       - name: Prepare static pages
         run: |
