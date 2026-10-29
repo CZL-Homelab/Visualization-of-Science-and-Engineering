@@ -116,3 +116,35 @@ PR 合并到组织仓库 main（或在明确授权下推送 main）后，`.githu
   https://www.nidec.com/en/products/small-precision-motors/contents/technology/motor/basic/00013/
 
 2026-10-29
+
+## English — Motor Lab v3.1
+
+Canonical repository: [CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering). [Open Motor Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) or return to the [project directory](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/). Source is under Projects/motor-lab; the maintainer's F-drive path is an example, not a required location. Read the root contribution guide and local AGENTS.md.
+
+### Run and explore
+
+Open index.html in a modern WebGL-capable browser, or run python -m http.server 8766 --bind 127.0.0.1 in this directory. All model code, styles and the shared SVG identity are embedded; no account, server, npm installation or network is needed for the demonstration itself. External reference links require a connection. Optional speech depends on browser/OS Chinese voice availability and may require networking.
+
+Each of the six motors starts with a running showcase, then automatically enters an eight-scene tour after 12 seconds and proceeds to other motors. Tours coordinate motion, decomposition, camera, emphasis and in-scene captions. Choose any scene, pause, or restart from the beginning. Speech is off by default. Reduced-motion preferences suppress automatic movement.
+
+Click a model part or its index to read its role; isolate it for closer inspection. Use assembly, cutaway, exploded and X-ray modes or the explosion slider. Drag or use arrow keys to rotate the camera; scroll/pinch to zoom. Fit view restores framing. Expand the lab and press Escape to exit. Space toggles motor motion unless a form/control has focus. Pause before stepping 60 electrical degrees to compare currents, field direction, diagrams and waveforms. Pausing the tour preserves current motor motion; motor pause/step ends automatic scene advancement. Changing scenes restores that scene's defaults.
+
+### Content and identity
+
+The models include ribs, covers, bolts, laminations, teeth, copper turns, insulation, bearings, shaft/keyway, permanent magnets, a 24-bar cage with shorting rings, brush holders/springs and a split commutator, capacitor branches and closed shading rings. Materials, lighting and reflections improve spatial readability. Phase particles, field vectors and force directions remain explanatory markers.
+
+BLDC covers six-step commutation, two conducting phases and one floating phase. Brushed DC covers stationary magnets/brushes, a rotating armature/commutator and current reversal. PMSM covers smooth three-phase fields, synchronous speed and magnetic-axis angle; stable phase colors darken/lighten with absolute current. Three-phase induction covers cage closure, induced current and slip. Capacitor-run motors cover spatially separated windings, phase-shifted currents and elliptical fields. Shaded-pole motors cover local flux lag in the shaded region.
+
+Four comparison pairs provide six scenes each: BLDC/PMSM, synchronous/induction, capacitor-run/shaded-pole, and brushed/brushless. They compare structure, current paths, fields, rotors, load and energy chains. The phase-diagram brightness is not instantaneous PWM gating. Original articles, taxonomy, energy-loss arithmetic, fan similarity laws, FAQs, quizzes and manufacturer references remain available.
+
+### Model boundaries
+
+These are educational procedural geometries, not manufacturing CAD, finite-element results or repair instructions. Dimensions, gaps and turns are simplified around a two-pole internal-rotor arrangement. Exploding an embedded cage out of its core is an explanatory separation, not a real disassembly operation. Animation is heavily slowed relative to indicated rpm; particles are not electron drift speeds and brightness is not measured field strength.
+
+Motion uses simplified steady-state operating points rather than startup inertia, stall, saturation, loss of synchronism, PWM transients or current loops. BLDC follows a prescribed smooth response; PMSM uses a simplified magnetic-axis angle rather than a full FOC/dq solution. Induction slip varies linearly with load for teaching. Capacitor-run examples assume 70-degree phase separation and amplitude ratio 0.8; actual values depend on the design and operating point. Shaded-pole fields show local timing rather than an ideal circular three-phase field. The single-coil/two-segment brushed model does not solve neutral-plane transients or dead-point starting. Bearing balls illustrate structure, not contact kinematics. Drive-board placement is illustrative. The efficiency ledger uses assumed arithmetic allocations and predicts neither measured efficiency nor temperature. Fan blades do not automatically apply an aerodynamic load curve.
+
+### Maintain and publish
+
+Edit src/ and run python build.py. Run node tests/check-model.cjs and the syntax commands in AGENTS.md; commit the generated index.html. No npm installation is needed. core.js handles the inherited lessons and operating points; courses.js contains scene content; engine.js builds the models; app.js controls interaction and diagrams; director.js directs tours and comparisons. Shared identity is embedded from ../../assets/icon.svg. vendor/three.min.js is Three.js 0.160.1 under the preserved MIT license. Historical v2 files under work/ are backups.
+
+Merging to the organization repository's main triggers Pages validation and publishing. Source, build and route guidance is in the root README. Manufacturer references above include Microchip BLDC commutation, Oriental Motor induction/PSC structure, and Nidec capacitor-run and DC back-EMF explanations. Their links are shared by both language versions.

@@ -50,3 +50,11 @@
 - 不使用外部 JavaScript、字体、图片或 CDN；不请求任何用户数据。
 
 2026-10-28
+
+## English — archived v2 instructions
+
+This file preserves the original Chinese v2 README above as historical documentation. It is not the current source of truth. Open the parent README and AGENTS.md for v3.1, organization publishing and current controls.
+
+The v2 page was a standalone offline canvas-projected motor lab covering six-step BLDC, brushed DC, sinusoidal permanent-magnet synchronous, three-phase induction, capacitor-run and shaded-pole motors, plus loss arithmetic, taxonomy and fan laws. Drag to rotate, scroll to zoom, Space to pause, arrow keys to change view, and step 60 electrical degrees. Sliders controlled frequency/voltage, load and exploded separation. Optional labels, sectioning and fan blades illustrated parts and output.
+
+The original models were simplified two-pole internal-rotor geometries with slowed, prescribed steady-state motion. Slip was linear in load, BLDC following and PMSM magnetic-axis angles were illustrative, capacitor phase/amplitude were 70 degrees/0.8, and shaded-pole flux used local timing. They did not solve startup, inertia, stall, saturation, overload, temperature, real efficiency or aerodynamic loads. The old index.html contained all code and no CDN dependencies; reference links required connectivity. These historical constraints explain the archive and are not instructions to restore or replace the current implementation.

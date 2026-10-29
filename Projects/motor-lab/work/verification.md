@@ -10,3 +10,9 @@
 - 预览器仅允许 HTTP/HTTPS，阻止 file:// 导航，因此直接双击的文件协议模式未在该预览器中执行测试。
 - node tests/check-model.cjs：通过六步电流矢量、三相正弦旋转场、转差、换向转矩符号、N 极真实几何方向、48 步数据、单文件依赖与静态 ID 检查。
 - 可选语音由浏览器与操作系统语音包提供；未验证所有设备的中文语音可用性。
+
+## English — archived v3 verification record, 2026-10-29
+
+The original record above documented all 48 lesson selections, six diagrams, cage isolation, automatic advancement from scene 1 to 6, desktop 1440x1000 and narrow 390x844 layouts, and an induction UI point at 60 Hz/100% load (3600 rpm field, 3222 rpm rotor, 10.5% slip). No console errors were observed in those checks.
+
+The downloaded standalone file's scripts matched the source and required no external runtime scripts/styles. The preview browser blocked file:// navigation, so direct file-protocol execution was not tested there. Physical-invariant, geometry, packaging and static-ID checks passed. Availability of every device's Chinese speech package was not verified. This is a historical record, not evidence that future revisions have passed the same checks.

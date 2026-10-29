@@ -2,7 +2,7 @@ name: Publish engineering visualizations
 on:
   push:
     branches: [main]
-    paths: ['Projects/**', '.github/workflows/**', 'README.md', 'AGENTS.md', 'CONTRIBUTING.md', '.gitattributes']
+    paths: ['site/**', 'assets/**', 'scripts/**', 'Projects/**', '.github/workflows/**', 'README.md', 'AGENTS.md', 'CONTRIBUTING.md', '.gitattributes']
   workflow_dispatch:
 permissions:
   contents: read
@@ -34,10 +34,7 @@ jobs:
           node tests/check-model.cjs
       - name: Prepare static pages
         run: |
-          mkdir -p _site/motor-lab
-          cp Projects/motor-lab/index.html _site/motor-lab/index.html
-          printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=./motor-lab/"><a href="./motor-lab/">Motor Lab</a>' > _site/index.html
-          touch _site/.nojekyll
+          python scripts/build_site.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

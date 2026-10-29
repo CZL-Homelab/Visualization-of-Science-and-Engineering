@@ -1,7 +1,10 @@
 """Build the self-contained offline HTML using Python's standard library."""
 from pathlib import Path
+import base64
 root=Path(__file__).resolve().parent
 html=(root/'src/page.html').read_text(encoding='utf-8')
+icon='data:image/svg+xml;base64,'+base64.b64encode((root.parent.parent/'assets/icon.svg').read_bytes()).decode('ascii')
+html=html.replace('<!-- SITE_ICON -->','<link rel="icon" type="image/svg+xml" href="'+icon+'">').replace('<!-- BRAND_ICON -->',icon)
 html=html.replace('/* LAB_STYLES */',(root/'src/lab.css').read_text(encoding='utf-8'))
 for token,file in [('<!-- COURSE_PANEL -->','course.html'),('<!-- PARTS_PANEL -->','parts.html')]:
     html=html.replace(token,(root/'src'/file).read_text(encoding='utf-8'))

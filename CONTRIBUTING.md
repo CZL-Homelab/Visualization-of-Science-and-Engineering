@@ -35,8 +35,24 @@ PR 的 **Motor Lab checks** 工作流在 Windows 和 Linux 构建、执行语法
 ## 发布和故障定位
 
 - 正式域名：`https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/`。
-- Motor Lab 路径：`/motor-lab/`；仓库根网页跳转到该路径。
+- Motor Lab 路径：`/motor-lab/`；仓库根网页为可搜索的项目目录。
 - Pages Source 使用 GitHub Actions；仓库和工作流需要允许 Actions 执行。
 - 合并后先检查 CI/部署结果，再确认网页内容。失败时查看具体任务日志，修复后重新运行或推送修复提交。
 - 不将个人 GitHub 令牌写入仓库。当前发布通过 `GITHUB_TOKEN` 和 Pages 环境完成。
 - Git 推送成功不等于部署成功；对外报告实际状态。
+
+## English — contributing
+
+Read the root and target project's README.md and AGENTS.md. Issues, PRs and production publishing belong to the CZL-Homelab repository linked above.
+
+Start from an up-to-date main using the branch commands in the Chinese section. Save existing work first. If a fast-forward pull fails, inspect the divergence; never force-push over another contributor. Contributors without organization write access can fork the organization repository and open a PR against its main branch.
+
+Edit Motor Lab source under Projects/motor-lab/src, run python build.py, and commit the generated index.html alongside the source. Keep its single-file offline behavior and avoid unnecessary dependencies. For new scientific claims, link manufacturer documentation, primary technical references or papers and state model assumptions. UI changes should include screenshots or recordings and checks for motion, pause, occlusion and narrow layouts. Preserve dependency and asset provenance and licensing.
+
+New demonstrations belong under Projects/<slug> with independent environment, build, validation, model-boundary and license documentation. Register the project in site/projects.json. The directory builder currently packages each project's standalone index.html; extend it explicitly for additional required files. Update bilingual documentation and route checks.
+
+Run the relevant project's checks and git diff --check before committing. Motor Lab invariants cover three-phase fields, slip, commutation signs, pole geometry and offline packaging. Keep commits focused, describe user-visible behavior, and document validation limits. Never commit credentials, new temporary backups, caches or unrelated changes.
+
+PR CI runs Windows and Linux builds and verifies syntax, model invariants, generated pages and directory links. Maintainers review and merge to main; publishing runs only in the organization repository. PR review is the collaboration convention, not a claim that branch protection is enforced; administrators control actual settings.
+
+Production is hosted under czl-homelab.github.io/Visualization-of-Science-and-Engineering/. The root route is the project directory; Motor Lab remains under /motor-lab/. Set Pages Source to GitHub Actions. Workflows use GITHUB_TOKEN rather than stored personal tokens. After merging, inspect CI and deployment logs and verify the live page; a successful push alone is not a successful deployment.

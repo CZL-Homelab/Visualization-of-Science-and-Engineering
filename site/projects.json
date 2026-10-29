@@ -1,0 +1,12 @@
+[
+  {
+    "slug": "motor-lab",
+    "title": "Motor Lab · 电机原理实验室",
+    "category": "电气工程 / Electrical engineering",
+    "description": "从零件到磁场，从换相到转差。拆开六类电机，用分步动画和双模型对比，理解它们为什么会转。",
+    "english": "Explore six motor types through 3D anatomy, guided animation and synchronized comparisons.",
+    "tags": ["交互 3D / Interactive 3D", "离线可用 / Offline", "自动讲解 / Guided tours"],
+    "metrics": "6 类电机 · 48 幕讲解 · 24 幕对比",
+    "preview": "assets/motor-preview.svg"
+  }
+]

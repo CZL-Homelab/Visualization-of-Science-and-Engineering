@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 380" fill="none">
+<defs><radialGradient id="bg"><stop stop-color="#284c55"/><stop offset="1" stop-color="#132733"/></radialGradient><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0v32" stroke="#44646e" stroke-opacity=".18"/></pattern></defs>
+<path fill="url(#bg)" d="M0 0h620v380H0z"/><path fill="url(#grid)" d="M0 0h620v380H0z"/>
+<g transform="translate(310 190)"><circle r="127" stroke="#77959e" stroke-width="18"/><circle r="111" stroke="#34555f" stroke-width="8"/>
+<g id="coil"><path d="M-23-112h46v45h-46z" fill="#18333e" stroke="#e3aa80" stroke-width="3"/><path d="M-21-104h42m-42 7h42m-42 7h42m-42 7h42m-42 7h42" stroke="#e3aa80" stroke-width="2"/></g>
+<use href="#coil" transform="rotate(60)"/><use href="#coil" transform="rotate(120)"/><use href="#coil" transform="rotate(180)"/><use href="#coil" transform="rotate(240)"/><use href="#coil" transform="rotate(300)"/>
+<path d="M0-62a62 62 0 0 1 0 124z" fill="#cb7279"/><path d="M0-62a62 62 0 0 0 0 124z" fill="#719ed1"/><circle r="22" fill="#a2bcc3"/><circle r="12" fill="#142a36"/>
+<path d="m0 0 50-67m-3 16 3-16-15 5" stroke="#edcf80" stroke-width="4" stroke-linecap="round"/>
+<circle r="79" stroke="#edcf80" stroke-dasharray="3 8" opacity=".4"/>
+</g><g font-family="monospace" font-size="11" fill="#92b8bf"><text x="25" y="31">MOTOR ANATOMY / 01</text><text x="25" y="355">STRUCTURE → CURRENT → FIELD → MOTION</text></g><g stroke="#80c8b8" opacity=".6"><path d="M444 88h105m-10-5 10 5-10 5M142 296H67m10-5-10 5 10 5"/></g>
+</svg>

@@ -41,3 +41,17 @@ node tests/check-model.cjs
 改动交互时检查六种默认运行状态、课程步骤、暂停/步进、零件隔离、四组同步对比和窄屏溢出。自动导演的改动额外检查从全景进入课程、最后一幕进入下一种电机及手动接管。不要声称测试了未实际运行的语音包、文件协议或浏览器。
 
 此项目不需要 npm 依赖安装。固定 Three.js UMD 构建保留单文件 `file://` 可用性；库的弃用提示本身不是构建失败，不要仅为消除提示就破坏离线封装。
+
+## English — Motor Lab development instructions
+
+Follow the repository AGENTS.md and read the README's model boundaries first.
+
+Source map: page.html is the main template; course.html and parts.html are embedded templates; lab.css styles the lab, captions, entry and comparisons. core.js contains motor data, older lessons, waveforms and operating points. courses.js defines 48 scenes, part explanations and quizzes. engine.js manages geometry, materials, labels, camera and motion. app.js connects controls, speech and diagrams. director.js manages tours, captions and synchronized comparisons. build.py generates index.html; never make the generated file the only edit target.
+
+Scripts use a fixed embedded order with shared state, teaching and functions. Check dependencies before changing it. Comparison scenes temporarily switch state via motorContext(snapshot, fn) and restore it in finally. Do not leak comparison state into the main lab. Each MotorScene owns its label container.
+
+Default entry is a running showcase followed by eight-scene tours and the motor playlist. Explicit pause/manual input overrides the director. PMSM phase colors remain stable; brightness represents absolute current and signs/particles represent direction, not instantaneous PWM switch states. Synchronous speed with a fixed magnetic-axis angle differs from induction slip. Cage bars require both end rings. Brushes remain fixed while the commutator rotates. Shading rings must be closed and enclose only part of a pole. Distinguish capacitor-run from capacitor-start designs; do not replace local shaded-pole timing with an ideal circular field.
+
+Disclose any new torque, temperature or efficiency model. Do not infer measured quantities from illustrative brightness. Run the build, all JavaScript syntax checks and node tests/check-model.cjs using the commands above. For UI changes check all six default states, lessons, pause/step, isolation, four comparison groups and narrow layouts. Director changes also require showcase-to-tour, last-scene-to-next-motor and manual takeover checks. Report speech-package, file-protocol and browser verification limits honestly.
+
+No npm installation is required. Keep the fixed Three.js UMD build and its license for standalone file:// compatibility; its deprecation notice alone is not a build failure. The shared icon is read from ../../assets/icon.svg and embedded by the build; do not replace it with a runtime request. The external directory and repository links intentionally require connectivity.

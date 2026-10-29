@@ -35,3 +35,6 @@ jobs:
         run: node tests/check-model.cjs
       - name: Verify generated page is committed
         run: git diff --exit-code -- index.html
+      - name: Build project directory and resolve local links
+        working-directory: .
+        run: python scripts/check_site.py

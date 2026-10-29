@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/icon.svg" width="96" height="96" alt="CZL 科学与工程可视化 / Science and Engineering Visualizations"></p>
+
 # 科学与工程可视化 · Visualization of Science and Engineering
 
 用交互模型、动画、字幕和对照实验，把科学与工程中的结构、因果关系和工作过程讲清楚。项目由 **CZL-Homelab** 组织维护，欢迎开发者、内容作者和 AI 辅助贡献。
@@ -9,7 +11,7 @@
 
 后续代码、Issue、PR 和部署均以组织仓库为准。个人账号下的历史仓库和旧站点不是后续同步或发布目标。
 
-## 当前演示
+## 当前演示 / Current projects
 
 | 项目 | 内容 | 源码与说明 |
 | --- | --- | --- |
@@ -45,6 +47,9 @@ git fetch origin
 
 ```text
 .github/                 CI、Pages 发布、Issue 与 PR 模板
+assets/                  SVG 标识与共享插图
+site/                    目录模板与项目清单
+scripts/                 目录构建及链接检查
 AGENTS.md                仓库级 AI 工作约定
 CONTRIBUTING.md          开发、验证与协作流程
 CHANGELOG.md             面向使用者的更新记录
@@ -58,14 +63,51 @@ Projects/
     index.html           生成的离线交付文件，随源码一起提交
 ```
 
-请修改 `src/`，再重新生成 `index.html`。不要只编辑生成页。新增演示放在 `Projects/<slug>/`，提供独立说明、构建和检查方式，并在发布工作流中明确增加对应路由。
+请修改 `src/`，再重新生成 `index.html`。不要只编辑生成页。新增演示放在 `Projects/<slug>/`，提供独立说明、构建和检查方式，并在 `site/projects.json` 登记项目；构建器据此生成目录和对应路由。若项目需要额外资源，请同时扩展打包逻辑。
 
 ## 协作与发布
 
 日常开发使用功能分支和 PR；PR 会执行独立 CI。合并到组织仓库的 `main` 后，Pages 工作流构建、验证并部署。文档和发布配置变化也会触发发布，支持从 Actions 手动运行。
 
-站点位于 `czl-homelab.github.io/Visualization-of-Science-and-Engineering/`，不是组织根域的独立首页仓库。当前站点根路径跳转至 `/motor-lab/`。发布仅上传生成的网页，不上传源码、备份或工作文件。
+站点位于 `czl-homelab.github.io/Visualization-of-Science-and-Engineering/`，不是组织根域的独立首页仓库。站点根路径是可搜索的项目目录，Motor Lab 保留 `/motor-lab/` 独立入口。发布仅上传生成的网页，不上传源码、备份或工作文件。
 
 仓库管理员应将 **Settings → Pages → Source** 设为 **GitHub Actions**。新维护者可在 [Actions](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/actions) 查看检查和部署记录。现有流程使用仓库提供的 `GITHUB_TOKEN`，不需要在源码中保存个人令牌。
 
 MIT 许可见 [LICENSE](LICENSE)。第三方依赖保留各自许可证，例如 [Three.js MIT 许可](Projects/motor-lab/vendor/THREE-LICENSE.txt)。现有作者署名保持不变。
+
+## 目录与视觉标识 / Directory and visual identity
+
+根地址是项目总目录，后续演示统一登记在 `site/projects.json`，不再用某一个演示代替首页。构建目录：先构建各演示，再在仓库根目录运行 `python scripts/check_site.py`；本地预览使用 `python -m http.server 8767 --bind 127.0.0.1 --directory _site`。
+
+SVG 标识位于 [`assets/icon.svg`](assets/icon.svg)：空间框架表示结构，轨迹表示科学观察和运动。README、目录及 Motor Lab 使用同一标识；Motor Lab 内嵌 SVG，保持离线使用。网站头部和页脚提供完整仓库入口。图标与复用说明见 [`assets/README.md`](assets/README.md)。
+
+## English
+
+### Purpose and canonical home
+
+An open collection of interactive science and engineering explanations maintained by **CZL-Homelab**. Explore structures, causal relationships and working principles through models, animation, captions and comparisons.
+
+- Canonical repository: [CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering).
+- Project directory: [GitHub Pages](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/).
+- Current demonstration: [Motor Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/), covering six motor types, 48 lesson scenes and 24 comparison scenes.
+- Read [CONTRIBUTING.md](CONTRIBUTING.md) and the applicable [AGENTS.md](AGENTS.md) before contributing. Personal historical repositories and sites are not synchronization or deployment targets.
+
+### Run and build
+
+Use Git, Python 3.9+ and Node.js 22 LTS. No npm installation or third-party Python packages are needed. Clone the organization repository, enter `Projects/motor-lab`, then run `python build.py` and `node tests/check-model.cjs`. The commands in the Chinese quick-start section are identical on all platforms; use `python3` where appropriate.
+
+Preview the project with `python -m http.server 8766 --bind 127.0.0.1`, or open its generated `index.html` with a WebGL-capable browser. Optional speech and external references have their own network requirements; see the project README. Models are educational and disclose physical simplifications.
+
+To build the complete directory, build project artifacts first, then run `python scripts/check_site.py` from the repository root. Preview `_site` with `python -m http.server 8767 --bind 127.0.0.1 --directory _site`. The root page is a searchable catalog; each project has its own stable route such as `/motor-lab/`.
+
+### Source, identity and collaboration
+
+Edit project `src/` files and regenerate `index.html`; commit both source and the documented generated deliverable. `site/` contains the directory template and project registry, `assets/` holds shared SVG identity and illustrations, and `scripts/` builds and verifies the published directory. Add new demonstrations under `Projects/<slug>/` and register them in `site/projects.json`; extend packaging explicitly if they require extra assets.
+
+The [SVG icon](assets/icon.svg) combines a spatial frame with an orbital path, representing structure, observation and motion. It is used in this README, the directory, and the Motor Lab favicon/brand. Motor Lab embeds it to retain offline operation. Both web pages link to the complete repository name. See [asset guidance](assets/README.md).
+
+Use feature branches and pull requests. CI verifies Windows and Linux builds, JavaScript syntax, physical invariants, generated artifacts and published links. Merging to the organization's `main` triggers Pages deployment; manual dispatch is also supported. Pages Source must be **GitHub Actions**. Publishing uses `GITHUB_TOKEN`, not committed personal credentials. The root page is not the organization's separate `<owner>.github.io` repository.
+
+Before changing the remote or synchronizing existing work, inspect the working tree, branch history and `git remote -v`. Do not overwrite collaborators' changes or force-push. See [Actions](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/actions) for actual deployment status.
+
+Code and original visual identity use the [MIT license](LICENSE); preserve existing author attribution and third-party licenses, including [Three.js](Projects/motor-lab/vendor/THREE-LICENSE.txt).

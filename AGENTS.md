@@ -29,3 +29,37 @@
 - 发布由组织仓库 `.github/workflows/pages.yml` 管理。扩展发布时保留已有项目路由，不上传中间文件。
 - 不擅自改变组织权限、分支保护或第三方账号设置；发布授权不等于组织治理授权。
 - 完成后说明改动、验证、提交/PR 和实际部署状态，区分“已推送”与“已上线”。
+
+- 根目录必须保留项目目录页；新项目登记在 site/projects.json。共享标识在 assets/icon.svg，调整仓库标识不代表更改组织头像。
+- 仓库说明文档使用中文与英文双语；法律许可证保留原文。
+
+## English — instructions for AI contributors
+
+These instructions cover the entire repository. Read the project README and any more specific AGENTS.md before editing. Explicit authorization and constraints in the current user session take precedence.
+
+### Repository and delivery
+
+- The only upstream and default push target is `https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering.git`. The production site is `https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/`.
+- Do not synchronize to historical personal repositories or present personal sites as canonical.
+- Start by inspecting the working tree, branch and remotes. Preserve other contributors' changes; do not reset, clean, force-push or rewrite history without authorization.
+- Prefer a descriptive feature branch and PR. Existing explicit authorization to commit, synchronize or publish remains valid; do not request it again.
+
+### Implementation
+
+- Keep demonstrations under `Projects/<slug>/`. Edit source and run the documented build. Motor Lab's generated index.html must be committed with source changes.
+- Preserve offline behavior; do not introduce CDN scripts, online fonts, remote models or runtime network dependencies unless explicitly requested.
+- Keep scientific concepts accurate and distinguish current, magnetomotive force, flux, speed and angle. Disclose simplifications; animation is not an engineering simulation.
+- Check visibility, occlusion, phase and arrow direction visually. A clean console alone is insufficient.
+- Automatic presentations must be pausable, manual controls stable, reduced-motion preferences respected, and speech opt-in.
+- Preserve licenses and attribution. Never commit credentials, private keys, personal environment files or debugging output.
+
+### Validation and collaboration
+
+- Run relevant builds, syntax checks and meaningful physical invariants. Check desktop and narrow layouts for UI changes and report verification limits. Do not add implementation-mirroring tests for small documentation edits.
+- Review the diff, generated artifacts and git diff --check. Do not reformat third-party libraries or unrelated code.
+- Do not add temporary work, caches or screenshots to deployment. Preserve previously tracked historical backups unless asked to change them.
+- Organization Pages is managed by .github/workflows/pages.yml. The root route must remain a project catalog; preserve existing routes. Register projects in site/projects.json and extend packaging if extra files are required.
+- Shared identity lives in assets/icon.svg. Preserve its offline embedding in Motor Lab; do not change the organization avatar when asked to adjust repository branding.
+- Keep repository documentation bilingual in Chinese and English. Preserve original legal license text.
+- Do not change organization permissions, branch protection or external account settings without authorization. Publishing authorization does not imply governance authorization.
+- Report changes, validation, commit/PR and actual deployment outcome. Distinguish pushed code from a successfully published website.
