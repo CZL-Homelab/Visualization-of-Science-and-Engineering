@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" role="img" aria-labelledby="title desc">
   <title id="title">CZL Science and Engineering Visualizations</title>
   <desc id="desc">A spatial frame and an orbital path: structure, observation and motion.</desc>
-  <rect width="128" height="128" rx="30" fill="#10232d"/>
-  <rect x="1" y="1" width="126" height="126" rx="29" stroke="#35505a" stroke-width="2"/>
-  <path d="M64 21 99 41v43L64 105 29 84V41Z" fill="#183c43" stroke="#8ae5ce" stroke-width="4" stroke-linejoin="round"/>
-  <path d="m29 41 35 21 35-21M64 62v43M64 21v41" stroke="#8ae5ce" stroke-width="3.5" stroke-linejoin="round"/>
-  <ellipse cx="64" cy="64" rx="53" ry="20" transform="rotate(-30 64 64)" stroke="#88b8ed" stroke-width="4"/>
-  <path d="m29 41 35 21v43" stroke="#b5f4e1" stroke-width="3.5" stroke-linecap="round"/>
-  <circle cx="107" cy="39" r="7" fill="#efb17d" stroke="#10232d" stroke-width="3"/>
-  <circle cx="64" cy="62" r="5" fill="#b5f4e1"/>
+  <rect width="128" height="128" rx="30" fill="#17181a"/>
+  <rect x="1" y="1" width="126" height="126" rx="29" stroke="#3b3e42" stroke-width="2"/>
+  <path d="M64 21 99 41v43L64 105 29 84V41Z" fill="#222427" stroke="#5bc8be" stroke-width="4" stroke-linejoin="round"/>
+  <path d="m29 41 35 21 35-21M64 62v43M64 21v41" stroke="#5bc8be" stroke-width="3.5" stroke-linejoin="round"/>
+  <ellipse cx="64" cy="64" rx="53" ry="20" transform="rotate(-30 64 64)" stroke="#7aa2d8" stroke-width="4"/>
+  <path d="m29 41 35 21v43" stroke="#cfe8e3" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="107" cy="39" r="7" fill="#d99a6b" stroke="#17181a" stroke-width="3"/>
+  <circle cx="64" cy="62" r="5" fill="#cfe8e3"/>
 </svg>
