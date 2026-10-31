@@ -74,6 +74,7 @@
   function initHero() {
     var host = $('heroChart');
     if (!host) return;
+    host.innerHTML = '';
     var candles = SM.datasets.heroCandles();
     var closes = candles.map(function (c) { return c.c; });
     var p = charts.palette();
@@ -530,9 +531,15 @@
 
   function initDownload() {
     $('downloadPage').addEventListener('click', function () {
-      var html = '<!doctype html>\n' + document.documentElement.outerHTML;
+      var clone = document.documentElement.cloneNode(true);
+      ['heroChart', 'indexStrip', 'moduleList', 'stageBody', 'modulePanel', 'sceneDots', 'quizMount'].forEach(function (id) {
+        var el = clone.querySelector('#' + id);
+        if (el) el.innerHTML = '';
+      });
+      clone.querySelectorAll('.chart-tip, .toast').forEach(function (el) { el.remove(); });
+      var html = '<!doctype html>\n' + clone.outerHTML;
       SM.ui.download('stock-market-lab-offline.html', html, 'text/html;charset=utf-8');
-      toast('已导出当前页面的单文件副本');
+      toast('已导出干净的离线副本（脚本会重新挂载实验）');
     });
   }
 
