@@ -32,6 +32,13 @@ jobs:
           python build.py
           for script in src/*.js; do node --check "$script"; done
           node tests/check-model.cjs
+      - name: Build and verify Stock Market Lab
+        working-directory: Projects/stock-market-lab
+        run: |
+          python build.py
+          for script in src/*.js src/modules/*.js; do node --check "$script"; done
+          node tests/check-finance.cjs
+          node tests/check-build.cjs
       - name: Prepare static pages
         run: |
           python scripts/build_site.py

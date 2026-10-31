@@ -5,8 +5,28 @@
     "category": "电气工程 / Electrical engineering",
     "description": "从零件到磁场，从换相到转差。拆开六类电机，用分步动画和双模型对比，理解它们为什么会转。",
     "english": "Explore six motor types through 3D anatomy, guided animation and synchronized comparisons.",
-    "tags": ["交互 3D / Interactive 3D", "离线可用 / Offline", "自动讲解 / Guided tours"],
+    "tags": [
+      "交互 3D / Interactive 3D",
+      "离线可用 / Offline",
+      "自动讲解 / Guided tours"
+    ],
     "metrics": "6 类电机 · 48 幕讲解 · 24 幕对比",
-    "preview": "assets/motor-preview.svg"
+    "preview": "assets/motor-preview.svg",
+    "previewAlt": "电机横截面示意 / Illustrated motor cross-section"
+  },
+  {
+    "slug": "stock-market-lab",
+    "title": "Stock Market Lab · 股票市场原理实验室",
+    "category": "金融市场 / Financial markets",
+    "description": "从一根 K 线到订单簿、IPO 与杠杆：亲手调参数、看资金流，理解价格如何形成、钱到底流向哪里。",
+    "english": "Ten interactive labs on candlesticks, order books, IPOs, valuation and leverage.",
+    "tags": [
+      "交互图表 / Interactive charts",
+      "离线可用 / Offline",
+      "自动讲解 / Guided tours"
+    ],
+    "metrics": "10 个模块 · 60+ 幕讲解 · 10 组同步对比",
+    "preview": "assets/stock-preview.svg",
+    "previewAlt": "股票 K 线、均线与订单簿示意图 / Candlestick, moving averages and order book illustration"
   }
 ]

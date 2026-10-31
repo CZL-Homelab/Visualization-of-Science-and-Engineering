@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>股票市场原理实验室 · Stock Market Lab</title>
+<meta name="description" content="用可操作的图表、订单簿、IPO 与杠杆实验，从零理解股票市场的运行机制。A 股与美股同步对比，全部离线运行。">
+<meta name="color-scheme" content="dark light">
+<!-- SITE_ICON -->
+<style>/* LAB_STYLES */</style>
+</head>
+<body>
+<a class="skip" href="#lab">跳到实验台</a>
+
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="回到页首">
+    <img class="brand-mark" src="<!-- BRAND_ICON -->" alt="">
+    <span class="brand-name">股票市场原理实验室<small>STOCK MARKET LAB</small></span>
+  </a>
+  <nav class="topnav" aria-label="页面导航">
+    <a href="#lab">实验台</a>
+    <a href="#rules">规则核对</a>
+    <a href="#myths">常见误区</a>
+    <a href="#data">数据</a>
+    <a href="#limits">边界</a>
+    <a class="ext" href="https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering" target="_blank" rel="noopener">源码 <span aria-hidden="true">↗</span></a>
+  </nav>
+  <div class="top-actions">
+    <button id="themeToggle" class="ghost" type="button" aria-pressed="false" title="切换深色 / 浅色主题">浅色</button>
+    <button id="downloadPage" class="ghost" type="button" title="把当前页面保存为单文件 HTML">离线网页</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">INTERACTIVE MARKET MECHANICS / 10 MODULES</p>
+      <h1>价格从哪里来，<br>钱又流向哪里。</h1>
+      <p class="lede">从一根周 K 线出发，拆开订单簿、指数、IPO 与杠杆。每个概念都配一台能调参数、能验证的仪器——不是看动画，而是亲手看见数字之间的关系。</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#lab">进入实验台</a>
+        <a class="btn" href="#rules">先看规则口径</a>
+      </div>
+      <ul class="hero-facts">
+        <li><b>10</b><span>教学模块</span></li>
+        <li><b>60+</b><span>讲解场景</span></li>
+        <li><b>0</b><span>运行时联网依赖</span></li>
+      </ul>
+    </div>
+    <figure class="hero-figure">
+      <div class="tape-label">
+        <span>SSE COMPOSITE / WEEKLY</span>
+        <span class="sim">模拟数据</span>
+      </div>
+      <div class="hero-chart" id="heroChart"></div>
+      <figcaption class="fig-note">示例周 K 线只用于讲解：观察实体、影线、均线与成交量，不是实时行情，也不构成任何预测。</figcaption>
+    </figure>
+  </section>
+
+  <section class="index-strip" id="indexStrip" aria-label="演示用指数快照"></section>
+
+  <section class="workspace" id="lab" aria-label="交互实验台">
+    <aside class="sidebar">
+      <div class="side-label">课程模块 <span>/ MODULES</span></div>
+      <nav id="moduleList" class="module-list" aria-label="课程模块列表"></nav>
+      <div class="side-progress">
+        <div class="sp-head"><span>学习进度</span><b id="progressText">0 / 10</b></div>
+        <div class="sp-bar"><i id="progressBar"></i></div>
+        <p class="sp-note">进度只记录在本机浏览器，不上传任何数据。</p>
+      </div>
+    </aside>
+
+    <div class="stage" id="stage">
+      <div class="stage-head">
+        <div class="stage-id">
+          <span class="stage-kicker" id="stageKicker">MODULE A</span>
+          <h2 id="stageTitle">股票、公司与市场</h2>
+        </div>
+        <p class="stage-sub" id="stageSub"></p>
+      </div>
+      <div class="stage-body" id="stageBody"></div>
+      <div class="stage-foot">
+        <span class="hint" id="stageHint">拖动图表、调整滑块，观察数字如何一起变化。</span>
+        <span class="sim-badge">SIMULATED</span>
+      </div>
+    </div>
+
+    <aside class="scene-panel" id="scenePanel" aria-label="讲解与参数面板">
+      <div class="scene-head">
+        <div class="scene-meta">
+          <span id="sceneChapter">场景 1 / 6</span>
+          <span class="sim" id="sceneBadge">自动讲解</span>
+        </div>
+        <div class="scene-dots" id="sceneDots"></div>
+        <h3 id="sceneTitle">场景标题</h3>
+        <div class="scene-body" id="sceneBody"></div>
+        <button class="takeover-link" id="takeoverBtn" type="button">⏸ 暂停讲解，我要自己试</button>
+      </div>
+      <div class="panel-scroll" id="modulePanel"></div>
+    </aside>
+
+    <div class="transport" role="group" aria-label="自动讲解控制">
+      <div class="tr-buttons">
+        <button id="prevScene" class="icon-btn" type="button" title="上一幕" aria-label="上一幕">←</button>
+        <button id="playScenes" class="icon-btn primary" type="button" title="播放 / 暂停自动讲解">▶ 自动讲解</button>
+        <button id="nextScene" class="icon-btn" type="button" title="下一幕" aria-label="下一幕">→</button>
+        <button id="replayScene" class="icon-btn" type="button" title="重播本模块" aria-label="重播本模块">↺</button>
+      </div>
+      <div class="tr-progress" aria-hidden="true"><i id="directorBar"></i></div>
+      <div class="tr-meta">
+        <label class="mini"><span>速度</span>
+          <select id="dirSpeed">
+            <option value="0.7">0.7×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.4">1.4×</option>
+            <option value="2">2×</option>
+          </select>
+        </label>
+        <label class="mini check"><input type="checkbox" id="voiceToggle"> 语音讲解</label>
+        <span class="tr-status" id="directorStatus">手动模式</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="rules">
+    <div class="section-head">
+      <p class="eyebrow">RULES / 核对口径</p>
+      <h2>规则会变，先把版本钉住。</h2>
+      <p>下面的交易规则按 <b>2026-10-31</b> 可核对的公开资料整理，并标注生效日期。教学模拟只覆盖常用情形；交易所、券商与账户条件并不相同，实际以官方现行规则为准。</p>
+    </div>
+    <div id="rulesTable" class="rules-wrap"></div>
+    <div class="source-row" id="ruleSources"></div>
+  </section>
+
+  <section class="content" id="myths">
+    <div class="section-head">
+      <p class="eyebrow">MISCONCEPTIONS / 常见误区</p>
+      <h2>最容易说错的十四句话。</h2>
+      <p>每一条都能在实验台里找到反例。点开看为什么，以及对应哪个模块。</p>
+    </div>
+    <div id="mythList" class="myth-list"></div>
+  </section>
+
+  <section class="content" id="data">
+    <div class="section-head">
+      <p class="eyebrow">DATA / 数据</p>
+      <h2>默认全离线，也可以导入你自己的历史数据。</h2>
+      <p>课程数据全部由确定性种子生成，标注为“模拟”。你也可以载入本地 CSV 或 JSON 行情文件，在 K 线实验室里检查它，页面不会上传文件。</p>
+    </div>
+    <div class="data-grid">
+      <div class="data-card">
+        <h3>导入本地行情</h3>
+        <p class="small">支持 CSV 或 JSON。必需列：<code>date</code>（或 <code>time</code>）、<code>open</code>、<code>high</code>、<code>low</code>、<code>close</code>；可选 <code>volume</code>。列名不区分大小写，也接受常见别名（t/o/h/l/c/v）。</p>
+        <div class="import-row">
+          <label class="btn file-btn">选择文件<input id="importFile" type="file" accept=".csv,.json,text/csv,application/json"></label>
+          <button class="btn ghost" id="importTemplate" type="button">下载 CSV 模板</button>
+          <button class="btn ghost" id="importClear" type="button">清除导入</button>
+        </div>
+        <div class="import-status" id="importStatus" role="status">尚未导入。课程将使用模拟数据。</div>
+        <details class="import-paste">
+          <summary>或直接粘贴 CSV / JSON</summary>
+          <textarea id="importText" rows="6" spellcheck="false" placeholder="date,open,high,low,close,volume&#10;2026-01-05,3600,3650,3580,3640,320000000"></textarea>
+          <button class="btn" id="importPaste" type="button">解析并载入</button>
+        </details>
+      </div>
+      <div class="data-card">
+        <h3>导入后会检查什么</h3>
+        <ul class="tick-list">
+          <li>每根 K 线必须满足 <code>low ≤ min(open, close) ≤ max(open, close) ≤ high</code>。</li>
+          <li>时间为空、无法解析或顺序倒置的行会被报告，可跳过或中止。</li>
+          <li>缺成交量时按 0 处理，并提示“该数据没有成交量，成交量类指标不可用”。</li>
+          <li>载入后标明数据来源、时间范围、时区（按本地解释）、币种与复权状态（默认“未说明”）。</li>
+          <li>模拟数据与导入数据在界面上用不同徽标区分，切换时不会悄悄混用。</li>
+        </ul>
+        <p class="small muted">实时行情不是本项目的依赖。断网、直接双击 <code>index.html</code>，全部课程仍然可用。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="quiz">
+    <div class="section-head">
+      <p class="eyebrow">CHECK / 理解检验</p>
+      <h2>能算对，才算看懂。</h2>
+      <p>题目跟随当前模块。答错会给出计算过程，而不是只给一个答案。</p>
+    </div>
+    <div id="quizMount"></div>
+  </section>
+
+  <section class="content" id="limits">
+    <div class="section-head">
+      <p class="eyebrow">BOUNDARIES / 模型边界</p>
+      <h2>哪些是教学模型，哪些不是。</h2>
+    </div>
+    <div class="limit-grid">
+      <article class="limit-card">
+        <h3>通用边界</h3>
+        <p>所有价格路径、订单流、IPO 需求与收益分布都是合成数据，用来展示机制，不是预测。撮合器是简化连续竞价模型，不实现交易所全部订单类型、路由与风控。</p>
+      </article>
+      <article class="limit-card">
+        <h3>制度边界</h3>
+        <p>规则表只覆盖常见主板、创业板、科创板与美股常规交易情形。未覆盖的板块、特殊证券、盘前盘后与跨境税务会明确标注“规则介绍，非完整撮合”。</p>
+      </article>
+      <article class="limit-card">
+        <h3>费用边界</h3>
+        <p>佣金、税费、滑点都是可修改的示例费率，不代表任何一家券商。A 股印花税单边征收、美股监管费随年度调整，界面上均可改。</p>
+      </article>
+      <article class="limit-card">
+        <h3>不构成投资建议</h3>
+        <p>本项目用于理解机制。任何数字都不应作为买卖依据；真实交易还涉及适当性、流动性、税务与个人风险承受能力。</p>
+      </article>
+    </div>
+    <p class="fineprint" id="buildStamp">Stock Market Lab · 教学模拟 · 非投资建议</p>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div>
+    <strong>股票市场原理实验室</strong>
+    <span>Stock Market Lab · 一个可离线运行的市场机制教学实验台</span>
+  </div>
+  <nav>
+    <a href="https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering" target="_blank" rel="noopener">仓库 / Repository</a>
+    <a href="#lab">回到实验台</a>
+  </nav>
+</footer>
+
+<noscript><p class="noscript">本实验台需要 JavaScript 才能绘图与计算。页面本身不含任何远程资源。</p></noscript>
+
+<!-- LAB_SCRIPTS -->
+</body>
+</html>
