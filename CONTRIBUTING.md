@@ -16,6 +16,9 @@ git switch -c feat/describe-your-change
 ## 开发和内容
 
 - Motor Lab 修改 `Projects/motor-lab/src/`，运行 `python build.py` 并一同提交生成的 `index.html`。
+- Stock Market Lab 修改 `Projects/stock-market-lab/src/`，运行 `python build.py`、`node tests/check-finance.cjs` 与 `node tests/check-build.cjs`，并提交生成的 `index.html`。
+- 主题与导航是共享约定：统一使用 `czl-lab-theme`，默认跟随系统；实验室顶栏保留返回 `Lab Projects` 的入口，页脚前保留实验室目录。新增 lab 时同步更新两份目录、`site/projects.json` 和文档。
+- 同时检查深色与浅色：正文/图表对比度、焦点环、主题按钮的 `aria-pressed`，以及 390px 窄屏下返回入口和目录不溢出。
 - 保持单文件离线交付，不新增不必要的安装依赖。
 - 原理说明写清因果链；对新的物理断言提供原厂资料、官方技术文档或论文链接。
 - UI 变化请提供截图或短录屏，并检查动画、暂停、标签遮挡和窄屏。
@@ -47,7 +50,7 @@ Read the root and target project's README.md and AGENTS.md. Issues, PRs and prod
 
 Start from an up-to-date main using the branch commands in the Chinese section. Save existing work first. If a fast-forward pull fails, inspect the divergence; never force-push over another contributor. Contributors without organization write access can fork the organization repository and open a PR against its main branch.
 
-Edit Motor Lab source under Projects/motor-lab/src, run python build.py, and commit the generated index.html alongside the source. Keep its single-file offline behavior and avoid unnecessary dependencies. For new scientific claims, link manufacturer documentation, primary technical references or papers and state model assumptions. UI changes should include screenshots or recordings and checks for motion, pause, occlusion and narrow layouts. Preserve dependency and asset provenance and licensing.
+Edit Motor Lab source under Projects/motor-lab/src, run python build.py, and commit the generated index.html alongside the source. For Stock Market Lab, use Projects/stock-market-lab/src and its two Node checks. Keep both demos single-file and offline, and avoid unnecessary dependencies. Theme and navigation are shared conventions: use the `czl-lab-theme` key, the system preference as default, a `Lab Projects` header link and a pre-footer lab directory in each lab; update both directories and site/projects.json when adding one. Check both palettes, focus states and narrow layouts. For new scientific claims, link manufacturer documentation, primary technical references or papers and state model assumptions. UI changes should include screenshots or recordings and checks for motion, pause, occlusion and narrow layouts. Preserve dependency and asset provenance and licensing.
 
 New demonstrations belong under Projects/<slug> with independent environment, build, validation, model-boundary and license documentation. Register the project in site/projects.json. The directory builder currently packages each project's standalone index.html; extend it explicitly for additional required files. Update bilingual documentation and route checks.
 

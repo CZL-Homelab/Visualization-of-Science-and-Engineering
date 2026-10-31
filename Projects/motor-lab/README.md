@@ -75,6 +75,12 @@ PR 合并到组织仓库 main（或在明确授权下推送 main）后，`.githu
 - 切换步骤会恢复该步骤的默认展示状态；切换电机从第 1 步开始。
 - 语音默认关闭。没有中文语音包时显示文字提示并继续文字课程。
 
+## 主题与项目导航
+
+- 右上角按钮在深色与浅色之间切换；首次访问跟随系统 `prefers-color-scheme`，选择会写入 `localStorage` 的共享键 `czl-lab-theme`，并同步 `meta[name="theme-color"]`。两套主题都内联在 `index.html` 中，离线可用，不请求远程字体或样式。
+- 顶栏左侧的 `Lab Projects` 返回项目目录；页脚前的“换一个实验室”目录列出全部实验室、标记当前页，并提供返回目录的链接；滚动后右下角有“↑ 顶部”。链接使用相对路径，Pages 子路径与 `_site` 的本地 `file://` 预览可解析；把单个文件复制到别处时，目录链接需要保持同样的站点结构。
+- 主题切换会通知三维引擎调整网格与坐标轴透明度；浅色为暖纸色舞台，深色维持石墨舞台。两种主题下都应检查标签、网格、焦点环与窄屏布局。
+
 ## 教学边界
 
 - 这是精细的原理模型，仍不是制造 CAD、有限元计算或拆装维修规程。
@@ -136,6 +142,12 @@ The models include ribs, covers, bolts, laminations, teeth, copper turns, insula
 BLDC covers six-step commutation, two conducting phases and one floating phase. Brushed DC covers stationary magnets/brushes, a rotating armature/commutator and current reversal. PMSM covers smooth three-phase fields, synchronous speed and magnetic-axis angle; stable phase colors darken/lighten with absolute current. Three-phase induction covers cage closure, induced current and slip. Capacitor-run motors cover spatially separated windings, phase-shifted currents and elliptical fields. Shaded-pole motors cover local flux lag in the shaded region.
 
 Four comparison pairs provide six scenes each: BLDC/PMSM, synchronous/induction, capacitor-run/shaded-pole, and brushed/brushless. They compare structure, current paths, fields, rotors, load and energy chains. The phase-diagram brightness is not instantaneous PWM gating. Original articles, taxonomy, energy-loss arithmetic, fan similarity laws, FAQs, quizzes and manufacturer references remain available.
+
+### Theme and lab navigation
+
+The header button switches between dark and light. First visit follows `prefers-color-scheme`; an explicit choice is stored under the shared `czl-lab-theme` key and mirrored to `meta[name="theme-color"]`. Both palettes are inlined in index.html, so the file stays offline and requests no remote fonts or styles.
+
+`Lab Projects` at the top-left returns to the catalog. The "Lab projects" directory above the footer lists every lab, marks the current page and links back to the catalog. Both labs show a floating “top” button after 600px of scrolling, hidden when the page is short. Relative paths keep Pages subpaths and local file:// previews working. The theme switch also updates grid and axis opacity in the 3D engine; light mode uses a warm paper stage, dark mode keeps graphite. Check labels, grids, focus rings and narrow layouts in both themes.
 
 ### Model boundaries
 

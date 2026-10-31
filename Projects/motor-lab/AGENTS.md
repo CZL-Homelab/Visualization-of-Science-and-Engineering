@@ -24,6 +24,13 @@
 - 保持电容运转与电容启动的区别。罩极局部时序不能替换为理想圆形三相场。
 - 任何新转矩、温升或效率结果必须说明计算模型；不要从示意亮度推导实测结论。
 
+## 主题与导航
+
+- 共享主题键为 `czl-lab-theme`；`src/page.html` 首次绘制前设置 `data-theme`，`src/app.js` 负责切换、`aria-pressed`、`meta[name="theme-color"]`，并调用 `engine.setTheme()` 调整网格/坐标轴。
+- 浅色覆盖分两层：`src/page.html` 内的变量与 `html[data-theme="light"]`，以及后加载的 `src/lab.css` 末尾覆盖。新增颜色必须走变量；不要只改一层，否则浅色会被另一层覆盖。
+- 顶栏保留 `Lab Projects` 返回入口，页脚前保留 `.lab-directory`；新增实验室时同步两份目录与 `site/projects.json`，并检查 Pages 与本地 `file://` 链接。
+- 主题按钮是原生按钮，带可读名称和 `aria-pressed`；不得引入远程样式或字体。深浅色均需检查舞台、字幕卡、目录、焦点状态和 390px 窄屏。
+
 ## 检查
 
 在本目录运行：
@@ -41,6 +48,13 @@ node tests/check-model.cjs
 改动交互时检查六种默认运行状态、课程步骤、暂停/步进、零件隔离、四组同步对比和窄屏溢出。自动导演的改动额外检查从全景进入课程、最后一幕进入下一种电机及手动接管。不要声称测试了未实际运行的语音包、文件协议或浏览器。
 
 此项目不需要 npm 依赖安装。固定 Three.js UMD 构建保留单文件 `file://` 可用性；库的弃用提示本身不是构建失败，不要仅为消除提示就破坏离线封装。
+
+## Theme and navigation
+
+- The shared key is `czl-lab-theme`. src/page.html sets data-theme before first paint; src/app.js handles the switch, aria-pressed, meta[name="theme-color"] and engine.setTheme() for grid/axis opacity.
+- Light overrides live in two layers: variables plus html[data-theme="light"] in src/page.html, and overrides appended to the later-loaded src/lab.css. Route new colors through variables; changing one layer only will be overridden.
+- Keep the Lab Projects back link in the header and .lab-directory above the footer. When adding a lab, update both directories and site/projects.json, and verify Pages and local file:// links.
+- The theme control must remain a native button with an accessible name and aria-pressed. Do not add remote styles or fonts. Verify the stage, caption cards, directory, focus states and 390px layouts in both themes.
 
 ## English — Motor Lab development instructions
 

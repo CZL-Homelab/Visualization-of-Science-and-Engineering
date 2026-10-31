@@ -12,7 +12,7 @@ class MotorScene {
     const env=new THREE.CanvasTexture(ec);env.mapping=THREE.EquirectangularReflectionMapping;const pm=new THREE.PMREMGenerator(this.renderer);this.envTarget=pm.fromEquirectangular(env);this.scene.environment=this.envTarget.texture;env.dispose();pm.dispose();
     this.materials={};this.geoCache=new Map();
     this.mat('steel',0xa7bbc5,.8,.31);this.mat('darkSteel',0x475963,.77,.37);this.mat('shell',0x5a7580,.78,.3);this.mat('edge',0xbed0d5,.85,.25);this.mat('copper',0xdca06b,.78,.27);this.mat('gold',0xe2b65b,.78,.25);this.mat('insulation',0x333d46,.1,.6);this.mat('pcb',0x197766,.35,.38);this.mat('chip',0x242d35,.25,.46);this.mat('red',0xb84450,.5,.34);this.mat('blue',0x386eae,.5,.34);this.mat('ceramic',0xdbc19a,.1,.55);this.mat('shaft',0xb7cad1,.9,.2);
-    const grid=new THREE.GridHelper(24,40,0x345261,0x243d4a);grid.position.y=-2.12;grid.material.transparent=true;grid.material.opacity=.28;this.scene.add(grid);
+    const grid=new THREE.GridHelper(24,40,0x345261,0x243d4a);grid.position.y=-2.12;grid.material.transparent=true;grid.material.opacity=.28;this.scene.add(grid);this.grid=grid;
     const sc=document.createElement('canvas');sc.width=sc.height=128;const sx=sc.getContext('2d'),sg=sx.createRadialGradient(64,64,0,64,64,64);sg.addColorStop(0,'#00000077');sg.addColorStop(.4,'#00000038');sg.addColorStop(1,'#00000000');sx.fillStyle=sg;sx.fillRect(0,0,128,128);const shadow=new THREE.Mesh(new THREE.PlaneGeometry(18,7),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(sc),transparent:true,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=-2.1;this.scene.add(shadow);
     this.root=new THREE.Group();this.scene.add(this.root);this.raycaster=new THREE.Raycaster();this.pointer=new THREE.Vector2();this.bindPointer();
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.resize();
@@ -117,6 +117,7 @@ class MotorScene {
   setMode(mode){this.mode=mode;this.isolated=false;this.controlsTouched=false;state.section=mode==='cutaway'||mode==='exploded';$('#section').checked=state.section;state.explode=mode==='exploded'?.88:0;$('#explode').value=Math.round(state.explode*100);$('#explodeOut').textContent=Math.round(state.explode*100)+'%';this.fit();}
   select(id,isolate=false){this.focus=id;this.isolated=isolate;this.controlsTouched=false;this.fit();}
   fit(){this.desired.distance=12;this.needsFit=true;this.controlsTouched=false;}
+  setTheme(theme){const light=theme==='light';if(this.grid){this.grid.material.opacity=light?.08:.28;}if(this.axisLine)this.axisLine.material.opacity=light?.48:.32;}
   resize(){const r=this.canvas.getBoundingClientRect();if(!r.width||!r.height)return;this.renderer.setSize(r.width,r.height,false);this.camera.aspect=r.width/r.height;if(this.canvas.id==='scene')this.camera.setViewOffset(r.width,r.height,0,r.height*.1,r.width,r.height);this.camera.updateProjectionMatrix();this.width=r.width;this.height=r.height;if(!this.controlsTouched)this.needsFit=true;}
   update(dt){
     if(!this.parts.length)return;if(state.playing)this.clock+=dt;const ease=1-Math.exp(-dt*5);this.explosion+=(state.explode-this.explosion)*ease;

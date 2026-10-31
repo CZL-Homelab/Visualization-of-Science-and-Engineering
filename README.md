@@ -22,6 +22,14 @@ Motor Lab 默认先展示运行动画，再进入逐步讲解。它支持单文�
 
 Stock Market Lab 面向没有金融基础的学习者：从一根 K 线的四个价格出发，逐层拆到订单簿、一级/二级市场资金流、IPO 摊薄、估值、杠杆强平与 ETF 分散。所有行情与收益都是标注过的模拟数据或固定种子模型；规则页记录核对日期与官方来源，不构成投资建议。
 
+## 主题与实验室导航 / Theme and lab navigation
+
+根目录页与两个实验室共用同一套主题偏好。页面在首次绘制前读取 `czl-lab-theme`；没有记录时跟随系统 `prefers-color-scheme`，右上角按钮切换后写回 `localStorage`，并把 `meta[name="theme-color"]` 同步为当前背景。两套主题都内联在单文件页面中，不请求远程样式或字体，断网、直接打开 `index.html` 仍然有效。
+
+两个实验室的顶栏左侧都有返回 `Lab Projects` 目录的入口；页脚前有“换一个实验室 / Lab projects”目录，列出全部实验室、标记当前页，并提供返回根目录的链接。目录使用相对路径，`/motor-lab/`、`/stock-market-lab/` 与 `_site` 的本地 `file://` 预览都能解析；单独复制某个 `index.html` 时需保留同样的站点目录结构。新增实验室时必须同时更新两份实验室目录与 `site/projects.json`。
+
+两个实验室在滚动后右下角提供“↑ 顶部”按钮；主题按钮是真实的 `<button>`，带有可读名称与 `aria-pressed` 状态；切换不重载页面，也不应出现主题闪烁。深色与浅色下都要检查正文对比度、图表网格、焦点环与 390px 窄屏。主题与导航的实现约定见 [AGENTS.md](AGENTS.md)，提交流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
 ## 快速开始
 
 需要 Git、Python 3.9+ 和 Node.js 22 LTS。当前项目不需要 npm 安装或 Python 第三方包。
@@ -100,6 +108,14 @@ An open collection of interactive science and engineering explanations maintaine
 - Project directory: [GitHub Pages](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/).
 - Current demonstrations: [Motor Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) (six motor types, 48 lesson scenes, 24 comparison scenes) and [Stock Market Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/stock-market-lab/) (ten interactive labs on candlesticks, indicators, order books, market rules, IPOs, valuation, leverage and ETFs).
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) and the applicable [AGENTS.md](AGENTS.md) before contributing. Personal historical repositories and sites are not synchronization or deployment targets.
+
+### Theme and lab navigation
+
+The catalog and both labs share one theme preference. Each page reads `czl-lab-theme` before first paint, falls back to `prefers-color-scheme`, persists explicit choices in `localStorage`, and updates `meta[name="theme-color"]`. Both palettes are inlined in the standalone files; no remote styles or fonts are requested, so the pages keep working offline.
+
+Each lab header starts with a link back to the `Lab Projects` catalog. Before the footer, a "Lab projects" directory lists every lab, marks the current page, and links back to the catalog. Relative paths keep `/motor-lab/`, `/stock-market-lab/` and `file://` previews working. Both labs also show a floating “top” button after scrolling. A new lab must update both directories and `site/projects.json`.
+
+The theme control is a real `<button>` with an accessible name and `aria-pressed`; switching must not reload the page or flash the wrong palette. Check contrast, chart grids, focus rings and narrow layouts in both themes. See [AGENTS.md](AGENTS.md) for implementation rules and [CONTRIBUTING.md](CONTRIBUTING.md) for the review flow.
 
 ### Run and build
 

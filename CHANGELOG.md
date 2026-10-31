@@ -1,5 +1,15 @@
 # 更新记录 / Changelog
 
+## 2026-10-31 · 全局主题与实验室导航
+
+- 根目录页、Motor Lab 与 Stock Market Lab 共用 `czl-lab-theme` 深浅色偏好，默认跟随系统，并在首次绘制前应用。
+- 两个实验室顶栏新增 `Lab Projects` 返回入口，页脚前新增实验室目录；主题、返回与目录均写入 README/AGENTS/CONTRIBUTING。
+- Motor Lab 三维网格与坐标轴随主题调整；Stock Lab 图表沿用 `sm:theme` 重绘。
+- 两个实验室增加滚动后的“↑ 顶部”按钮，遵循减少动态效果设置。
+- 补充浅色对比度、焦点环与 390px 窄屏布局检查。
+- 发布 Stock Market Lab 的说明与目录卡片（此前已随 PR #2 上线）。
+
+
 ## 项目目录与共享标识
 
 - 根地址改为可搜索的项目目录，保留 Motor Lab 路由。
@@ -26,6 +36,16 @@
 - 48 幕课程、理解检验题、物理不变量检查及单文件离线构建。
 
 ## English — change history
+
+### 2026-10-31 — global theme and lab navigation
+
+- The catalog, Motor Lab and Stock Market Lab share the `czl-lab-theme` preference, default to the system setting and apply it before first paint.
+- Both labs gained a `Lab Projects` header link and a pre-footer lab directory; theme, back-link and directory rules are documented in README/AGENTS/CONTRIBUTING.
+- The Motor Lab 3D grid and axes follow the theme; Stock Lab charts continue to redraw on `sm:theme`.
+- Added a floating “top” button to both labs that respects reduced-motion settings.
+- Added light-mode contrast, focus and 390px layout checks.
+- Published the Stock Market Lab documentation and catalog card (the lab itself shipped in PR #2).
+
 
 ### Project directory and shared identity
 

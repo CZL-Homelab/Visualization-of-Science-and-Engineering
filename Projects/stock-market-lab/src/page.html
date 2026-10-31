@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>股票市场原理实验室 · Stock Market Lab</title>
 <meta name="description" content="用可操作的图表、订单簿、IPO 与杠杆实验，从零理解股票市场的运行机制。A 股与美股同步对比，全部离线运行。">
-<meta name="color-scheme" content="dark light">
+<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#101113"><script>(function(){try{var k='czl-lab-theme',s=localStorage.getItem(k)||localStorage.getItem('sml.theme');if(s==='light'||s==='dark')localStorage.setItem(k,s),t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==='light'?'#f4f2ec':'#101113';}catch(e){}})();</script>
 <!-- SITE_ICON -->
 <style>/* LAB_STYLES */</style>
 </head>
@@ -13,6 +13,9 @@
 <a class="skip" href="#lab">跳到实验台</a>
 
 <header class="topbar">
+  <a class="backlink" href="../index.html#projects" aria-label="返回 Lab Projects 项目列表">
+    <span aria-hidden="true">←</span><span class="backlink-label">Lab Projects</span>
+  </a>
   <a class="brand" href="#top" aria-label="回到页首">
     <img class="brand-mark" src="<!-- BRAND_ICON -->" alt="">
     <span class="brand-name">股票市场原理实验室<small>STOCK MARKET LAB</small></span>
@@ -26,7 +29,7 @@
     <a class="ext" href="https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering" target="_blank" rel="noopener">源码 <span aria-hidden="true">↗</span></a>
   </nav>
   <div class="top-actions">
-    <button id="themeToggle" class="ghost" type="button" aria-pressed="false" title="切换深色 / 浅色主题">浅色</button>
+    <button id="themeToggle" class="ghost theme-toggle" type="button" aria-pressed="false" aria-label="切换到浅色模式" title="切换深色 / 浅色主题"><span class="theme-icon" aria-hidden="true">☀</span><span class="theme-label">浅色</span></button>
     <button id="downloadPage" class="ghost" type="button" title="把当前页面保存为单文件 HTML">离线网页</button>
   </div>
 </header>
@@ -212,6 +215,25 @@
     <p class="fineprint" id="buildStamp">Stock Market Lab · 教学模拟 · 非投资建议</p>
   </section>
 </main>
+
+<section class="lab-directory" aria-labelledby="labDirectoryTitle">
+  <div class="dir-head">
+    <span class="dir-eyebrow">LAB PROJECTS / 全部实验</span>
+    <h2 id="labDirectoryTitle">换一个实验室</h2>
+    <p>两个可离线运行的交互式实验室。主题与导航在各页保持一致。</p>
+  </div>
+  <div class="dir-grid">
+    <a class="dir-card current" href="./index.html" aria-current="page">
+      <span class="dir-num">02</span>
+      <div class="dir-copy"><h3>股票市场原理实验室 <span class="dir-tag">当前 / Current</span></h3><p>K 线、订单簿、IPO、杠杆与 A 股 / 美股制度对比。</p></div>
+    </a>
+    <a class="dir-card" href="../motor-lab/index.html">
+      <span class="dir-num">01</span>
+      <div class="dir-copy"><h3>电机原理实验室 <span class="dir-tag">Motor Lab</span></h3><p>六类电机的三维结构、磁场与连续换向过程。</p></div>
+    </a>
+  </div>
+  <a class="dir-all" href="../index.html#projects">返回项目目录 / All projects <span aria-hidden="true">↗</span></a>
+</section>
 
 <footer class="site-foot">
   <div>

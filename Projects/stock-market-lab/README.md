@@ -61,13 +61,21 @@ python3 -m http.server 8766 --bind 127.0.0.1
 - **手动实验**：拖动右侧滑块、输入精确数值、点击市场/周期/指标切换。所有读数即时更新。
 - **K 线图**：悬停查看 OHLC 与涨跌幅；拖动平移；滚轮缩放；双击复位；聚焦后可用方向键与 `+`/`-`。
 - **恢复默认**：每个实验面板底部有“恢复默认”按钮；切换模块不会残留上一个模块的状态。
-- **深浅色**：右上角切换；图表会随主题重绘。
+- **深浅色**：右上角切换；首次访问跟随系统，选择写入共享键 `czl-lab-theme`，图表随主题重绘。
+- **返回与切换**：顶栏左侧 `Lab Projects` 返回项目目录；页脚前的“换一个实验室”目录可切换 Motor Lab 或返回目录；滚动后右下角出现“↑ 顶部”按钮。
 - **导入数据**：页面下方“数据”区可粘贴或选择本地 CSV/JSON；导入后会标明来源、时间范围、时区、币种、复权与缺失情况。导入数据与模拟数据不会混在同一张图里。
 - **离线保存**：右上角“离线网页”会下载当前页面的单文件副本。
 
 移动端（390×844）为单列布局，图表与参数面板依次排列；触控可拖动/缩放 K 线。
 
 ---
+
+## 项目导航
+
+- 顶栏左侧的 `Lab Projects` 返回组织站点首页（项目目录）；页脚前的“换一个实验室”目录列出全部实验室，当前页带 `当前 / Current` 标记，并提供返回项目目录的链接。
+- 链接使用相对路径（`../motor-lab/index.html`、`./index.html`、`../index.html`），因此 Pages 子路径与 `_site` 本地预览都能解析；若把单个 `index.html` 复制到别处，实验室目录与返回入口需要保持同样的站点目录结构。
+- 主题键 `czl-lab-theme` 与 Motor Lab、根目录页共用；页面在首次绘制前设置 `data-theme`，主题按钮通过 `aria-pressed` 暴露状态，`meta[name="theme-color"]` 同步当前背景。
+- 新增实验室时必须同时更新本页目录、Motor Lab 目录和 `site/projects.json`，并检查 390px 下两个入口不溢出。
 
 ## 数据与模型
 
@@ -222,6 +230,8 @@ node tests/check-finance.cjs
 node tests/check-build.cjs
 python3 -m http.server 8766
 ```
+
+Theme and navigation: the header's `Lab Projects` link returns to the catalog; the "Lab projects" directory above the footer lists every lab, marks the current page and links back to the catalog. Relative paths keep Pages subpaths, the local `_site` preview and direct file opening working. Both labs show a floating “top” button after 600px of scrolling. The shared `czl-lab-theme` key is also used by Motor Lab and the root catalog; `data-theme` is set before first paint, the theme button exposes `aria-pressed`, and `meta[name="theme-color"]` follows the background. When adding a lab, update this directory, the Motor Lab directory and `site/projects.json`, and check both entry points at 390px.
 
 The project is MIT licensed and is not investment advice. Model boundaries are listed in each module and in the section above.
 

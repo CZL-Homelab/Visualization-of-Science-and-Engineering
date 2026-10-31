@@ -48,21 +48,32 @@
   /* ------------------------------------------------------------------ */
   /*  Theme                                                             */
   /* ------------------------------------------------------------------ */
-  function applyTheme(theme) {
+  var THEME_KEY = 'czl-lab-theme';
+  function applyTheme(theme, persist) {
     document.documentElement.setAttribute('data-theme', theme);
     var btn = $('themeToggle');
+    var light = theme === 'light';
     if (btn) {
-      btn.textContent = theme === 'dark' ? '浅色' : '深色';
-      btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+      var icon = btn.querySelector('.theme-icon');
+      var label = btn.querySelector('.theme-label');
+      if (icon) icon.textContent = light ? '☾' : '☀';
+      if (label) label.textContent = light ? '深色' : '浅色';
+      btn.setAttribute('aria-pressed', light ? 'false' : 'true');
+      btn.setAttribute('aria-label', light ? '当前浅色主题，切换到深色' : '当前深色主题，切换到浅色');
     }
-    try { localStorage.setItem('sml.theme', theme); } catch (e) { /* ignore */ }
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', light ? '#f4f2ec' : '#101113');
+    if (persist !== false) {
+      try { localStorage.setItem(THEME_KEY, theme); localStorage.setItem('sml.theme', theme); } catch (e) { /* ignore */ }
+    }
     window.dispatchEvent(new Event('sm:theme'));
   }
   function initTheme() {
     var saved = null;
-    try { saved = localStorage.getItem('sml.theme'); } catch (e) { /* ignore */ }
-    var theme = saved || 'dark';
-    applyTheme(theme);
+    try { saved = localStorage.getItem(THEME_KEY) || localStorage.getItem('sml.theme'); } catch (e) { /* ignore */ }
+    try { if (saved && !localStorage.getItem(THEME_KEY)) localStorage.setItem(THEME_KEY, saved); } catch (e) { /* ignore */ }
+    var theme = saved === 'light' || saved === 'dark' ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    applyTheme(theme, false);
     $('themeToggle').addEventListener('click', function () {
       applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
     });
@@ -547,6 +558,22 @@
     $('buildStamp').textContent = 'Stock Market Lab · 规则核对 ' + SM.rules.asOf + ' · 教学模拟 · 非投资建议';
   }
 
+  function initToTop() {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'to-top';
+    b.setAttribute('aria-label', '回到页面顶部');
+    b.innerHTML = '<span aria-hidden="true">↑</span><span class="to-top-label">顶部</span>';
+    document.body.appendChild(b);
+    function sync() { b.classList.toggle('show', (window.scrollY || window.pageYOffset) > 600); }
+    window.addEventListener('scroll', sync, { passive: true });
+    b.addEventListener('click', function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+    sync();
+  }
+
   function boot() {
     initTheme();
     initHero();
@@ -557,6 +584,7 @@
     initTransport();
     initDownload();
     initBuildStamp();
+    initToTop();
     renderModuleList();
     var first = sortedModules()[0];
     if (first) openModule(first.id, 0);

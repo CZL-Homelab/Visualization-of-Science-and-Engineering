@@ -18,6 +18,9 @@
 - 科学内容优先准确：区分电流、磁动势、磁通、转速与角度；写明几何和物理简化。程序动画不能冒充工程仿真。
 - 增加零件或动画时检查实际可见性、遮挡、相位和指向，不以“脚本没报错”代替视觉验收。
 - 自动演示应可暂停，手动控制应稳定；遵循 `prefers-reduced-motion`。不默认播放语音。
+- 主题与导航属于全站约定。统一使用 `czl-lab-theme`，默认跟随 `prefers-color-scheme`；页面在首次绘制前设置 `data-theme`，主题按钮提供可读名称与 `aria-pressed`，并同步 `meta[name="theme-color"]`。
+- 每个实验室顶栏左侧提供返回 `Lab Projects` 目录的入口，页脚前提供列出全部实验室的目录并标记当前页；新增实验室时同步更新两份目录与 `site/projects.json`。链接必须能在 Pages 子路径和本地 `file://` 下解析。
+- 主题与导航不得引入远程样式、脚本或字体；深浅色都要检查正文对比度、图表颜色、焦点环和窄屏，不得只验证默认主题。
 - 不移除已有许可证和署名。不得提交凭据、令牌、私钥、个人环境或调试输出。
 
 ## 验证和 Git 协作
@@ -51,6 +54,9 @@ These instructions cover the entire repository. Read the project README and any 
 - Keep scientific concepts accurate and distinguish current, magnetomotive force, flux, speed and angle. Disclose simplifications; animation is not an engineering simulation.
 - Check visibility, occlusion, phase and arrow direction visually. A clean console alone is insufficient.
 - Automatic presentations must be pausable, manual controls stable, reduced-motion preferences respected, and speech opt-in.
+- Theme and navigation are repository-wide conventions. Use the shared `czl-lab-theme` key, default to `prefers-color-scheme`, set `data-theme` before first paint, and expose a real button with an accessible name, `aria-pressed` and an updated `meta[name="theme-color"]`.
+- Every lab header links back to the `Lab Projects` catalog, and a pre-footer directory lists all labs and marks the current page. Register a new lab in both directories and `site/projects.json`; links must resolve under the Pages subpath and from local `file://` previews.
+- Theme and navigation must not add remote styles, scripts or fonts. Verify contrast, chart colors, focus rings and narrow layouts in both themes, not only the default one.
 - Preserve licenses and attribution. Never commit credentials, private keys, personal environment files or debugging output.
 
 ### Validation and collaboration
