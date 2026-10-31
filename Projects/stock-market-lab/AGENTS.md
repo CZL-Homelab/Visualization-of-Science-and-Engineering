@@ -57,6 +57,20 @@ no chart at all.
 - Check 1920×1080, 1366×768 and 390×844 in both themes before claiming a layout works.
 - Never use `alert`/`confirm` for teaching feedback; use inline notes or the app toast.
 
+## Theme and navigation
+
+- The shared theme key is `czl-lab-theme`. `src/page.html` sets `data-theme` before first paint;
+  `src/app.js` owns `applyTheme`, the button label/icon, `aria-pressed`, `meta[name="theme-color"]`
+  and keeps the legacy `sml.theme` key readable during migration.
+- Keep `#themeToggle` a native button with a readable label. Charts must redraw on the `sm:theme`
+  event; do not cache CSS colors at construction time.
+- The header keeps a `Lab Projects` back link (catalog with `#projects`); the pre-footer
+  `.lab-directory` lists all labs and marks the current one. Relative links must resolve under the
+  Pages subpath and from `file://`.
+- When adding a lab, update this directory, the Motor Lab directory and `site/projects.json`.
+- Verify both palettes for text contrast, chart grid/axis colors, focus rings and 390px layouts.
+  A passing console check is not a visual check.
+
 ## Build and verification
 
 ```sh
