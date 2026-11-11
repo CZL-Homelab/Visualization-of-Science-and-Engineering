@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四冲程发动机原理实验室 · Engine Lab</title>
+<meta name="description" content="用剖面动画、示功图与对照实验理解四冲程发动机：配气正时、点火提前角、压缩比、汽油 vs 柴油、四缸点火顺序。单文件离线运行。">
+<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#101113"><script>(function(){try{var k='czl-lab-theme',s=localStorage.getItem(k);if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=s==='light'?'#f4f2ec':'#101113';}}catch(e){}})();</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiBmaWxsPSJub25lIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+Q1pMIFNjaWVuY2UgYW5kIEVuZ2luZWVyaW5nIFZpc3VhbGl6YXRpb25zPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+QSBzcGF0aWFsIGZyYW1lIGFuZCBhbiBvcmJpdGFsIHBhdGg6IHN0cnVjdHVyZSwgb2JzZXJ2YXRpb24gYW5kIG1vdGlvbi48L2Rlc2M+CiAgPHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIzMCIgZmlsbD0iIzE3MTgxYSIvPgogIDxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSIxMjYiIGhlaWdodD0iMTI2IiByeD0iMjkiIHN0cm9rZT0iIzNiM2U0MiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTY0IDIxIDk5IDQxdjQzTDY0IDEwNSAyOSA4NFY0MVoiIGZpbGw9IiMyMjI0MjciIHN0cm9rZT0iIzViYzhiZSIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTI5IDQxIDM1IDIxIDM1LTIxTTY0IDYydjQzTTY0IDIxdjQxIiBzdHJva2U9IiM1YmM4YmUiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGVsbGlwc2UgY3g9IjY0IiBjeT0iNjQiIHJ4PSI1MyIgcnk9IjIwIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzAgNjQgNjQpIiBzdHJva2U9IiM3YWEyZDgiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxwYXRoIGQ9Im0yOSA0MSAzNSAyMXY0MyIgc3Ryb2tlPSIjY2ZlOGUzIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iMTA3IiBjeT0iMzkiIHI9IjciIGZpbGw9IiNkOTlhNmIiIHN0cm9rZT0iIzE3MTgxYSIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGNpcmNsZSBjeD0iNjQiIGN5PSI2MiIgcj0iNSIgZmlsbD0iI2NmZThlMyIvPgo8L3N2Zz4K">
+<style>/* Engine Lab — shared styles. Dark graphite instrument panel +
+   paper-light alternative, matching the other labs. No webfonts,
+   no remote assets. */
+
+:root{
+  --bg:#101113; --panel:#181a1e; --panel-2:#1e2126; --panel-3:#23272d;
+  --line:#2d3238; --line-soft:#24282e;
+  --text:#eceef1; --muted:#9aa1a9; --dim:#6e757d;
+  --cyan:#5bc8be; --orange:#e0955a; --blue:#7aa2d8; --red:#e05a5f; --green:#3fae7a;
+  --shadow:0 18px 48px rgba(0,0,0,.38); --shadow-sm:0 6px 18px rgba(0,0,0,.24);
+  --r:14px; --r-sm:10px;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:"Inter","Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+html[data-theme="light"]{
+  --bg:#f4f2ec; --panel:#fcfbf7; --panel-2:#f7f5ef; --panel-3:#efebe2;
+  --line:#d9d4c9; --line-soft:#e4dfd4;
+  --text:#17181b; --muted:#6b6f75; --dim:#8b8f95;
+  --cyan:#177e74; --orange:#b0632c; --blue:#3a6fa8; --red:#b04a4a; --green:#2e7d58;
+  --shadow:0 18px 48px rgba(60,50,30,.12); --shadow-sm:0 6px 18px rgba(60,50,30,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.62 var(--sans)}
+h1,h2,h3,p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+canvas{display:block}
+::selection{background:var(--cyan);color:#0b0d0f}
+
+.skip{position:absolute;left:-9999px;top:0;background:var(--cyan);color:#08201e;padding:8px 14px;z-index:99;border-radius:0 0 8px 0}
+.skip:focus{left:0}
+
+.topbar{
+  position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:14px;
+  padding:0 clamp(14px,3vw,32px);height:60px;
+  background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-soft);
+}
+.backlink{display:inline-flex;align-items:center;gap:5px;padding:6px 8px;border:1px solid transparent;border-radius:8px;color:var(--muted);font-size:12px;white-space:nowrap;transition:.16s}
+.backlink:hover{color:var(--cyan);background:var(--panel-2);border-color:var(--line)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-mark{width:30px;height:30px;flex:none;border-radius:8px;background:var(--panel-2);padding:4px;border:1px solid var(--line)}
+.brand-name{display:flex;flex-direction:column;font-weight:640;font-size:15px;white-space:nowrap}
+.brand-name small{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--dim);font-weight:500}
+.topnav{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+.topnav a{padding:6px 10px;border-radius:8px;font-size:13px;color:var(--muted);transition:.16s}
+.topnav a:hover{color:var(--text);background:var(--panel-2)}
+.topnav a.ext{color:var(--cyan)}
+.theme-toggle{border:1px solid var(--line);background:transparent;color:var(--muted);padding:6px 11px;border-radius:8px;font-size:12.5px;cursor:pointer}
+.theme-toggle:hover{color:var(--text);border-color:var(--dim)}
+
+.hero{max-width:1020px;margin:0 auto;padding:clamp(26px,4vw,46px) clamp(16px,3vw,32px) 14px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.17em;color:var(--cyan);text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-size:clamp(30px,4vw,48px);letter-spacing:-.03em;font-weight:680;line-height:1.18}
+.lede{margin-top:14px;max-width:60ch;color:var(--muted)}
+.hero-facts{display:flex;gap:26px;list-style:none;padding:14px 0 0;margin:20px 0 0;border-top:1px solid var(--line-soft);flex-wrap:wrap}
+.hero-facts b{display:block;font-family:var(--mono);font-size:20px;font-weight:600}
+.hero-facts span{font-size:11.5px;color:var(--dim)}
+
+.workspace{display:grid;grid-template-columns:210px minmax(0,1fr);gap:14px;max-width:1020px;margin:18px auto 0;padding:0 clamp(16px,3vw,32px)}
+@media(max-width:860px){.workspace{grid-template-columns:1fr}}
+.sidebar{border:1px solid var(--line);border-radius:var(--r-sm);background:var(--panel-2);padding:12px 8px;height:fit-content;position:sticky;top:76px}
+@media(max-width:860px){.sidebar{position:static}}
+.side-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);padding:0 8px 8px}
+.module-list{display:flex;flex-direction:column;gap:2px}
+.mod{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;align-items:center;padding:8px;border-radius:9px;background:transparent;border:1px solid transparent;cursor:pointer;text-align:left;width:100%;transition:.14s}
+.mod:hover{background:var(--panel-3)}
+.mod.cur{background:var(--panel-3);border-color:var(--line)}
+.mod-id{font-family:var(--mono);font-size:10.5px;line-height:1.5;text-align:center;border:1px solid var(--line);border-radius:5px;color:var(--muted);background:var(--panel);padding:2px 0}
+.mod.cur .mod-id{background:var(--cyan);color:#08201e;border-color:var(--cyan)}
+html[data-theme="light"] .mod.cur .mod-id{color:#f6fffd}
+.mod-title{font-size:13px;display:block}
+.mod-sub{font-size:10px;color:var(--dim);display:block;font-family:var(--mono)}
+.mod.done .mod-title::after{content:"✓";color:var(--cyan);margin-left:5px}
+
+.stage{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow);padding:10px}
+.stage canvas{width:100%;height:auto;border-radius:8px}
+.narration{padding:12px 14px;border-top:1px solid var(--line-soft);margin-top:10px}
+.narr-head{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:.08em}
+.narration p{margin-top:6px;color:var(--muted);font-size:14.5px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 14px;border-top:1px solid var(--line-soft)}
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--panel-2);color:var(--text);padding:7px 13px;border-radius:9px;font-size:13px;cursor:pointer;transition:.16s}
+.btn:hover{border-color:var(--dim)}
+.btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.btn.primary{background:var(--cyan);color:#08201e;border-color:var(--cyan);font-weight:620}
+html[data-theme="light"] .btn.primary{color:#f6fffd}
+.controls label{font-size:12px;color:var(--dim);display:inline-flex;align-items:center;gap:6px}
+.controls input[type=range]{width:150px;accent-color:var(--cyan)}
+.angle-tag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+#quiz{max-width:1020px;margin:22px auto 0;padding:0 clamp(16px,3vw,32px)}
+.quiz-card{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:18px}
+.quiz-card h2{font-size:16px;margin-bottom:10px}
+.quiz-q{font-size:14.5px;margin-bottom:12px}
+.quiz-opts{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:640px){.quiz-opts{grid-template-columns:1fr}}
+.quiz-opts .btn{justify-content:flex-start;text-align:left}
+.quiz-opts .btn.right{border-color:var(--green);color:var(--green)}
+.quiz-opts .btn.wrong{border-color:var(--red);color:var(--red)}
+.quiz-why{margin-top:12px;font-size:13.5px;color:var(--muted)}
+
+.limits{max-width:1020px;margin:22px auto 0;padding:0 clamp(16px,3vw,32px);border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:18px}
+.limits h2{font-size:16px;margin-bottom:8px}
+.limits p{font-size:13px;color:var(--muted);margin-top:6px}
+.fineprint{font-size:10.5px;color:var(--dim);margin-top:14px;font-family:var(--mono)}
+
+.lab-directory{margin:34px clamp(16px,3vw,32px) 0;padding:24px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.dir-head{display:flex;flex-direction:column;gap:5px;margin-bottom:18px}
+.dir-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--cyan)}
+.dir-head h2{font-size:clamp(20px,2.2vw,27px);letter-spacing:-.02em}
+.dir-head p{font-size:12.5px;color:var(--muted)}
+.dir-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media(max-width:760px){.dir-grid{grid-template-columns:1fr}}
+.dir-card{display:flex;gap:14px;align-items:flex-start;padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);transition:.18s}
+.dir-card:hover{border-color:var(--cyan);transform:translateY(-1px);box-shadow:0 8px 24px #0002}
+.dir-card.current{border-color:color-mix(in srgb,var(--cyan) 50%,var(--line));background:color-mix(in srgb,var(--cyan) 6%,var(--panel-2))}
+.dir-num{font-family:var(--mono);font-size:11px;color:var(--cyan);padding-top:2px}
+.dir-copy h3{font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dir-copy p{font-size:12px;color:var(--muted);line-height:1.65;margin-top:5px}
+.dir-tag{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:2px 6px}
+.dir-all{display:inline-flex;align-items:center;gap:6px;margin-top:15px;font-size:12px;color:var(--cyan)}
+.dir-all:hover{text-decoration:underline;text-underline-offset:3px}
+
+footer{margin:30px clamp(16px,3vw,32px) 40px;padding-top:16px;border-top:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--dim)}
+footer strong{color:var(--muted)}
+.noscript{max-width:760px;margin:40px auto;padding:16px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
+</style>
+</head>
+<body>
+<a class="skip" href="#lab">跳到实验台</a>
+
+<header class="topbar">
+  <a class="backlink" href="../index.html#projects" aria-label="返回 Lab Projects 项目列表">
+    <span aria-hidden="true">←</span><span class="backlink-label">Lab Projects</span>
+  </a>
+  <a class="brand" href="#top" aria-label="回到页首">
+    <img class="brand-mark" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiBmaWxsPSJub25lIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+Q1pMIFNjaWVuY2UgYW5kIEVuZ2luZWVyaW5nIFZpc3VhbGl6YXRpb25zPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+QSBzcGF0aWFsIGZyYW1lIGFuZCBhbiBvcmJpdGFsIHBhdGg6IHN0cnVjdHVyZSwgb2JzZXJ2YXRpb24gYW5kIG1vdGlvbi48L2Rlc2M+CiAgPHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIzMCIgZmlsbD0iIzE3MTgxYSIvPgogIDxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSIxMjYiIGhlaWdodD0iMTI2IiByeD0iMjkiIHN0cm9rZT0iIzNiM2U0MiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTY0IDIxIDk5IDQxdjQzTDY0IDEwNSAyOSA4NFY0MVoiIGZpbGw9IiMyMjI0MjciIHN0cm9rZT0iIzViYzhiZSIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTI5IDQxIDM1IDIxIDM1LTIxTTY0IDYydjQzTTY0IDIxdjQxIiBzdHJva2U9IiM1YmM4YmUiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGVsbGlwc2UgY3g9IjY0IiBjeT0iNjQiIHJ4PSI1MyIgcnk9IjIwIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzAgNjQgNjQpIiBzdHJva2U9IiM3YWEyZDgiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxwYXRoIGQ9Im0yOSA0MSAzNSAyMXY0MyIgc3Ryb2tlPSIjY2ZlOGUzIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iMTA3IiBjeT0iMzkiIHI9IjciIGZpbGw9IiNkOTlhNmIiIHN0cm9rZT0iIzE3MTgxYSIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGNpcmNsZSBjeD0iNjQiIGN5PSI2MiIgcj0iNSIgZmlsbD0iI2NmZThlMyIvPgo8L3N2Zz4K" alt="">
+    <span class="brand-name">四冲程发动机原理实验室<small>ENGINE LAB</small></span>
+  </a>
+  <nav class="topnav" aria-label="页面导航">
+    <a href="#lab">实验台</a>
+    <a href="#quiz">随堂测验</a>
+    <a href="#limits">模型边界</a>
+    <a class="ext" href="https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering" target="_blank" rel="noopener">源码 <span aria-hidden="true">↗</span></a>
+  </nav>
+  <button class="theme-toggle" id="themeBtn" aria-pressed="false">深色 Dark</button>
+</header>
+
+<section class="hero" id="top">
+  <p class="eyebrow">Interactive Combustion Cycle · One Canvas, No Dependencies</p>
+  <h1>曲轴转两圈，一次燃烧做四件事。</h1>
+  <p class="lede">进气、压缩、做功、排气——720° 曲轴转角里，两个气门、一个火花塞和一个活塞如何配合。配气正时、点火提前角、压缩比和示功图，每一幕都能拖、能停、能验证。</p>
+  <ul class="hero-facts">
+    <li><b>8</b><span>教学模块 / modules</span></li>
+    <li><b>39</b><span>讲解场景 / scenes</span></li>
+    <li><b>8</b><span>随堂测验 / quizzes</span></li>
+    <li><b>0</b><span>运行时联网依赖 / network calls</span></li>
+  </ul>
+</section>
+
+<section class="workspace" id="lab">
+  <aside class="sidebar" aria-label="教学模块列表">
+    <p class="side-label">MODULES / 模块</p>
+    <div class="module-list" id="moduleList"></div>
+  </aside>
+  <div>
+    <div class="stage">
+      <canvas id="scene" width="900" height="640" role="img" aria-label="四冲程发动机剖面动画与仪器"></canvas>
+      <div class="narration">
+        <div class="narr-head"><span id="narrName"></span><span id="narrIdx"></span></div>
+        <p id="narrText"></p>
+      </div>
+      <div class="controls" id="controlBar">
+        <button class="btn primary" id="playBtn">暂停 Pause</button>
+        <button class="btn" id="prevBtn">◀ 上一幕</button>
+        <button class="btn" id="nextBtn">下一幕 ▶</button>
+        <button class="btn" id="autoBtn" aria-pressed="true">自动导览 开</button>
+        <label>转速 RPM <input id="rpmR" type="range" min="60" max="1200" step="10" value="240"></label>
+        <label>曲轴转角 θ <input id="scrubR" type="range" min="0" max="719" step="1" value="90"></label>
+        <span class="angle-tag" id="angleTag">90°</span>
+        <span id="paramControls" style="display:contents"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="quiz-card">
+    <h2>随堂测验 · 本模块一句话检验</h2>
+    <div id="quizBody"></div>
+  </div>
+</section>
+
+<section class="limits" id="limits">
+  <h2>模型边界</h2>
+  <p>曲柄几何、配气相位、压力曲线与效率均为教学模型：γ=1.3 空气标准循环、半正弦气门升程、简化的燃烧与爆震风险函数。数字用于建立直觉与因果对照，不构成任何工程计算或发动机调校依据。</p>
+  <p>页面为单文件离线交付：图标、样式与全部脚本在构建时内嵌，断网或从 U 盘直接打开 <code>index.html</code> 仍然工作，运行时不请求任何远程资源。</p>
+  <p class="fineprint">Engine Lab · 教学模型 · CZL-Homelab</p>
+</section>
+
+<section class="lab-directory" aria-labelledby="labDirectoryTitle">
+  <div class="dir-head">
+    <span class="dir-eyebrow">LAB PROJECTS / 全部实验</span>
+    <h2 id="labDirectoryTitle">换一个实验室</h2>
+    <p>三个可离线运行的交互式实验室。主题与导航在各页保持一致。</p>
+  </div>
+  <div class="dir-grid">
+    <a class="dir-card current" href="./index.html" aria-current="page">
+      <span class="dir-num">03</span>
+      <div class="dir-copy"><h3>四冲程发动机原理实验室 <span class="dir-tag">当前 / Current</span></h3><p>配气正时、点火提前角、示功图与四缸点火顺序。</p></div>
+    </a>
+    <a class="dir-card" href="../motor-lab/index.html">
+      <span class="dir-num">01</span>
+      <div class="dir-copy"><h3>电机原理实验室 <span class="dir-tag">Motor Lab</span></h3><p>六类电机的三维结构、磁场与连续换向过程。</p></div>
+    </a>
+    <a class="dir-card" href="../stock-market-lab/index.html">
+      <span class="dir-num">02</span>
+      <div class="dir-copy"><h3>股票市场原理实验室 <span class="dir-tag">Stock Lab</span></h3><p>K 线、订单簿、IPO、杠杆与 A 股 / 美股制度对比。</p></div>
+    </a>
+  </div>
+  <a class="dir-all" href="../index.html#projects">返回项目目录 / All projects <span aria-hidden="true">↗</span></a>
+</section>
+
+<footer>
+  <div><strong>四冲程发动机原理实验室</strong><br>Engine Lab · 一个可离线运行的燃烧循环教学实验台</div>
+  <div>教学模型，非工程设计工具<br>γ=1.3 空气标准 · 单文件离线</div>
+</footer>
+
+<noscript><p class="noscript">本实验台需要 JavaScript 才能绘图与计算。页面本身不含任何远程资源。</p></noscript>
+
+<script>
+/* Four-stroke engine core model — pure functions, no DOM.
+
+   Geometry, kinematics, valve timing, ignition and the cylinder
+   pressure / P-V model for the teaching lab. Dimensions are drawing
+   units; pressures are illustrative (gamma = 1.3), not engineering data.
+*/
+'use strict';
+
+const D2R = Math.PI / 180;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const wrap720 = deg => ((deg % 720) + 720) % 720;
+
+// ---------- crank-slider kinematics ----------
+const GEO = { CX: 450, BORE: 62, DECK: 165, CLEAR: 18, PISTON_H: 56, R: 75, L: 190 };
+GEO.CRANK_Y = GEO.DECK + GEO.CLEAR + GEO.PISTON_H / 2 + GEO.R + GEO.L;
+const SWEPT = 2 * GEO.R;                    // piston travel, drawing units
+
+function pistonDisplacement(deg) {
+  const t = deg * D2R;
+  return GEO.R * (1 - Math.cos(t)) + GEO.L - Math.sqrt(GEO.L * GEO.L - Math.pow(GEO.R * Math.sin(t), 2));
+}
+function pistonTop(deg) { return GEO.DECK + GEO.CLEAR + pistonDisplacement(deg); }
+function crankPin(deg) {
+  const t = deg * D2R;
+  return { x: GEO.CX + GEO.R * Math.sin(t), y: GEO.CRANK_Y - GEO.R * Math.cos(t) };
+}
+function conrodLength(deg) {
+  const p = crankPin(deg), pinY = pistonTop(deg) + GEO.PISTON_H / 2;
+  return Math.hypot(GEO.CX - p.x, pinY - p.y);
+}
+
+// ---------- valve timing (simplified, with overlap & IVC) ----------
+function liftProfile(deg, open, close) {
+  let d = deg - open; if (d < 0) d += 720;
+  const span = (close - open + 720) % 720;
+  if (d > span) return 0;
+  return Math.sin(Math.PI * d / span);
+}
+const MAX_LIFT = 16;
+const INTAKE_OPEN = 695, INTAKE_CLOSE = 245;   // IVC at 245° (late intake closing)
+const EXHAUST_OPEN = 475, EXHAUST_CLOSE = 25;  // EVO late power, EVC early intake
+const intakeLift = deg => liftProfile(wrap720(deg), INTAKE_OPEN, INTAKE_CLOSE) * MAX_LIFT;
+const exhaustLift = deg => liftProfile(wrap720(deg), EXHAUST_OPEN, EXHAUST_CLOSE) * MAX_LIFT;
+const overlapPeak = 720;                      // both valves near peak of their tails here
+
+// ---------- spark & combustion ----------
+const SPARK_AT = 358;                         // 2° before TDC of power stroke
+function sparkFlash(deg, spark = SPARK_AT) {
+  const a = wrap720(deg), d = a - spark;
+  return (d > -18 && d < 44) ? clamp(1 - Math.abs(d) / 16, 0, 1) : 0;
+}
+function burnFraction(deg, spark = SPARK_AT) {
+  const a = wrap720(deg);
+  if (a < spark - 3 || a > spark + 102) return 0;
+  return clamp((a - (spark - 3)) / 105, 0, 1);
+}
+
+// ---------- cylinder pressure model (bar, gamma = 1.3) ----------
+const GAMMA = 1.3;
+function chamberVol(deg, cr) {
+  const clear = SWEPT / (cr - 1);
+  return clear + pistonDisplacement(deg);
+}
+function pressure(deg, cr = 11.7, spark = SPARK_AT) {
+  const a = wrap720(deg);
+  const v = chamberVol(a, cr);
+  if (a <= 180) return 1.05;                                  // intake ≈ ambient
+  if (a <= spark) return Math.pow(chamberVol(180, cr) / v, GAMMA);  // compression
+  if (a <= 540) {                                             // combustion + expansion
+    const P0 = Math.pow(chamberVol(180, cr) / chamberVol(spark, cr), GAMMA);
+    const Ps = P0 * (1 + 3.2 * clamp((a - spark) / 22, 0, 1));
+    return Ps * Math.pow(chamberVol(spark, cr) / v, GAMMA) * (1 - clamp((a - (spark + 102)) / 80, 0, 1) * 0.35);
+  }
+  const pend = Math.pow(chamberVol(180, cr) / chamberVol(540, cr), GAMMA) * 3.0;  // blowdown
+  return 1.4 + (pend - 1.4) * Math.exp(-(a - 540) / 45);
+}
+const PRESSURE_CURVE = Array.from({ length: 720 }, (_, a) => pressure(a));
+
+// Net indicated work of the closed P-V loop (∮ P dV, arbitrary units).
+function pvWork(cr = 11.7, spark = SPARK_AT) {
+  let w = 0;
+  for (let a = 1; a <= 720; a++) w += pressure(a, cr, spark) * (chamberVol(a, cr) - chamberVol(a - 1, cr));
+  return w;
+}
+function pvPoint(deg, cr = 11.7, spark = SPARK_AT) {
+  return { v: chamberVol(wrap720(deg), cr), p: pressure(wrap720(deg), cr, spark) };
+}
+
+// ---------- compression ratio ----------
+function crPressure(cr) { return Math.pow(chamberVol(180, cr) / chamberVol(SPARK_AT, cr), GAMMA); }
+function crTemp(cr) { return 340 * Math.pow(cr, GAMMA - 1); }   // kelvin, ambient 340 K
+const GASOLINE_MAX_CR = 13.5;                                   // knock-limited, teaching figure
+
+// ---------- ignition advance ----------
+// advance = degrees before TDC of power stroke (spark at 360 - advance).
+function sparkAngle(advance) { return 360 - advance; }
+function relativePower(advance) { return Math.exp(-Math.pow(advance - 12, 2) / 320); }
+function knockRisk(advance) { return clamp((advance - 22) / 16, 0, 1); }
+function backfireRisk(advance) { return clamp((-advance - 4) / 14, 0, 1); }   // spark after TDC-ish
+
+// ---------- four-cylinder inline engine ----------
+// Firing order 1-3-4-2; crank throws put pistons 1&4 and 2&3 together.
+const CYL_PHASES = [0, 540, 180, 360];       // cycle offsets for cylinders 1..4
+const FIRING_ORDER = [1, 3, 4, 2];
+function cylStroke(cyl, angle) { return strokeIndex(wrap720(angle - CYL_PHASES[cyl - 1])); }
+function firingPulseDeg(cyl) { return wrap720(CYL_PHASES[cyl - 1] + 372); }
+
+// ---------- strokes ----------
+const STROKES = [
+  ['进气', 'Intake', '活塞下行，进气门打开（排气门仍有少量叠开），新鲜混合气被吸入气缸。'],
+  ['压缩', 'Compression', '进气门在压缩初段才关闭（晚关利用惯性多充气），随后两气门全关，活塞上行把混合气压到约 1/11 容积。'],
+  ['做功', 'Power', '点火稍早于上止点，燃烧气体膨胀推动活塞下行——唯一输出动力的冲程。'],
+  ['排气', 'Exhaust', '排气门打开，废气先自动泄出（blowdown），再由上行活塞推出气缸。'],
+];
+function strokeIndex(deg) { return Math.floor(wrap720(deg) / 180) % 4; }
+
+</script>
+<script>
+/* Shared canvas renderer for the Engine Lab.
+   One engine drawing used by every module; parts can be highlighted or
+   dimmed. Instruments (timing strip, P-V diagram, lift curves, gears,
+   multi-cylinder) live here too. Colors come from theme CSS variables. */
+'use strict';
+
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+function fitCanvas(cv) {
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.width, h = cv.height;
+  cv.width = w * dpr; cv.height = h * dpr;
+  cv.getContext('2d').scale(dpr, dpr);
+  cv._w = w; cv._h = h;
+  return { w, h };
+}
+
+const PARTS = ['block', 'piston', 'conrod', 'crank', 'flywheel', 'valves', 'plug'];
+
+function drawEngine(ctx, W, H, opts) {
+  const { angle, highlight = null, flow = true, labels = true, diesel = false, spark = null, t = 0 } = opts;
+  const a = wrap720(angle);
+  const sparkAt = spark ?? (diesel ? 350 : SPARK_AT);
+  const ink = cssVar('--text'), dim = cssVar('--dim'), line = cssVar('--line'), panel = cssVar('--panel');
+  const cyan = cssVar('--cyan'), blue = cssVar('--blue'), orange = cssVar('--orange'), red = cssVar('--red');
+  const al = part => highlight && highlight !== part ? 0.22 : 1;
+  const set = part => { ctx.globalAlpha = al(part); };
+
+  const pTop = pistonTop(a), gasH = pTop - GEO.DECK;
+  const idx = strokeIndex(a);
+
+  // cylinder walls + water jacket
+  set('block');
+  ctx.strokeStyle = ink; ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.moveTo(GEO.CX - GEO.BORE - 4, 60); ctx.lineTo(GEO.CX - GEO.BORE - 4, GEO.CRANK_Y - 120);
+  ctx.moveTo(GEO.CX + GEO.BORE + 4, 60); ctx.lineTo(GEO.CX + GEO.BORE + 4, GEO.CRANK_Y - 120); ctx.stroke();
+  ctx.fillStyle = dim; ctx.globalAlpha = al('block') * 0.35;
+  for (let y = 90; y < GEO.CRANK_Y - 150; y += 22) { ctx.fillRect(GEO.CX - GEO.BORE - 16, y, 6, 10); ctx.fillRect(GEO.CX + GEO.BORE + 10, y, 6, 10); }
+  ctx.globalAlpha = al('block');
+
+  // head with intake (left) / exhaust (right) ports
+  ctx.fillStyle = panel; ctx.strokeStyle = ink; ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.roundRect(GEO.CX - GEO.BORE - 46, 58, 120, GEO.DECK - 58, 10);
+  ctx.roundRect(GEO.CX + 30, 58, 120, GEO.DECK - 58, 10);
+  ctx.fill();
+  ctx.fillStyle = cssVar('--bg');
+  ctx.beginPath(); ctx.moveTo(GEO.CX - 110, 58); ctx.lineTo(GEO.CX - 14, GEO.DECK - 4); ctx.lineTo(GEO.CX - 44, GEO.DECK + 2); ctx.lineTo(GEO.CX - 132, 72); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(GEO.CX + 110, 58); ctx.lineTo(GEO.CX + 14, GEO.DECK - 4); ctx.lineTo(GEO.CX + 44, GEO.DECK + 2); ctx.lineTo(GEO.CX + 132, 72); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = line; ctx.lineWidth = 2; ctx.stroke();
+
+  // gas volume + combustion glow
+  const cols = [blue, cyan, orange, dim];
+  ctx.globalAlpha = al('block') * (0.28 + 0.35 * (gasH < 40 ? (1 - gasH / 40) : 0.25));
+  ctx.fillStyle = cols[idx];
+  ctx.fillRect(GEO.CX - GEO.BORE, GEO.DECK, GEO.BORE * 2, gasH);
+  if (idx === 2) {
+    const f = burnFraction(a, sparkAt);
+    const g = ctx.createRadialGradient(GEO.CX, GEO.DECK + 8, 4, GEO.CX, GEO.DECK + 8, GEO.BORE + 30);
+    g.addColorStop(0, 'rgba(255,200,90,' + (0.85 * clamp(f * 1.6, 0, 1) * al('block')) + ')');
+    g.addColorStop(1, 'rgba(230,110,40,0)');
+    ctx.fillStyle = g; ctx.fillRect(GEO.CX - GEO.BORE, GEO.DECK, GEO.BORE * 2, Math.min(gasH, GEO.BORE + 20));
+  }
+  ctx.globalAlpha = 1;
+
+  // spark flash / diesel injector
+  set('plug');
+  const sf = diesel ? clamp(1 - Math.abs(a - sparkAt) / 14, 0, 1) : sparkFlash(a, sparkAt);
+  if (sf > 0) { ctx.fillStyle = 'rgba(255,240,180,' + sf + ')'; ctx.beginPath(); ctx.arc(GEO.CX, GEO.DECK + 8, 7 + 10 * sf, 0, 7); ctx.fill(); }
+  ctx.fillStyle = ink;
+  if (diesel) { ctx.fillRect(GEO.CX - 4, 38, 8, 24); ctx.fillStyle = orange; ctx.fillRect(GEO.CX - 7, 32, 14, 7); }
+  else { ctx.fillRect(GEO.CX - 5, 36, 10, 26); ctx.fillStyle = red; ctx.fillRect(GEO.CX - 8, 30, 16, 8); }
+  ctx.strokeStyle = ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(GEO.CX, 62); ctx.lineTo(GEO.CX, GEO.DECK + 2); ctx.stroke();
+
+  // valves
+  const il = intakeLift(a), el = exhaustLift(a);
+  set('valves');
+  function valve(x, lift, color) {
+    ctx.strokeStyle = color; ctx.lineWidth = 6;
+    ctx.beginPath(); ctx.moveTo(x, 52); ctx.lineTo(x, GEO.DECK + lift - 6); ctx.stroke();
+    ctx.lineWidth = 2; ctx.strokeStyle = dim; ctx.beginPath();
+    for (let i = 0; i < 5; i++) { const y = 62 + i * 9 + lift * 0.55; ctx.moveTo(x - 11, y); ctx.lineTo(x + 11, y + 5); }
+    ctx.stroke();
+    ctx.fillStyle = color; ctx.beginPath(); ctx.roundRect(x - 17, GEO.DECK + lift - 4, 34, 9, 4); ctx.fill();
+  }
+  valve(GEO.CX - 34, il, blue); valve(GEO.CX + 34, el, red);
+
+  // flow chevrons
+  if (flow && highlight !== 'flywheel') {
+    function flowDots(sx, sy, ex, ey, color) {
+      ctx.fillStyle = color;
+      for (let i = 0; i < 3; i++) { const f = ((t * 1.1 + i / 3) % 1); ctx.globalAlpha = al('valves') * 0.65 * (1 - Math.abs(f - 0.55)); ctx.beginPath(); ctx.arc(sx + (ex - sx) * f, sy + (ey - sy) * f, 4, 0, 7); ctx.fill(); }
+      ctx.globalAlpha = 1;
+    }
+    if (il > 3) flowDots(GEO.CX - 130, 58, GEO.CX - 34, GEO.DECK + il + 16, blue);
+    if (el > 3) flowDots(GEO.CX + 34, GEO.DECK + el + 16, GEO.CX + 130, 58, dim);
+  }
+
+  // piston
+  set('piston');
+  ctx.fillStyle = ink;
+  ctx.beginPath(); ctx.roundRect(GEO.CX - GEO.BORE + 3, pTop, (GEO.BORE - 3) * 2, GEO.PISTON_H, 6); ctx.fill();
+  ctx.strokeStyle = panel; ctx.lineWidth = 2;
+  for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(GEO.CX - GEO.BORE + 6, pTop + 8 + i * 7); ctx.lineTo(GEO.CX + GEO.BORE - 6, pTop + 8 + i * 7); ctx.stroke(); }
+  const pinY = pTop + GEO.PISTON_H / 2;
+  ctx.fillStyle = dim; ctx.beginPath(); ctx.arc(GEO.CX, pinY, 8, 0, 7); ctx.fill();
+
+  // conrod
+  const cp = crankPin(a);
+  set('conrod');
+  ctx.strokeStyle = dim; ctx.lineWidth = 15; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(GEO.CX, pinY); ctx.lineTo(cp.x, cp.y); ctx.stroke();
+  ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(cp.x, cp.y, 11, 0, 7); ctx.fill();
+
+  // crank web + counterweight
+  set('crank');
+  ctx.save(); ctx.translate(GEO.CX, GEO.CRANK_Y); ctx.rotate(a * D2R);
+  ctx.fillStyle = ink;
+  ctx.beginPath(); ctx.roundRect(-14, -GEO.R - 6, 28, GEO.R + 20, 8); ctx.fill();
+  ctx.beginPath(); ctx.arc(0, 0, 52, Math.PI * 0.65, Math.PI * 1.35); ctx.arc(0, 0, 20, Math.PI * 1.35, Math.PI * 0.65, true); ctx.fill();
+  ctx.fillStyle = cyan; ctx.beginPath(); ctx.arc(0, -GEO.R, 8, 0, 7); ctx.fill();
+  ctx.restore();
+  ctx.fillStyle = dim; ctx.beginPath(); ctx.arc(GEO.CX, GEO.CRANK_Y, 9, 0, 7); ctx.fill();
+
+  // flywheel
+  set('flywheel');
+  ctx.strokeStyle = line; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(GEO.CX, GEO.CRANK_Y, 104, 0, 7); ctx.stroke();
+  ctx.save(); ctx.translate(GEO.CX, GEO.CRANK_Y); ctx.rotate(a * D2R);
+  ctx.fillStyle = orange; ctx.fillRect(-3, -112, 6, 14);
+  ctx.globalAlpha = al('flywheel') * 0.35;
+  ctx.strokeStyle = dim; ctx.lineWidth = 4;
+  for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(66 * Math.cos(i * Math.PI / 3), 66 * Math.sin(i * Math.PI / 3)); ctx.stroke(); }
+  ctx.restore();
+  ctx.globalAlpha = 1;
+
+  if (labels && highlight === null) {
+    ctx.fillStyle = dim; ctx.font = '12px system-ui';
+    ctx.fillText(diesel ? '喷油嘴 Injector' : '火花塞 Spark plug', GEO.CX + 18, 26);
+    ctx.fillText('进气门 Intake valve', GEO.CX - 185, 30);
+    ctx.fillText('排气门 Exhaust valve', GEO.CX + 118, 30);
+    ctx.fillText('活塞 Piston', GEO.CX + GEO.BORE + 18, pTop + 20);
+    ctx.fillText('连杆 Conrod', GEO.CX + 30, (pinY + cp.y) / 2);
+    ctx.fillText('曲轴/飞轮 Crank · Flywheel', GEO.CX + 112, GEO.CRANK_Y + 40);
+  }
+  ctx.fillStyle = ink; ctx.font = 'bold 14px ui-monospace,monospace';
+  ctx.fillText('θ=' + Math.round(a) + '°', GEO.CX - 38, GEO.CRANK_Y + 150);
+}
+
+// ---------- timing strip (valve lift + spark windows, 0–720°) ----------
+function drawTimingStrip(ctx, W, H, angle, spark = SPARK_AT) {
+  const pad = 34, base = H - 16, top = 20, bar = 12;
+  const x = a => pad + a / 719 * (W - pad - 10);
+  ctx.font = '11px system-ui';
+  function strip(y, fn, color, label) {
+    ctx.fillStyle = cssVar('--line'); ctx.fillRect(pad, y, W - pad - 10, bar);
+    ctx.fillStyle = color;
+    let start = -1;
+    for (let a = 0; a <= 720; a++) {
+      const v = fn(a % 720);
+      if (v > 0.05 && start < 0) start = a;
+      if (v <= 0.05 && start >= 0) { ctx.fillRect(x(start), y, x(a) - x(start), bar); start = -1; }
+    }
+    if (start >= 0) ctx.fillRect(x(start), y, x(720) - x(start), bar);
+    ctx.fillStyle = cssVar('--dim'); ctx.fillText(label, pad, y - 6);
+  }
+  strip(top, a => intakeLift(a) / MAX_LIFT, cssVar('--blue'), '进气门升程 Intake lift · 开 695° → 关 245°（IVC）');
+  strip(top + 34, a => exhaustLift(a) / MAX_LIFT, cssVar('--red'), '排气门升程 Exhaust lift · 开 475° → 关 25°');
+  ctx.fillStyle = cssVar('--orange'); ctx.fillRect(x(spark - 18), top + 68, x(spark + 44) - x(spark - 18), bar);
+  ctx.fillStyle = cssVar('--dim'); ctx.fillText('燃烧窗口 Combustion ~' + spark + '° 起（点火提前于上止点）', pad, top + 62);
+  // overlap marker
+  ctx.fillStyle = cssVar('--cyan'); ctx.fillRect(x(695), top + 18, x(25) - x(695) + x(720) - x(695), 3);
+  ctx.strokeStyle = cssVar('--cyan'); ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.moveTo(x(wrap720(angle)), top - 8); ctx.lineTo(x(wrap720(angle)), base + 2); ctx.stroke();
+  ctx.fillStyle = cssVar('--dim'); ctx.fillText('0°', pad, H - 6); ctx.fillText('720°', W - 42, H - 6);
+}
+
+// ---------- P-V diagram ----------
+function drawPV(ctx, W, H, opts) {
+  const { cr = 11.7, spark = SPARK_AT, angle = null, trail = true } = opts;
+  const ink = cssVar('--text'), dim = cssVar('--dim'), line = cssVar('--line');
+  const padL = 46, padB = 30, padT = 14, padR = 16;
+  const vs = Array.from({ length: 721 }, (_, a) => chamberVol(a, cr));
+  const ps = Array.from({ length: 721 }, (_, a) => pressure(a, cr, spark));
+  const vmax = Math.max(...vs), vmin = Math.min(...vs), pmax = Math.max(...ps);
+  const X = v => padL + (v - vmin) / (vmax - vmin) * (W - padL - padR);
+  const Y = p => H - padB - p / pmax * (H - padB - padT);
+  ctx.strokeStyle = line; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, H - padB); ctx.lineTo(W - padR, H - padB); ctx.stroke();
+  ctx.fillStyle = dim; ctx.font = '11px ui-monospace,monospace';
+  ctx.fillText('V →', W - 60, H - 10); ctx.save(); ctx.translate(14, padT + 40); ctx.rotate(-Math.PI / 2); ctx.fillText('P →', 0, 0); ctx.restore();
+  ctx.fillText('V_死点 ' + vmin.toFixed(0), padL, H - 10);
+  ctx.fillText('P_max ' + pmax.toFixed(0) + ' bar', padL + 4, padT + 10);
+  // loop: compression path, combustion, expansion, exhaust, intake
+  ctx.lineWidth = 2.6; ctx.lineJoin = 'round';
+  ctx.strokeStyle = cssVar('--cyan'); ctx.beginPath();
+  for (let a = 180; a <= spark; a++) { a === 180 ? ctx.moveTo(X(vs[a]), Y(ps[a])) : ctx.lineTo(X(vs[a]), Y(ps[a])); }
+  ctx.stroke();
+  ctx.strokeStyle = cssVar('--orange'); ctx.beginPath();
+  for (let a = spark; a <= 540; a++) { a === spark ? ctx.moveTo(X(vs[a]), Y(ps[a])) : ctx.lineTo(X(vs[a]), Y(ps[a])); }
+  ctx.stroke();
+  ctx.strokeStyle = dim; ctx.lineWidth = 1.8; ctx.beginPath();
+  for (let a = 540; a <= 720; a++) ctx.lineTo(X(vs[a]), Y(ps[a]));
+  for (let a = 0; a <= 180; a++) ctx.lineTo(X(vs[a]), Y(ps[a]));
+  ctx.stroke();
+  // shaded net work area
+  ctx.globalAlpha = 0.14; ctx.fillStyle = cssVar('--orange');
+  ctx.beginPath();
+  for (let a = spark; a <= 540; a++) ctx.lineTo(X(vs[a]), Y(ps[a]));
+  for (let a = 540; a >= 0; a--) ctx.lineTo(X(vs[a % 720]), Y(ps[a % 720]));
+  for (let a = 0; a <= spark; a++) ctx.lineTo(X(vs[a]), Y(ps[a]));
+  ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+  if (trail) {
+    const cur = pvPoint(angle ?? 0, cr, spark);
+    ctx.fillStyle = cssVar('--cyan'); ctx.beginPath(); ctx.arc(X(cur.v), Y(cur.p), 5, 0, 7); ctx.fill();
+    ctx.fillStyle = ink; ctx.font = 'bold 12px ui-monospace,monospace';
+    ctx.fillText(Math.round(cur.p) + ' bar @ ' + Math.round(wrap720(angle ?? 0)) + '°', X(cur.v) + 8, Y(cur.p) - 8);
+  }
+  ctx.fillStyle = dim; ctx.font = '11px system-ui';
+  ctx.fillText('闭合环的面积 = 一循环净指示功 ≈ ' + Math.round(pvWork(cr, spark)) + ' (任意单位)', padL + 8, H - padB - 6);
+}
+
+// ---------- valve lift curves with annotations ----------
+function drawLiftCurves(ctx, W, H, angle) {
+  const padL = 40, padB = 28, padT = 16;
+  const line = cssVar('--line'), dim = cssVar('--dim');
+  const x = a => padL + a / 720 * (W - padL - 16);
+  const y = lift => H - padB - lift / MAX_LIFT * (H - padB - padT - 8);
+  ctx.strokeStyle = line; ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, H - padB); ctx.lineTo(W - 16, H - padB); ctx.stroke();
+  // overlap shading around 720/0
+  ctx.fillStyle = cssVar('--cyan'); ctx.globalAlpha = 0.12;
+  ctx.fillRect(x(695), padT, x(720) - x(695), H - padB - padT);
+  ctx.fillRect(x(0), padT, x(25), H - padB - padT);
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = dim; ctx.font = '11px system-ui';
+  ctx.fillText('气门叠开', x(695) + 2, padT + 12);
+  for (const [fn, color, label] of [[intakeLift, cssVar('--blue'), '进气门'], [exhaustLift, cssVar('--red'), '排气门']]) {
+    ctx.strokeStyle = color; ctx.lineWidth = 2.4; ctx.beginPath();
+    for (let a = 0; a <= 720; a++) { const v = fn(a % 720); a === 0 ? ctx.moveTo(x(a), y(v)) : ctx.lineTo(x(a), y(v)); }
+    ctx.stroke();
+  }
+  ctx.fillStyle = cssVar('--blue'); ctx.fillText('进气门 Intake', padL + 6, padT + 26);
+  ctx.fillStyle = cssVar('--red'); ctx.fillText('排气门 Exhaust', padL + 130, padT + 26);
+  ctx.fillStyle = dim;
+  ctx.fillText('EVO 475°', x(475) - 20, H - padB + 14); ctx.fillText('EVC 25°', x(25) - 8, H - padB + 14);
+  ctx.fillText('IVO 695°', x(695) + 6, H - padB + 14); ctx.fillText('IVC 245°', x(245) - 4, H - padB + 14);
+  ctx.strokeStyle = cssVar('--cyan'); ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(x(wrap720(angle)), padT); ctx.lineTo(x(wrap720(angle)), H - padB); ctx.stroke();
+  ctx.fillStyle = dim; ctx.fillText('0°', padL, H - 8); ctx.fillText('360°', x(360) - 12, H - 8); ctx.fillText('720°', W - 44, H - 8);
+}
+
+// ---------- cam drive gears (2:1 reduction) ----------
+function drawCamGears(ctx, W, H, angle) {
+  const dim = cssVar('--dim'), cyan = cssVar('--cyan'), ink = cssVar('--text');
+  const cx1 = W * 0.32, cy = H * 0.55, r1 = Math.min(W, H) * 0.24, r2 = r1 * 2;
+  const cx2 = cx1 + r1 + r2;
+  function gear(x, r, rot, teeth, label) {
+    ctx.strokeStyle = ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.stroke();
+    ctx.save(); ctx.translate(x, cy); ctx.rotate(rot);
+    ctx.strokeStyle = dim; ctx.lineWidth = 3;
+    for (let i = 0; i < teeth; i++) { const t = i / teeth * Math.PI * 2; ctx.beginPath(); ctx.moveTo((r - 6) * Math.cos(t), (r - 6) * Math.sin(t)); ctx.lineTo((r + 5) * Math.cos(t), (r + 5) * Math.sin(t)); ctx.stroke(); }
+    ctx.fillStyle = cyan; ctx.beginPath(); ctx.arc(0, -r + 8, 5, 0, 7); ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = dim; ctx.font = '12px system-ui'; ctx.fillText(label, x - 30, cy + r + 26);
+  }
+  gear(cx1, r1, angle * D2R, 12, '曲轴齿轮 1×');
+  gear(cx2, r2, -angle / 2 * D2R, 24, '凸轮轴齿轮 0.5×');
+  ctx.fillStyle = ink; ctx.font = 'bold 13px ui-monospace,monospace';
+  ctx.fillText('曲轴转 720° = 凸轮轴转 360°', cx1 - 40, 22);
+}
+
+// ---------- mini engine for comparisons ----------
+function drawMiniEngine(ctx, W, H, opts) {
+  const { angle, diesel = false, t = 0 } = opts;
+  ctx.save();
+  ctx.translate(0, -26); ctx.scale(W / 900, H / 620);
+  drawEngine(ctx, 900, 620, { angle, labels: false, flow: true, diesel, t });
+  ctx.restore();
+}
+
+// ---------- inline four-cylinder ----------
+function drawMultiCyl(ctx, W, H, angle, count = 4) {
+  const a = wrap720(angle);
+  const ink = cssVar('--text'), dim = cssVar('--dim'), cyan = cssVar('--cyan'), orange = cssVar('--orange'), blue = cssVar('--blue');
+  const colW = W / count;
+  for (let c = 1; c <= count; c++) {
+    const ph = wrap720(a - CYL_PHASES[c - 1]);
+    const cx = colW * (c - 0.5), bore = colW * 0.30, deck = H * 0.30;
+    const stroke = bore * 0.9, disp = pistonDisplacement(ph) / (2 * GEO.R) * stroke;
+    const top = deck + 6 + disp;
+    ctx.strokeStyle = ink; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(cx - bore, deck - 14); ctx.lineTo(cx - bore, top + stroke + 26); ctx.moveTo(cx + bore, deck - 14); ctx.lineTo(cx + bore, top + stroke + 26); ctx.stroke();
+    const si = strokeIndex(ph);
+    const cols = [blue, cyan, orange, dim];
+    ctx.globalAlpha = 0.4; ctx.fillStyle = cols[si];
+    ctx.fillRect(cx - bore, deck, bore * 2, top - deck); ctx.globalAlpha = 1;
+    ctx.fillStyle = ink; ctx.beginPath(); ctx.roundRect(cx - bore + 2, top, bore * 2 - 4, stroke * 0.42, 4); ctx.fill();
+    if (si === 2) { ctx.fillStyle = orange; ctx.beginPath(); ctx.arc(cx, deck + 6, 7, 0, 7); ctx.fill(); }
+    ctx.fillStyle = dim; ctx.font = '12px ui-monospace,monospace';
+    ctx.fillText('缸 ' + c, cx - 14, top + stroke * 0.42 + 20);
+    ctx.fillStyle = cyan; ctx.fillText(STROKES[si][0], cx - 16, top + stroke * 0.42 + 38);
+  }
+  // firing pulse bar: 720° timeline, pulse every 180° once per cyl
+  const by = H - 26, x = deg => 30 + deg / 720 * (W - 60);
+  ctx.fillStyle = dim; ctx.font = '11px system-ui'; ctx.fillText('点火脉冲（每 180° 一次，缸序 1-3-4-2）', 30, by - 14);
+  ctx.fillStyle = cssVar('--line'); ctx.fillRect(30, by, W - 60, 10);
+  for (let c = 1; c <= count; c++) ctx.fillStyle = orange, ctx.fillRect(x(firingPulseDeg(c)) - 3, by - 3, 6, 16);
+  ctx.strokeStyle = cyan; ctx.beginPath(); ctx.moveTo(x(a), by - 6); ctx.lineTo(x(a), by + 14); ctx.stroke();
+  ctx.fillStyle = dim; ctx.font = '11px system-ui';
+  ctx.fillText(count === 1 ? '点火脉冲（720° 里只有 1 次）' : '点火脉冲（每 180° 一次，缸序 1-3-4-2）', 30, by - 14);
+}
+
+</script>
+<script>
+/* Module registry: every module file registers exactly one module. */
+'use strict';
+window.ENGINE_MODULES = [];
+function registerModule(mod) {
+  if (!mod || !mod.id || !Array.isArray(mod.scenes) || !mod.quiz) throw new Error('invalid module: ' + (mod && mod.id));
+  window.ENGINE_MODULES.push(mod);
+}
+
+</script>
+<script>
+/* 01 · 结构拆解 Anatomy */
+'use strict';
+registerModule({
+  id: 'anatomy', num: '01', name: '结构拆解', en: 'Anatomy',
+  desc: '认识一台单缸四冲程发动机的每个零件。',
+  quiz: {
+    q: '为什么四冲程发动机的曲轴要转两圈（720°）才完成一个循环？',
+    opts: ['转两圈才够摩擦生热', '四个冲程各占曲轴一圈的一半（180°），合计 720°', '因为飞轮太重', '为了配气'],
+    ans: 1,
+    why: '每个冲程对应活塞从上止点到下止点一次，曲轴转 180°；进压做排四个冲程合计 720°。凸轮轴因此正好转一圈。',
+  },
+  scenes: [
+    { key: 'overview', name: '整机纵剖', en: 'Cutaway', narr: '这是纵剖视图：上部是气缸与缸盖，中部活塞在缸内上下运动，下部是曲轴和飞轮。先看全景。', spin: true },
+    { key: 'piston', name: '活塞与环', en: 'Piston & rings', narr: '活塞把气体压力变成直线运动；三道环：两道气环密封燃烧气体，一道油环刮掉缸壁多余机油。', highlight: 'piston', angle: 120 },
+    { key: 'conrod', name: '连杆与曲轴', en: 'Conrod & crank', narr: '连杆把活塞的直线运动传给曲轴曲柄销。注意轨迹不是正弦：连杆倾斜让上止点附近更“尖”、下止点附近更“平”。', highlight: 'conrod', spin: true },
+    { key: 'valves', name: '气门与弹簧', en: 'Valves', narr: '进气门（蓝）放进混合气，排气门（红）放出废气。弹簧负责把气门压回关闭位——凸轮只负责推开它。', highlight: 'valves', spin: true },
+    { key: 'plug', name: '火花塞', en: 'Spark plug', narr: '火花塞在压缩末段跳火，点燃被压缩的混合气。点火时刻在上止点前几度，详见“点火正时”模块。', highlight: 'plug', angle: 358 },
+    { key: 'flywheel', name: '飞轮', en: 'Flywheel', narr: '只有做功冲程输出动力，其余三个冲程靠飞轮储存的动能带着曲轴转过去。飞轮是这台发动机的“电池”。', highlight: 'flywheel', spin: true },
+    { key: 'block', name: '缸体与水套', en: 'Block & jacket', narr: '缸壁外侧的点阵是水套。燃烧室温度上千度，靠循环冷却水带走多余热量，保持金属和润滑在可用范围。', highlight: 'block', angle: 200 },
+  ],
+});
+
+</script>
+<script>
+/* 02 · 四个冲程 The Four Strokes */
+'use strict';
+registerModule({
+  id: 'cycle', num: '02', name: '四个冲程', en: 'The cycle',
+  desc: '进气 → 压缩 → 做功 → 排气，720° 走一遍。',
+  quiz: {
+    q: '四个冲程里，哪个是唯一对外输出动力的冲程？',
+    opts: ['进气', '压缩', '做功', '排气'],
+    ans: 2,
+    why: '只有做功冲程是高压燃气推活塞输出功；进气、压缩、排气都要消耗曲轴动能，由飞轮储能供给。',
+  },
+  scenes: [
+    { key: 'intake', name: '进气冲程', en: 'Intake', narr: '0°–180°：活塞下行形成低压，进气门开着，大气把新鲜混合气压进气缸。排气门此时已基本关闭。', angle: 90, spin: false },
+    { key: 'compression', name: '压缩冲程', en: 'Compression', narr: '180°–360°：进气门在压缩初段才关闭（IVC 245°），随后两门全关，活塞上行把气体压到约 1/11 容积，压力和温度一起升高。', angle: 290 },
+    { key: 'spark', name: '点火时刻', en: 'Ignition', narr: '358°：上止点前 2° 火花塞跳火。燃烧需要时间，提前点火才能让最高压力正好出现在活塞开始下行时。', angle: 362 },
+    { key: 'power', name: '做功冲程', en: 'Power', narr: '360°–540°：燃烧气体膨胀，推动活塞下行输出动力。压力从峰值约 70 bar 一路降到几 bar——做功的过程就是压力衰减的过程。', angle: 430, spin: false },
+    { key: 'exhaust', name: '排气冲程', en: 'Exhaust', narr: '540°–720°：排气门在做功末段已提前打开，残压自动泄出（blowdown），上行活塞把残余废气推出去。', angle: 630 },
+    { key: 'full', name: '连续循环', en: 'Full cycle', narr: '连续播放：注意每 720° 只有中段一次“橙色爆闪”。气门叠开出现在排气→进气交接（约 695°–25°），废气惯性顺便帮新气进缸。', spin: true },
+  ],
+});
+
+</script>
+<script>
+/* 03 · 配气正时 Valve timing */
+'use strict';
+registerModule({
+  id: 'timing', num: '03', name: '配气正时', en: 'Valve timing',
+  desc: '气门何时开、何时关，以及为什么不是正好 0° 和 180°。',
+  quiz: {
+    q: '进气门为什么在活塞过了下止点之后才关闭（IVC 245°）？',
+    opts: ['防止漏气', '利用进气气流的惯性，活塞开始上行时还能继续充进一段气', '设计失误', '为了降温'],
+    ans: 1,
+    why: '下止点时进气道里的气还在高速流入，晚关气门让惯性继续充气，增加充气量——这是转速越高越明显的手法。',
+  },
+  scenes: [
+    { key: 'lift', name: '升程曲线', en: 'Lift curves', narr: '两条半正弦升程曲线横轴是 0–720°。青色区是气门叠开：排气门还没关严、进气门已经提前打开。拖动角度游标对照。', tool: 'lift', spin: true },
+    { key: 'overlap', name: '气门叠开', en: 'Valve overlap', narr: '约 695°→25° 两门同开。排气废气正高速冲出排气道，在进气口形成低压“抽吸”，帮新鲜气体进来。高转速机叠开角更大。', tool: 'lift', angle: 705 },
+    { key: 'ivc', name: '晚进与晚排', en: 'IVC & EVC', narr: '进气门关在 245°（过了下止点 65°），排气门关在 25°（过了上止点 25°）。四个开闭点都不落在死点，全部为气流惯性让路。', tool: 'strip', angle: 230 },
+    { key: 'cam', name: '凸轮轴 2:1', en: 'Cam drive', narr: '曲轴齿轮带动凸轮轴齿轮，传动比 2:1：曲轴转 720°，凸轮轴正好转 360°——每个气门一个循环只被顶开一次。', tool: 'gears', spin: true },
+  ],
+});
+
+</script>
+<script>
+/* 04 · 点火正时 Ignition timing */
+'use strict';
+registerModule({
+  id: 'spark', num: '04', name: '点火正时', en: 'Ignition timing',
+  desc: '点火提前角：太早敲缸回火，太晚没劲发热。',
+  controls: [{ key: 'advance', label: '点火提前角 advance', min: -6, max: 36, step: 1, def: 12 }],
+  quiz: {
+    q: '点火提前角过大最典型的坏结果是什么？',
+    opts: ['油耗降低', '爆震（敲缸）与回火，严重时损坏发动机', '功率无限增大', '排放变干净'],
+    ans: 1,
+    why: '过早点火让燃烧压力在活塞还在上行时就达到峰值，反向冲击活塞（爆震）；火焰甚至可能窜回进气道（回火）。',
+  },
+  scenes: [
+    { key: 'curve', name: '功率-提前角曲线', en: 'Power vs advance', narr: '横轴点火提前角（上止点前度数），纵轴相对功率。峰值在约 12° 附近：燃烧要有时间，压力峰值要刚好落在活塞开始下行之后。拖动滑块。', tool: 'advcurve', spin: false },
+    { key: 'ideal', name: '最佳点', en: 'Best advance', narr: '提前角 12°：火焰从火花塞蔓延到整个燃烧室约需十几度曲轴转角，最高压力落在上止点后 10–20°，活塞已下行，做功最有效。', tool: 'engine', angle: 372 },
+    { key: 'early', name: '太早：爆震', en: 'Too early', narr: '提前角拉到 30°+：混合气在活塞到达上止点前大量燃烧，压力顶着上行活塞反做负功，压力波撞击缸壁——爆震。高温高压还会烧蚀零件。', tool: 'engine', angle: 330 },
+    { key: 'late', name: '太晚：没劲又发热', en: 'Too late', narr: '提前角 0° 或更晚：燃烧大半发生在活塞已下行之后，压力做不了多少功，热量留给排气——功率掉、排气温度飙，还容易回火。', tool: 'engine', angle: 400 },
+  ],
+});
+
+</script>
+<script>
+/* 05 · 示功图 The P-V diagram */
+'use strict';
+registerModule({
+  id: 'pv', num: '05', name: '示功图', en: 'P-V diagram',
+  desc: '压力×体积的闭合环——环的面积就是发动机一个循环做的净功。',
+  quiz: {
+    q: 'P-V 图上闭合环的面积代表什么？',
+    opts: ['活塞质量', '一个循环的净指示功（做功减去压缩付出的功）', '油耗', '排气量'],
+    ans: 1,
+    why: '膨胀线下的面积是气体对外做的功，压缩线下的面积是活塞对气体付出的功，两者之差正是闭合环面积——净功。',
+  },
+  scenes: [
+    { key: 'loop', name: '闭合环', en: 'The loop', narr: '横轴气缸容积 V，纵轴压力 P。青线是压缩，橙线是燃烧+膨胀，灰线是排气与进气。随曲轴转动描点。', tool: 'pv', spin: true },
+    { key: 'compress', name: '压缩段', en: 'Compression', narr: '从下止点（右）到上止点（左）：体积缩到约 1/11，压力沿 P·V^1.3 爬到几十 bar——这段是活塞“付出去”的功。', tool: 'pv', angle: 260 },
+    { key: 'burn', name: '燃烧竖跳', en: 'Combustion jump', narr: '上止点附近体积几乎不变而压力近乎垂直跳升——燃烧在极小体积变化内把压力推到峰值约 70 bar。', tool: 'pv', angle: 375 },
+    { key: 'area', name: '面积=功', en: 'Area = work', narr: '橙色阴影是环内面积：膨胀“赚”的功减去压缩“花”的功，剩下净功输出给曲轴。这就是示功图的本质。', tool: 'pv', angle: 480 },
+    { key: 'cr', name: '压缩比的影响', en: 'With compression ratio', narr: '拖动压缩比：环整体变高变宽，净功增大——但汽油机压缩比受爆震限制，见下一模块。', tool: 'pv', spin: false },
+  ],
+  controls: [{ key: 'cr', label: '压缩比 CR', min: 7, max: 14, step: 0.5, def: 11.7 }],
+});
+
+</script>
+<script>
+/* 06 · 压缩比 Compression ratio */
+'use strict';
+registerModule({
+  id: 'cr', num: '06', name: '压缩比', en: 'Compression ratio',
+  desc: '把混合气压到多小：越高越有效率，但汽油机会爆震。',
+  controls: [{ key: 'cr', label: '压缩比 CR', min: 6, max: 15, step: 0.5, def: 11.7 }],
+  quiz: {
+    q: '汽油机压缩比的上限主要由什么决定？',
+    opts: ['缸径大小', '爆震极限——压缩终了温度压力过高会让混合气自燃', '飞轮重量', '排气门角度'],
+    ans: 1,
+    why: '压缩终了温度过高时混合气在火花点火前自燃（超级爆震），所以汽油机压缩比通常止步于 13–14；柴油机靠压燃反而要高压缩比。',
+  },
+  scenes: [
+    { key: 'slider', name: '压缩比实验台', en: 'CR bench', narr: '拖动压缩比滑块，观察压缩终了（点火前）的压力与温度读数。压力 ∝ CR^1.3，温度 ∝ CR^0.3。', tool: 'crbench', spin: false },
+    { key: 'temp', name: '温度才是真正的上限', en: 'Temperature', narr: 'CR=11 时压缩终了约 700 K；CR=13.5 逼近汽油自燃温度区间——再加就爆震。这就是现代汽油机压缩比停在 13 左右的原因。', tool: 'crbench', angle: 350 },
+    { key: 'limit', name: '汽油机的天花板', en: 'Gasoline ceiling', narr: '红线标出教学用爆震极限 CR≈13.5。越过红线，压缩末期混合气自燃、压力波与火焰对冲——直喷、阿特金森循环都在红线内做文章。', tool: 'crbench', angle: 0 },
+    { key: 'diesel', name: '柴油机反过来用', en: 'Diesel', narr: '柴油机 CR 16–22：压缩终了空气温度约 900–1000 K，喷入的柴油雾滴直接自燃——不需要火花塞。压燃换来的代价是更重更硬的机体。', tool: 'diesel', spin: true },
+  ],
+});
+
+</script>
+<script>
+/* 07 · 汽油 vs 柴油 Gasoline vs Diesel */
+'use strict';
+registerModule({
+  id: 'compare', num: '07', name: '汽油对比柴油', en: 'Gasoline vs Diesel',
+  desc: '同一套四冲程，两种点火哲学：火花点燃 vs 压燃。',
+  quiz: {
+    q: '柴油机为什么不需要火花塞？',
+    opts: ['柴油更便宜', '压缩比高到压缩终了空气温度超过柴油自燃点，喷油即燃', '柴油自己会冒火花', '转速太低'],
+    ans: 1,
+    why: 'CR 16–22 让压缩终了空气达到 900 K 以上，柴油雾滴喷入即自燃。汽油反过来不能用高压燃——会爆震。',
+  },
+  scenes: [
+    { key: 'side', name: '并排看', en: 'Side by side', narr: '左边汽油机（火花塞，CR≈11.7），右边柴油机（喷油嘴，CR≈18）。同样的四个冲程，只有“怎么点燃”不同。', tool: 'compare', spin: true },
+    { key: 'intake', name: '进气差', en: 'Intake', narr: '汽油机进气冲程吸入的是汽油+空气混合气；柴油机只吸纯空气——燃油在压缩末才直接喷进燃烧室，避免提前点燃。', tool: 'compare', angle: 90 },
+    { key: 'ignite', name: '点燃差', en: 'Ignition', narr: '汽油机 358° 火花跳火；柴油机约 350° 喷油嘴雾化喷入高温空气，十几度后自燃起火。柴油机没有“点火提前角”，只有“喷油提前角”。', tool: 'compare', angle: 365 },
+    { key: 'eff', name: '效率差', en: 'Efficiency', narr: '理想循环效率 η=1−CR^−0.3：CR 11 约 51%，CR 18 约 58%。柴油机热效率更高，根源就是压缩比更高。', tool: 'effbar', spin: false },
+    { key: 'use', name: '用途分野', en: 'Where each wins', narr: '柴油机低速扭矩大、耐久、省油——卡车、船、发电机；汽油机转速高、轻、便宜、安静——乘用车。四冲程本身两种都用。', tool: 'effbar', spin: false },
+  ],
+});
+
+</script>
+<script>
+/* 08 · 四缸机 Inline Four */
+'use strict';
+registerModule({
+  id: 'multi', num: '08', name: '四缸机', en: 'Inline four',
+  desc: '单缸每 720° 只有一次爆发；四缸把它摊成每 180° 一次。',
+  quiz: {
+    q: '直列四缸机曲轴每转两圈（720°）里点火几次？',
+    opts: ['1 次', '4 次——四个缸轮流，每 180° 一次', '8 次', '2 次'],
+    ans: 1,
+    why: '每个缸 720° 循环点火一次，四个缸错开排列，合计每 180° 就有一缸点火，动力间隔均匀四倍于单缸。',
+  },
+  scenes: [
+    { key: 'gap', name: '单缸的空窗', en: 'Single-cylinder gap', narr: '只看缸 1：橙色脉冲 720° 里只出现一次，其余 540° 全靠飞轮动能撑着。这就是单缸机怠速“突突”的原因。', tool: 'multi', angle: 100 },
+    { key: 'phase', name: '四缸的相位', en: 'Phases', narr: '曲柄相位 0/540/180/360°：活塞 1 与 4 同上下、2 与 3 同上下（互相镜像）。两两配对，惯性力先抵消一半。', tool: 'multi', spin: true },
+    { key: 'order', name: '点火顺序 1-3-4-2', en: 'Firing order', narr: '点火沿 1→3→4→2，脉冲间隔正好 180°——曲轴每半圈收到一次推力，输出从“脉冲”变成“连续”。', tool: 'multi', angle: 372 },
+    { key: 'balance', name: '飞轮与平衡', en: 'Flywheel & balance', narr: '四缸仍需飞轮：180° 间隔仍有扭矩波动，且排气/二阶惯性力无法完全平衡。缸数越多越顺，代价是更重更贵。', tool: 'multi', spin: true },
+  ],
+});
+
+</script>
+<script>
+/* Engine Lab application shell: module sidebar, guided director, quiz,
+   theme, and the per-scene tool dispatcher. All drawing goes through
+   engine-render.js + core.js. */
+'use strict';
+
+const modules = window.ENGINE_MODULES;
+const stage = document.getElementById('scene');
+const sctx = stage.getContext('2d');
+fitCanvas(stage);
+
+const state = { mi: 0, si: 0, angle: 90, playing: true, auto: true, rpm: 240, t: 0, sceneT: 0, answered: {} };
+const params = {};
+for (const m of modules) {
+  params[m.id] = {};
+  for (const c of (m.controls || [])) params[m.id][c.key] = c.def;
+}
+
+const mod = () => modules[state.mi];
+const scene = () => mod().scenes[state.si];
+
+// ---------- debug hook (used by tests) ----------
+window.lab = {
+  get angle() { return state.angle; },
+  setAngle(a) { state.angle = wrap720(a); },
+  gotoModule(id) { const i = modules.findIndex(m => m.id === id); if (i >= 0) switchModule(i); },
+  gotoScene(key) { const i = mod().scenes.findIndex(s => s.key === key); if (i >= 0) switchScene(i); },
+  state, params,
+  debug() { const sc = scene(); return { module: mod().id, scene: sc.key, angle: wrap720(state.angle), spin: !!sc.spin, tool: sc.tool || 'engine', playing: state.playing }; },
+};
+
+// ---------- theme ----------
+let theme = localStorage.getItem('czl-lab-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+const themeBtn = document.getElementById('themeBtn');
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', theme);
+  themeBtn.textContent = theme === 'dark' ? '深色 Dark' : '浅色 Light';
+  themeBtn.setAttribute('aria-pressed', String(theme === 'light'));
+  const m = document.querySelector('meta[name="theme-color"]');
+  if (m) m.content = theme === 'light' ? '#f4f2ec' : '#101113';
+}
+themeBtn.addEventListener('click', () => { theme = theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('czl-lab-theme', theme); applyTheme(); });
+applyTheme();
+
+// ---------- sidebar ----------
+const moduleList = document.getElementById('moduleList');
+function buildSidebar() {
+  moduleList.innerHTML = '';
+  modules.forEach((m, i) => {
+    const b = document.createElement('button');
+    b.className = 'mod' + (i === state.mi ? ' cur' : '') + (state.answered[m.id] === m.quiz.ans ? ' done' : '');
+    b.setAttribute('aria-current', i === state.mi ? 'true' : 'false');
+    b.innerHTML = `<span class="mod-id">${m.num}</span><span><span class="mod-title">${m.name}</span><span class="mod-sub">${m.en}</span></span>`;
+    b.addEventListener('click', () => switchModule(i));
+    moduleList.appendChild(b);
+  });
+}
+
+// ---------- controls ----------
+const paramBox = document.getElementById('paramControls');
+function buildControls() {
+  paramBox.innerHTML = '';
+  for (const c of (mod().controls || [])) {
+    const lab = document.createElement('label');
+    const inp = document.createElement('input');
+    inp.type = 'range'; inp.min = c.min; inp.max = c.max; inp.step = c.step;
+    inp.value = params[mod().id][c.key];
+    inp.setAttribute('aria-label', c.label);
+    inp.addEventListener('input', () => { params[mod().id][c.key] = +inp.value; });
+    lab.append(c.label + ' ', inp);
+    paramBox.appendChild(lab);
+  }
+}
+
+// ---------- quiz ----------
+const quizCard = document.getElementById('quizBody');
+function buildQuiz() {
+  const q = mod().quiz;
+  quizCard.innerHTML = '';
+  const h = document.createElement('p'); h.className = 'quiz-q'; h.textContent = q.q;
+  quizCard.appendChild(h);
+  const opts = document.createElement('div'); opts.className = 'quiz-opts';
+  q.opts.forEach((o, i) => {
+    const b = document.createElement('button'); b.className = 'btn'; b.textContent = o;
+    b.addEventListener('click', () => {
+      state.answered[mod().id] = i;
+      [...opts.children].forEach((btn, j) => {
+        btn.disabled = true;
+        if (j === q.ans) btn.classList.add('right');
+        else if (j === i) btn.classList.add('wrong');
+      });
+      const why = document.createElement('p'); why.className = 'quiz-why';
+      why.textContent = (i === q.ans ? '✓ 对了：' : '✗ 正确答案是「' + q.opts[q.ans] + '」。') + q.why;
+      quizCard.appendChild(why);
+      buildSidebar();
+    });
+    opts.appendChild(b);
+  });
+  quizCard.appendChild(opts);
+}
+
+// ---------- narration ----------
+const narrName = document.getElementById('narrName'), narrIdx = document.getElementById('narrIdx'), narrText = document.getElementById('narrText');
+function narrate() {
+  narrName.textContent = mod().num + ' · ' + mod().name + ' ' + mod().en;
+  narrIdx.textContent = (state.si + 1) + ' / ' + mod().scenes.length;
+  narrText.textContent = scene().narr;
+  document.getElementById('angleTag').textContent = Math.round(wrap720(state.angle)) + '°';
+}
+
+// ---------- switching ----------
+function switchModule(i) {
+  state.mi = i; state.si = 0;
+  const sc = scene();
+  if (sc.angle != null) state.angle = sc.angle;
+  state.playing = !!sc.spin; state.sceneT = 0;
+  buildSidebar(); buildControls(); buildQuiz(); narrate(); syncButtons();
+}
+function switchScene(i) {
+  const n = mod().scenes.length;
+  state.si = ((i % n) + n) % n;
+  const sc = scene();
+  if (sc.angle != null) state.angle = sc.angle;
+  state.playing = !!sc.spin; state.sceneT = 0;
+  narrate(); syncButtons();
+}
+const playBtn = document.getElementById('playBtn'), autoBtn = document.getElementById('autoBtn');
+function syncButtons() {
+  playBtn.textContent = state.playing ? '暂停 Pause' : '播放 Play';
+  autoBtn.textContent = state.auto ? '自动导览 开' : '自动导览 关';
+  autoBtn.setAttribute('aria-pressed', String(state.auto));
+}
+playBtn.addEventListener('click', () => { state.playing = !state.playing; syncButtons(); });
+autoBtn.addEventListener('click', () => { state.auto = !state.auto; syncButtons(); });
+document.getElementById('nextBtn').addEventListener('click', () => { state.auto = false; switchScene(state.si + 1); });
+document.getElementById('prevBtn').addEventListener('click', () => { state.auto = false; switchScene(state.si - 1); });
+document.getElementById('rpmR').addEventListener('input', e => state.rpm = +e.target.value);
+document.getElementById('scrubR').addEventListener('input', e => {
+  state.playing = false; state.auto = false; state.angle = +e.target.value; syncButtons();
+});
+
+// ---------- bench instruments (module-local canvases drawn here) ----------
+function drawCRBench(ctx, W, H, cr) {
+  const ink = cssVar('--text'), dim = cssVar('--dim'), line = cssVar('--line'), cyan = cssVar('--cyan'), orange = cssVar('--orange'), red = cssVar('--red');
+  ctx.fillStyle = ink; ctx.font = 'bold 26px ui-monospace,monospace';
+  ctx.fillText('CR ' + cr.toFixed(1) + ' : 1', 40, 60);
+  const p = crPressure(cr), t = crTemp(cr), eta = 1 - Math.pow(cr, 1 - GAMMA);
+  const rows = [
+    ['压缩终了压力 P_tdc', p.toFixed(0) + ' bar', p / 90],
+    ['压缩终了温度 T_tdc', Math.round(t) + ' K', t / 1000],
+    ['理想循环效率 η', (eta * 100).toFixed(0) + '%', eta],
+  ];
+  rows.forEach(([label, val, frac], i) => {
+    const y = 120 + i * 74;
+    ctx.fillStyle = dim; ctx.font = '13px system-ui'; ctx.fillText(label, 40, y);
+    ctx.fillStyle = line; ctx.fillRect(40, y + 10, W - 200, 12);
+    ctx.fillStyle = cyan; ctx.fillRect(40, y + 10, clamp(frac, 0, 1) * (W - 200), 12);
+    ctx.fillStyle = ink; ctx.font = 'bold 15px ui-monospace,monospace'; ctx.fillText(val, W - 150, y + 22);
+  });
+  // gasoline knock limit marker
+  const x = 40 + GASOLINE_MAX_CR / 15 * (W - 200);
+  ctx.strokeStyle = red; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(x, 92); ctx.lineTo(x, H - 30); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = red; ctx.font = '12px system-ui'; ctx.fillText('汽油爆震极限 ≈ CR 13.5（教学值）', x + 6, H - 40);
+  ctx.fillStyle = dim; ctx.font = '12px system-ui';
+  ctx.fillText('P ∝ CR^1.3 · T ∝ CR^0.3 · η = 1 − CR^−0.3（γ=1.3 空气标准模型）', 40, H - 22);
+}
+
+function drawAdvCurve(ctx, W, H, advance) {
+  const ink = cssVar('--text'), dim = cssVar('--dim'), line = cssVar('--line'), cyan = cssVar('--cyan'), orange = cssVar('--orange'), red = cssVar('--red');
+  const padL = 40, padB = 34, padT = 26;
+  const X = a => padL + (a + 6) / 42 * (W - padL - 20);
+  const Y = p => H - padB - p * (H - padB - padT);
+  ctx.strokeStyle = line; ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, H - padB); ctx.lineTo(W - 20, H - padB); ctx.stroke();
+  // knock band (advance > 22) and late band (advance < 0)
+  ctx.globalAlpha = 0.13; ctx.fillStyle = red; ctx.fillRect(X(22), padT, X(36) - X(22), H - padB - padT);
+  ctx.fillStyle = orange; ctx.fillRect(X(-6), padT, X(0) - X(-6), H - padB - padT); ctx.globalAlpha = 1;
+  ctx.fillStyle = dim; ctx.font = '11px system-ui';
+  ctx.fillText('爆震区', X(24), padT + 14); ctx.fillText('迟燃/回火区', X(-5), padT + 14);
+  ctx.strokeStyle = cyan; ctx.lineWidth = 2.6; ctx.beginPath();
+  for (let a = -6; a <= 36; a += 0.5) { const y = Y(relativePower(a)); a === -6 ? ctx.moveTo(X(a), y) : ctx.lineTo(X(a), y); }
+  ctx.stroke();
+  const y = Y(relativePower(advance));
+  ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(X(advance), y, 6, 0, 7); ctx.fill();
+  ctx.font = 'bold 13px ui-monospace,monospace';
+  ctx.fillText((advance >= 0 ? '提前 ' + advance + '° BTDC' : '滞后 ' + (-advance) + '° ATDC') + ' · 相对功率 ' + Math.round(relativePower(advance) * 100) + '%', X(advance) + 10, y - 10);
+  ctx.fillStyle = dim; ctx.font = '11px ui-monospace,monospace';
+  ctx.fillText('上止点 TDC', X(0) - 30, H - padB + 18);
+  ctx.fillText('−6°', X(-6), H - 12); ctx.fillText('+36°', X(36) - 20, H - 12);
+  ctx.fillText('风险：爆震 ' + Math.round(knockRisk(advance) * 100) + '% · 回火 ' + Math.round(backfireRisk(advance) * 100) + '%（教学模型）', padL + 4, padT - 8);
+}
+
+function drawCompare(ctx, W, H, opts) {
+  const { angle, t } = opts;
+  const dim = cssVar('--dim'), ink = cssVar('--text');
+  ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W / 2 - 2, H); ctx.clip();
+  ctx.translate(0, -20); ctx.scale((W / 2) / 900, H / 620);
+  drawEngine(ctx, 900, 620, { angle, labels: false, t });
+  ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.rect(W / 2 + 2, 0, W / 2 - 2, H); ctx.clip();
+  ctx.translate(W / 2 + 2, -20); ctx.scale((W / 2) / 900, H / 620);
+  drawEngine(ctx, 900, 620, { angle, labels: false, diesel: true, t });
+  ctx.restore();
+  ctx.strokeStyle = cssVar('--line'); ctx.beginPath(); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, H); ctx.stroke();
+  ctx.font = 'bold 14px system-ui'; ctx.fillStyle = ink;
+  ctx.fillText('汽油机 Spark-ignition · CR 11.7 · 火花塞', 24, 24);
+  ctx.fillText('柴油机 Compression-ignition · CR 18 · 喷油嘴', W / 2 + 24, 24);
+  ctx.fillStyle = dim; ctx.font = '11px system-ui';
+  ctx.fillText('同一角度 θ · 同一曲柄几何 · 只有点燃方式不同', W / 2 - 150, H - 10);
+}
+
+function drawEffBars(ctx, W, H) {
+  const ink = cssVar('--text'), dim = cssVar('--dim'), cyan = cssVar('--cyan'), orange = cssVar('--orange');
+  const rows = [
+    ['汽油机 CR 11', 1 - Math.pow(11, 1 - GAMMA), cyan],
+    ['柴油机 CR 18', 1 - Math.pow(18, 1 - GAMMA), orange],
+    ['奥托 vs 柴油 · 空气标准 η = 1 − CR^−0.3'],
+  ];
+  rows.slice(0, 2).forEach(([label, eta, col], i) => {
+    const y = 90 + i * 90;
+    ctx.fillStyle = ink; ctx.font = '15px system-ui'; ctx.fillText(label, 40, y - 12);
+    ctx.fillStyle = cssVar('--line'); ctx.fillRect(40, y, W - 240, 26);
+    ctx.fillStyle = col; ctx.fillRect(40, y, eta * (W - 240), 26);
+    ctx.fillStyle = ink; ctx.font = 'bold 18px ui-monospace,monospace'; ctx.fillText(Math.round(eta * 100) + '%', W - 160, y + 22);
+  });
+  ctx.fillStyle = dim; ctx.font = '12px system-ui';
+  ctx.fillText(rows[2][0] + ' —— 实际热效率低一截（摩擦、泵气、传热），但排序不变。', 40, H - 40);
+  ctx.fillText('更高压缩比 = 更高效率 = 柴油机的根本优势；代价是重量、喷射系统和 NOx。', 40, H - 20);
+}
+
+// ---------- per-frame dispatch ----------
+function drawFrame() {
+  const sc = scene(), p = params[mod().id], W = stage._w, H = stage._h;
+  sctx.clearRect(0, 0, W, H);
+  const a = wrap720(state.angle);
+  switch (sc.tool || 'engine') {
+    case 'lift': drawLiftCurves(sctx, W, H, a); break;
+    case 'strip': drawTimingStrip(sctx, W, H, a, mod().id === 'spark' ? sparkAngle(p.advance) : SPARK_AT); break;
+    case 'gears': drawCamGears(sctx, W, H, a); break;
+    case 'pv': drawPV(sctx, W, H, { cr: p.cr, angle: a }); break;
+    case 'crbench': drawCRBench(sctx, W, H, p.cr); break;
+    case 'diesel': drawEngine(sctx, W, H, { angle: a, diesel: true, t: state.t }); break;
+    case 'advcurve': drawAdvCurve(sctx, W, H, p.advance); break;
+    case 'compare': drawCompare(sctx, W, H, { angle: a, t: state.t }); break;
+    case 'effbar': drawEffBars(sctx, W, H); break;
+    case 'multi': drawMultiCyl(sctx, W, H, a, sc.key === 'gap' ? 1 : 4); break;
+    default:
+      drawEngine(sctx, W, H, {
+        angle: a, highlight: sc.highlight ?? null, t: state.t,
+        spark: mod().id === 'spark' ? sparkAngle(p.advance) : null,
+      });
+  }
+}
+
+// ---------- director loop ----------
+let last = performance.now();
+function loop(now) {
+  const dt = Math.min((now - last) / 1000, 0.05); last = now;
+  state.t += dt;
+  const sc = scene();
+  if (state.playing && sc.spin) state.angle = wrap720(state.angle + state.rpm / 60 * 360 * dt);
+  state.sceneT += dt;
+  if (state.auto && state.playing && state.sceneT > (sc.hold || 12)) switchScene(state.si + 1);
+  if (state.playing && sc.spin) document.getElementById('angleTag').textContent = Math.round(state.angle) + '°';
+  drawFrame();
+  requestAnimationFrame(loop);
+}
+
+// ---------- boot ----------
+buildSidebar(); buildControls(); buildQuiz(); narrate(); syncButtons();
+requestAnimationFrame(loop);
+
+</script>
+</body>
+</html>

@@ -28,5 +28,20 @@
     "metrics": "10 个模块 · 60+ 幕讲解 · 10 组同步对比",
     "preview": "assets/stock-preview.svg",
     "previewAlt": "股票 K 线、均线与订单簿示意图 / Candlestick, moving averages and order book illustration"
+  },
+  {
+    "slug": "engine-lab",
+    "title": "Engine Lab · 四冲程发动机原理实验室",
+    "category": "机械工程 / Mechanical engineering",
+    "description": "从曲轴两圈一个循环出发，拆开配气正时、点火提前角、压缩比与示功图：能拖角度、能停在做功冲程，亲眼看压力如何变成功。",
+    "english": "Eight guided scenes-per-module on valve timing, ignition advance, compression ratio, P-V work and inline-four firing order.",
+    "tags": [
+      "剖面动画 / Cutaway animation",
+      "示功图 / P-V diagram",
+      "离线可用 / Offline"
+    ],
+    "metrics": "8 个模块 · 39 幕讲解 · 8 组测验",
+    "preview": "assets/engine-preview.svg",
+    "previewAlt": "单缸剖面与 P-V 示功图示意 / Single-cylinder cutaway and P-V indicator diagram"
   }
 ]

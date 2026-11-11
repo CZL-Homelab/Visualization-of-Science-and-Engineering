@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="380" viewBox="0 0 620 380" role="img" aria-labelledby="t d">
+<title id="t">Engine Lab preview</title>
+<desc id="d">Single-cylinder four-stroke cutaway with piston, valves and crank on the left, P-V indicator loop on the right.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b1e23"/><stop offset="1" stop-color="#121417"/></linearGradient>
+  <style>
+    text{font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif}
+    .eyebrow{fill:#5bc8be;font-size:9px;letter-spacing:2.2px;font-weight:600}
+    .title{fill:#eceef1;font-size:17px;font-weight:700}
+    .sub{fill:#9aa1a9;font-size:9px;letter-spacing:0.6px}
+    .stroke{stroke:#eceef1;stroke-width:3;fill:none}
+    .piston{fill:#eceef1}
+    .intake{fill:#7aa2d8}
+    .exhaust{fill:#e05a5f}
+    .spark{fill:#e0955a}
+    .pv{stroke:#e0955a;stroke-width:2.4;fill:none}
+    .ghost{stroke:#5bc8be;stroke-width:1.6;fill:none;opacity:.6}
+  </style>
+</defs>
+<rect width="620" height="380" rx="14" fill="url(#bg)"/>
+<rect x="14" y="14" width="592" height="352" rx="10" fill="none" stroke="#2d3238"/>
+<text x="34" y="46" class="eyebrow">ENGINE LAB · FOUR STROKE</text>
+<text x="34" y="70" class="title">四冲程发动机原理实验室</text>
+<text x="34" y="88" class="sub">配气正时 · 点火提前角 · 示功图 · 四缸点火顺序</text>
+<!-- cutaway -->
+<g transform="translate(96 110)">
+  <path class="stroke" d="M-34 6 v150 M34 6 v150"/>
+  <rect x="-30" y="96" width="60" height="26" rx="4" class="piston"/>
+  <path d="M0 122 L26 190" stroke="#9aa1a9" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="26" cy="190" r="7" fill="#5bc8be"/>
+  <circle cx="0" cy="196" r="22" fill="none" stroke="#2d3238" stroke-width="3"/>
+  <rect x="-13" y="14" width="26" height="7" rx="2" class="intake"/>
+  <rect x="13" y="20" width="26" height="7" rx="2" class="exhaust"/>
+  <circle cx="0" cy="14" r="5" class="spark"/>
+</g>
+<!-- P-V loop -->
+<g transform="translate(300 108)">
+  <path class="stroke" d="M0 220 V0 M0 220 H240"/>
+  <path class="pv" d="M208 218 C 150 200, 80 160, 36 116 C 30 80, 28 46, 30 26 C 70 14, 120 34, 158 72 C 184 108, 202 160, 208 200 C 150 182, 80 168, 34 150 C 32 172, 30 196, 32 212 Z"/>
+  <text x="8" y="238" class="sub">P–V 示功图 · 环面积 = 净功</text>
+</g>
+<!-- firing bar -->
+<g transform="translate(300 330)">
+  <rect x="0" y="0" width="240" height="8" rx="4" fill="#2d3238"/>
+  <rect x="10" y="-3" width="5" height="14" class="spark"/>
+  <rect x="70" y="-3" width="5" height="14" class="spark"/>
+  <rect x="130" y="-3" width="5" height="14" class="spark"/>
+  <rect x="190" y="-3" width="5" height="14" class="spark"/>
+  <text x="0" y="26" class="sub">四缸点火脉冲 · 每 180° 一次</text>
+</g>
+</svg>

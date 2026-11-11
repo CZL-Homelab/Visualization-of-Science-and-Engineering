@@ -581,7 +581,7 @@ input.invalid{border-color:var(--red)}
 .dir-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--cyan)}
 .dir-head h2{font-size:clamp(20px,2.2vw,27px);font-weight:620;letter-spacing:-.02em}
 .dir-head p{font-size:12.5px;color:var(--muted);max-width:640px}
-.dir-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.dir-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
 .dir-card{
   display:flex;gap:14px;align-items:flex-start;padding:18px;
   background:var(--panel);border:1px solid var(--line);border-radius:12px;transition:.18s
@@ -826,7 +826,7 @@ input.invalid{border-color:var(--red)}
   <div class="dir-head">
     <span class="dir-eyebrow">LAB PROJECTS / 全部实验</span>
     <h2 id="labDirectoryTitle">换一个实验室</h2>
-    <p>两个可离线运行的交互式实验室。主题与导航在各页保持一致。</p>
+    <p>三个可离线运行的交互式实验室。主题与导航在各页保持一致。</p>
   </div>
   <div class="dir-grid">
     <a class="dir-card current" href="./index.html" aria-current="page">
@@ -836,6 +836,10 @@ input.invalid{border-color:var(--red)}
     <a class="dir-card" href="../motor-lab/index.html">
       <span class="dir-num">01</span>
       <div class="dir-copy"><h3>电机原理实验室 <span class="dir-tag">Motor Lab</span></h3><p>六类电机的三维结构、磁场与连续换向过程。</p></div>
+    </a>
+    <a class="dir-card" href="../engine-lab/index.html">
+      <span class="dir-num">03</span>
+      <div class="dir-copy"><h3>四冲程发动机原理实验室 <span class="dir-tag">Engine Lab</span></h3><p>配气正时、点火提前角、示功图与四缸点火顺序。</p></div>
     </a>
   </div>
   <a class="dir-all" href="../index.html#projects">返回项目目录 / All projects <span aria-hidden="true">↗</span></a>
