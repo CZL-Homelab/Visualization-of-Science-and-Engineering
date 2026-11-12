@@ -46,6 +46,20 @@ ok('equivalent head for seawater π is ~270 m of water column', () => {
   assert.ok(h > 255 && h < 285, 'head = ' + h.toFixed(1));
 });
 
+/* ---------- pressure direction, including display rounding ---------- */
+ok('salt-side pressure opposes osmosis and reverses flow above equilibrium', () => {
+  const h = sim.osmosisCell(35000, 25, 0).head;
+  assert.strictEqual(sim.osmosisCell(35000, 25, 0).direction, 'in');
+  assert.strictEqual(sim.osmosisCell(35000, 25, h).direction, 'balance');
+  assert.strictEqual(sim.osmosisCell(35000, 25, h + 35).direction, 'out');
+});
+ok('rounding the equilibrium head to whole metres does not invent a flow', () => {
+  for (const salt of [1000, 35000, 70000]) {
+    const h = sim.osmosisCell(salt, 25, 0).head;
+    assert.strictEqual(sim.osmosisCell(salt, 25, Math.round(h)).direction, 'balance');
+  }
+});
+
 /* ---------- mass balance ---------- */
 ok('water balance identity F·Cf = P·Cp + B·Cb holds', () => {
   const b = core.waterBalance(100, 0.45, 0.993, 35000);

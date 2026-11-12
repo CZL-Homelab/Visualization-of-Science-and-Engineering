@@ -33,6 +33,8 @@ jobs:
           for script in src/*.js src/modules/*.js; do node --check "$script"; done
       - name: Verify physics invariants
         run: node tests/check-physics.cjs
+      - name: Verify lesson and 3D state synchronization
+        run: node tests/check-scenes.cjs
       - name: Verify offline packaging
         run: node tests/check-build.cjs
       - name: Verify generated page is committed

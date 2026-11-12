@@ -45,6 +45,7 @@ jobs:
           python build.py
           for script in src/*.js src/modules/*.js; do node --check "$script"; done
           node tests/check-physics.cjs
+          node tests/check-scenes.cjs
           node tests/check-build.cjs
       - name: Build and verify Fusion Lab
         working-directory: Projects/fusion-lab
@@ -55,7 +56,7 @@ jobs:
           node tests/check-build.cjs
       - name: Prepare static pages
         run: |
-          python scripts/build_site.py
+          python scripts/check_site.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

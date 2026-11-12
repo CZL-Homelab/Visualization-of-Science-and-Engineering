@@ -108,8 +108,8 @@
 
     return {
       apply: function (p) {
-        if (p.stages != null) nCtl.set(p.stages, true);
-        if (p.topBrine != null) tbCtl.set(p.topBrine, true);
+        if (p.stages != null) nCtl.set(p.stages);
+        if (p.topBrine != null) tbCtl.set(p.topBrine);
         if (p.barFocus != null) {
           var ladder = ['green', 'cyan', 'blue', 'orange'];
           bar.update({ colors: ladder.map(function (cc, i) { return i === p.barFocus ? 'yellow' : cc; }) });

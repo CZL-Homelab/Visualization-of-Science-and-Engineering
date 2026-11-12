@@ -131,7 +131,7 @@
     return {
       apply: function (p) {
         if (p.tech != null) { st.tech = p.tech; techCtl.set(p.tech); }
-        if (p.recovery != null) yCtl.set(p.recovery, true);
+        if (p.recovery != null) yCtl.set(p.recovery);
         sync();
       },
       destroy: function () { bar.destroy(); curve.destroy(); }

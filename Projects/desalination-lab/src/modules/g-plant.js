@@ -26,12 +26,14 @@
     glHost.style.cssText = 'flex:1;min-height:210px;display:none';
     var gl3d = null;
     function setMode(three) {
-      if (three && !gl3d) gl3d = DL.gl.plant(glHost, function () { return { recovery: st.recovery / 100 }; });
       flowHost.style.display = three ? 'none' : '';
       statHost.style.display = three ? 'none' : '';
       glHost.style.display = three ? '' : 'none';
+      if (three && !gl3d) gl3d = DL.gl.plant(glHost, function () { var pl = sim.plant({ feed: 100000, recovery: st.recovery / 100, rejection: 0.993, calcium: st.calcium }); return { recovery: st.recovery / 100, brineTds: pl.bal.Cb }; });
       btn2d.className = three ? '' : 'on';
       btn3d.className = three ? 'on' : '';
+      btn2d.setAttribute('aria-pressed', String(!three));
+      btn3d.setAttribute('aria-pressed', String(three));
     }
     btn2d.addEventListener('click', function () { setMode(false); });
     btn3d.addEventListener('click', function () { setMode(true); });
@@ -169,11 +171,12 @@
       note.textContent = '一条城市水管的真实旅程：取水 → 预处理 → 膜 → 再矿化 → 龙头，外加一条必须交代清楚的浓盐水支线。';
     }
     sync();
+    setMode(true);
 
     return {
       apply: function (p) {
-        if (p.recovery != null) yCtl.set(p.recovery, true);
-        if (p.calcium != null) caCtl.set(p.calcium, true);
+        if (p.recovery != null) yCtl.set(p.recovery);
+        if (p.calcium != null) caCtl.set(p.calcium);
         sync();
       },
       destroy: function () { flow.destroy(); stat.destroy(); if (gl3d) gl3d.destroy(); }

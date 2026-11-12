@@ -36,11 +36,11 @@
     "description": "从 35 g/L 的海水出发：亲手调渗透压、回收率与截留率，看质量守恒、闪蒸瀑布与整厂物料平衡如何配平。",
     "english": "Seven interactive labs on osmosis, reverse osmosis, flash distillation, membranes and the whole plant balance.",
     "tags": [
-      "交互模型 / Interactive models",
+      "交互 3D / Interactive 3D",
       "离线可用 / Offline",
       "自动讲解 / Guided tours"
     ],
-    "metrics": "7 个模块 · 25 幕讲解 · 3 个 WebGL 3D 视图 · 21 项物理不变量测试",
+    "metrics": "7 个模块 · 25 幕讲解 · 3 个 WebGL 3D 视图 · 23 项物理不变量测试",
     "preview": "assets/desal-preview.svg",
     "previewAlt": "反渗透膜、浓水与产物流及能耗对比示意图 / RO membrane streams, osmotic gauge and energy comparison bars"
   },

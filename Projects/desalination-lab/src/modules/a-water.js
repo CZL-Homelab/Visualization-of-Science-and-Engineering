@@ -119,7 +119,7 @@
 
     return {
       apply: function (p) {
-        if (p.tds != null) tdsCtl.set(p.tds, true);
+        if (p.tds != null) tdsCtl.set(p.tds);
         if (p.donutCenter) donut.update({ center: p.donutCenter });
         if (p.ladderFocus != null) {
           ladder.update({

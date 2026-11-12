@@ -14,6 +14,7 @@ python3 build.py                 # 生成单文件 index.html
 for f in src/*.js src/modules/*.js; do node --check "$f"; done
 node tests/check-physics.cjs     # 物理不变量
 node tests/check-build.cjs       # 离线封装与锚点
+node tests/check-scenes.cjs      # 讲解 → 控件 → 3D 状态联动
 python -m http.server 8766 --bind 127.0.0.1   # 预览 http://127.0.0.1:8766/desalination-lab/
 ```
 
@@ -45,10 +46,20 @@ python -m http.server 8766 --bind 127.0.0.1   # 预览 http://127.0.0.1:8766/des
 
 ## 主题与导航
 
-遵循仓库全站约定：`czl-lab-theme`、首次绘制前 `data-theme`、可读主题按钮与 `aria-pressed`、顶栏 `Lab Projects` 返回入口、页脚前实验室目录（三个实验室、标记当前页）。深浅色与 390px 窄屏均已检查。
+遵循仓库全站约定：`czl-lab-theme`、首次绘制前 `data-theme`、可读主题按钮与 `aria-pressed`、顶栏 `Lab Projects` 返回入口、页脚前实验室目录（四个实验室、标记当前页）。深浅色与 390px 窄屏均已检查。
 
 ## English
 
-Desalination Lab is a single-file, fully offline teaching bench for seawater desalination: seven modules covering the salinity ladder, osmotic pressure, a parameter-driven single-pass RO stage (mass balance and energy in sync), MSF flash cascades, membrane fouling, energy-accounting comparisons and a whole-plant balance with remineralisation and brine disposal. All physics math lives in `src/core.js` and is pinned by 21 invariant tests; literature values carry a verification date and source links. Animations are teaching models, not engineering simulations.
+Desalination Lab is a single-file, fully offline teaching bench for seawater desalination: seven modules covering the salinity ladder, osmotic pressure, a parameter-driven single-pass RO stage (mass balance and energy in sync), MSF flash cascades, membrane fouling, energy-accounting comparisons and a whole-plant balance with remineralisation and brine disposal. All physics math lives in `src/core.js` and is pinned by 23 invariant tests; literature values carry a verification date and source links. Animations are teaching models, not engineering simulations.
 
 Build and verify: `python3 build.py`, `node --check` on all sources, `node tests/check-physics.cjs`, `node tests/check-build.cjs`. Commit the generated `index.html` with source changes.
+
+## 3D 交互 / 3D controls
+
+B/C/G 默认进入 3D，保留 2D 剖面切换。拖动或用方向键旋转，滚轮、加减键或按钮缩放；可暂停流动、复位镜头，RO 支持外壳/剖切切换。减少动态效果偏好默认暂停流动；模型参数和读数仍可操作。切换模块时释放 GPU 几何、材质与纹理；WebGL 不可用时可切回 2D。
+
+卷式 RO 以卷绕膜片、进水流道和中心集水管表示，不采用螺旋管替代膜。结构参考 [DuPont FilmTec 技术手册 §1.7](https://www.dupont.com/content/dam/water/amer/us/en/water/public/documents/en/RO-NF-FilmTec-Manual-45-D01504-en.pdf)（核对 2026-11-13）；层间距、水路和设备尺寸有意放大。压力作用在盐水侧，滑块米数是等效淡水柱压头；未模拟真实自由液面演化。整厂粒子沿管线流动，浓盐水支线独立接至扩散器；不计算排海羽流或环评结果。
+
+B/C/G open in 3D with a 2D alternative. Drag or use arrow keys to orbit, scroll or use +/- to zoom, pause flow, reset the camera, and toggle the RO shell/cutaway. Reduced motion starts paused; state changes still update the model. GPU resources are released when switching modules. A WebGL fallback retains access to 2D views.
+
+The RO geometry uses wound membrane sheets and a separate collection tube, informed by the DuPont manual linked above (checked 2026-11-13). Spacing, paths and equipment are exaggerated teaching illustrations. Pressure acts on the saline side; metres denote an equivalent freshwater pressure head, not simulated liquid-level evolution. Plant particles follow connected pipes to a separate brine diffuser; no plume or environmental impact is calculated. Run `node tests/check-scenes.cjs` to verify lesson patches drive the live 3D state.

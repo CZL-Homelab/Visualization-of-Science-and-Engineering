@@ -29,15 +29,17 @@
   }
 
   /* ---------- module B: osmosis cell state ---------- */
-  /* Two chambers separated by a semipermeable membrane. Given the freshwater
-   * column height h (m) on the low side, report net water direction:
-   * osmosis lifts freshwater until the column head matches π. */
-  function osmosisCell(feedTdsMgL, tempC, freshwaterHeadM) {
+  /* Two chambers separated by a semipermeable membrane. Salt-side applied
+   * pressure is expressed as an equivalent freshwater head h (m), report net water direction. Positive salt-side
+   * pressure opposes osmosis; it drives RO once it exceeds π. */
+  function osmosisCell(feedTdsMgL, tempC, saltSideHeadM) {
     var pi = core.osmoticPressure(feedTdsMgL, tempC);
     var head = core.headMeters(pi);
-    var applied = freshwaterHeadM || 0;
+    var applied = saltSideHeadM || 0;
     var appliedBar = applied * 1000 * 9.80665 / 1e5;
-    var direction = appliedBar < pi ? 'in' : appliedBar > pi ? 'out' : 'balance';
+    /* A 0.05 bar display tolerance avoids claiming a flow reversal from
+     * rounding an equivalent head to the nearest metre. */
+    var direction = Math.abs(appliedBar - pi) <= 0.05 ? 'balance' : appliedBar < pi ? 'in' : 'out';
     return { pi: pi, head: head, appliedBar: appliedBar, direction: direction, net: pi - appliedBar };
   }
 

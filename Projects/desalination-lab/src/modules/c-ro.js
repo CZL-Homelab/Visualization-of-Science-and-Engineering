@@ -26,15 +26,17 @@
     glHost.style.cssText = 'flex:1;min-height:200px;display:none';
     var gl3d = null;
     function setMode(three) {
-      if (three && !gl3d) gl3d = DL.gl.spiralRO(glHost, function () {
-        var r = sim.roStage({ pressure: st.pressure, recovery: st.recovery / 100, rejection: st.rejection / 100, permeability: st.A, feed: 100 });
-        return { flux: r.flow.flux, feasible: r.feasible, appliedBar: st.pressure, piBrine: r.flow.piBrine };
-      });
       flowHost.style.display = three ? 'none' : '';
       gaugeHost.style.display = three ? 'none' : '';
       glHost.style.display = three ? '' : 'none';
+      if (three && !gl3d) gl3d = DL.gl.spiralRO(glHost, function () {
+        var r = sim.roStage({ pressure: st.pressure, recovery: st.recovery / 100, rejection: st.rejection / 100, permeability: st.A, feed: 100 });
+        return { flux: r.flow.flux, feasible: r.feasible, appliedBar: st.pressure, netPressure: r.flow.nd, recovery: st.recovery / 100 };
+      });
       btn2d.className = three ? '' : 'on';
       btn3d.className = three ? 'on' : '';
+      btn2d.setAttribute('aria-pressed', String(!three));
+      btn3d.setAttribute('aria-pressed', String(three));
     }
     btn2d.addEventListener('click', function () { setMode(false); });
     btn3d.addEventListener('click', function () { setMode(true); });
@@ -70,8 +72,8 @@
       c2.strokeStyle = p.violet; c2.lineWidth = 4;
       c2.beginPath(); c2.moveTo(memX, midY - 52); c2.lineTo(memX, midY + 52); c2.stroke();
       /* permeate down-right, brine right */
-      pipe(memX + 14, w - 16, midY - 46, permFrac, p.cyan, '产水 ' + ui.fmt.num(r.bal.P, 0) + ' m³/h', 'TDS ' + ui.fmt.int(r.bal.Cp) + ' mg/L', true);
-      pipe(memX + 14, w - 16, midY + 46, brineFrac, p.red, '浓水 ' + ui.fmt.num(r.bal.B, 0) + ' m³/h', 'TDS ' + ui.fmt.int(r.bal.Cb) + ' mg/L', true);
+      pipe(memX + 14, w - 16, midY - 46, permFrac, p.cyan, '产水 ' + ui.fmt.num(r.bal.P, 0) + ' m³/h', 'TDS ' + ui.fmt.int(r.bal.Cp) + ' mg/L');
+      pipe(memX + 14, w - 16, midY + 46, brineFrac, p.red, '浓水 ' + ui.fmt.num(r.bal.B, 0) + ' m³/h', 'TDS ' + ui.fmt.int(r.bal.Cb) + ' mg/L');
       /* travelling flow dots inside each pipe */
       var tt = api && api.t ? api.t : 0;
       var sp = r.feasible ? 0.22 + r.flow.flux * 0.02 : 0.06;
@@ -156,13 +158,14 @@
         : '压力低于浓水侧渗透压：膜两侧净通量为零或倒流。把压力拉回 60 bar 以上。';
     }
     sync();
+    setMode(true);
 
     return {
       apply: function (p) {
-        if (p.pressure != null) pCtl.set(p.pressure, true);
-        if (p.recovery != null) yCtl.set(p.recovery, true);
-        if (p.rejection != null) rCtl.set(p.rejection, true);
-        if (p.A != null) aCtl.set(p.A, true);
+        if (p.pressure != null) pCtl.set(p.pressure);
+        if (p.recovery != null) yCtl.set(p.recovery);
+        if (p.rejection != null) rCtl.set(p.rejection);
+        if (p.A != null) aCtl.set(p.A);
         sync();
       },
       destroy: function () { flowChart.destroy(); gauge.destroy(); if (gl3d) gl3d.destroy(); }
@@ -177,7 +180,7 @@
     scenes: [
       {
         title: '越过渗透压才有水',
-        body: '<p>62 bar 外加压力 vs 浓水侧渗透压（约 48 bar × β）：净驱动压力决定通量。<b>产水通量 J = A·ND</b>，约 14 LMH。</p>',
+        body: '<p>62 bar 外加压力 vs 浓水侧渗透压（约 48 bar × β）：净驱动压力决定通量。<b>产水通量 J = A·ND</b>，本模型默认约 10.5 LMH。</p>',
         guide: '下方压力条：绿色长度是外加压力，橙色标记是浓水侧渗透压。',
         patch: { pressure: 62, recovery: 45, rejection: 99.3 }
       },

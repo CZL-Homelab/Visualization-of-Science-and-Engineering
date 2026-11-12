@@ -1,433 +1,363 @@
-/* Desalination Lab — WebGL 3D views on the vendored three.js build.
- * DL.gl.view(host, opts) wires renderer/camera/drag/visibility;
- * DL.gl.osmosis / spiralRO / plant are the teaching scenes for modules
- * B, C and G. Scenes read live state through a getter each frame so the
- * sliders drive the 3D exactly like the 2D diagrams.
- * Fallback: if WebGL is unavailable the host shows a note and the 2D
- * diagram stays available.
- */
+/* Offline teaching scenes. Geometry is schematic, not a hydraulic simulation.
+ * Shared controls, projected annotations and local simulation time keep the
+ * three views usable without camera drift, including reduced-motion mode. */
 (function () {
   'use strict';
   var DL = globalThis.DL = globalThis.DL || {};
   var THREE = globalThis.THREE;
-  var clamp = DL.charts ? DL.charts.clamp : function (v, a, b) { return Math.min(b, Math.max(a, v)); };
-
-  function points(parent, n, color, size) {
-    var g = new THREE.BufferGeometry();
-    var pos = new Float32Array(n * 3);
-    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    var m = new THREE.PointsMaterial({ color: color, size: size || 0.07, transparent: true, opacity: 0.92, sizeAttenuation: true, depthWrite: false });
-    var obj = new THREE.Points(g, m);
-    obj.renderOrder = 10;   /* particles must never hide behind transparent water volumes */
-    parent.add(obj);
-    return { pos: pos, n: n, obj: obj, mat: m, dirty: function () { g.attributes.position.needsUpdate = true; } };
+  var clamp = DL.charts.clamp;
+  var C = { feed: 0xe0955a, product: 0x5bc8be, brine: 0xe05a5f, water: 0x7aa2d8, membrane: 0xb09bc7, metal: 0xb7c1ca };
+  function v(x, y, z) { return new THREE.Vector3(x, y, z); }
+  function mat(color, opacity) {
+    return new THREE.MeshStandardMaterial({ color: color, roughness: 0.65, metalness: 0.08,
+      transparent: opacity != null, opacity: opacity == null ? 1 : opacity,
+      depthWrite: opacity == null, side: THREE.DoubleSide });
   }
-
+  function mesh(g, geometry, material, x, y, z) {
+    var m = new THREE.Mesh(geometry, material); m.position.set(x || 0, y || 0, z || 0); g.add(m); return m;
+  }
+  function box(g, x, y, z, w, h, d, color, opacity) {
+    return mesh(g, new THREE.BoxGeometry(w, h, d), mat(color, opacity), x, y, z);
+  }
+  function cylinder(g, x, y, z, r, length, color, axis, opacity) {
+    var m = mesh(g, new THREE.CylinderGeometry(r, r, length, 32, 1, true), mat(color, opacity), x, y, z);
+    if (axis === 'x') m.rotation.z = Math.PI / 2;
+    return m;
+  }
+  function ring(g, x, r, color, y, z) {
+    var m = mesh(g, new THREE.TorusGeometry(r, 0.045, 8, 64), mat(color), x, y, z);
+    m.rotation.y = Math.PI / 2; return m;
+  }
+  function path(g, coords, color, radius) {
+    var pts = coords.map(function (a) { return v(a[0], a[1], a[2]); });
+    /* A polyline curve preserves pipe corners and exactly matches the particles. */
+    var curve = new THREE.CurvePath();
+    for (var i = 1; i < pts.length; i++) curve.add(new THREE.LineCurve3(pts[i - 1], pts[i]));
+    mesh(g, new THREE.TubeGeometry(curve, Math.max(24, coords.length * 12), radius || 0.055, 8, false), mat(color, 0.42));
+    return curve;
+  }
+  function points(g, n, color, size) {
+    var geo = new THREE.BufferGeometry(), pos = new Float32Array(n * 3);
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    var dot = document.createElement('canvas'); dot.width = dot.height = 32;
+    var c = dot.getContext('2d'); c.fillStyle = '#fff'; c.beginPath(); c.arc(16, 16, 13, 0, Math.PI * 2); c.fill();
+    var material = new THREE.PointsMaterial({ color: color, size: size || 0.09, map: new THREE.CanvasTexture(dot),
+      transparent: true, alphaTest: 0.1, opacity: 0.95, depthWrite: false });
+    var obj = new THREE.Points(geo, material); g.add(obj);
+    /* Positions start at zero and are rewritten before each render. Dynamic
+     * paths must not be culled using that initial zero-sized bounding sphere. */
+    obj.frustumCulled = false;
+    return { pos: pos, n: n, obj: obj, mat: material, dirty: function () { geo.attributes.position.needsUpdate = true; } };
+  }
+  function stream(g, coords, color, n, size) {
+    var curve = path(g, coords, color, size ? size * 0.6 : 0.055);
+    var p = points(g, n || 40, color, size), at = v(0, 0, 0);
+    return { update: function (t, speed, fraction) {
+      var count = Math.round(p.n * clamp(fraction == null ? 1 : fraction, 0, 1));
+      p.obj.geometry.setDrawRange(0, count);
+      for (var i = 0; i < count; i++) {
+        curve.getPoint((t * speed + i / Math.max(1, count)) % 1, at);
+        p.pos[i * 3] = at.x; p.pos[i * 3 + 1] = at.y; p.pos[i * 3 + 2] = at.z;
+      }
+      p.dirty();
+    } };
+  }
   function view(host, opts) {
-    opts = opts || {};
-    host.classList.add('chart', 'glhost');
-    host.innerHTML = '';
-    var api = { host: host, destroyed: false };
-    if (!THREE) { fallback('3D 引擎未加载'); return api; }
+    host.classList.add('chart', 'glhost'); host.innerHTML = '';
+    var api = { host: host, destroyed: false, destroy: function () { api.destroyed = true; host.innerHTML = ''; } };
+    function fallback() {
+      host.textContent = '3D 暂不可用，请切换到 2D 视图继续实验。'; host.classList.add('gl-fallback');
+    }
+    if (!THREE) { fallback(); return api; }
     var renderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-    } catch (e) {
-      fallback('当前环境不支持 WebGL——2D 示意图不受影响。');
-      return api;
-    }
-    function fallback(msg) {
-      host.innerHTML = '<div class="gl-fallback" style="display:flex;align-items:center;justify-content:center;height:100%;font:11px ui-monospace,monospace;color:#8a929b;text-align:center;padding:16px">' + msg + '</div>';
-    }
+    try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+    catch (e) { fallback(); return api; }
     renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-    var canvas = renderer.domElement;
-    canvas.style.cssText = 'width:100%;height:100%;display:block;touch-action:none';
-    host.appendChild(canvas);
-
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 200);
-    scene.add(new THREE.HemisphereLight(0xdfe9f5, 0x20262e, 1.45));
-    var key = new THREE.DirectionalLight(0xffffff, 1.5);
-    key.position.set(6, 10, 7);
-    scene.add(key);
-    var rim = new THREE.DirectionalLight(0x8fb7ff, 0.4);
-    rim.position.set(-7, 4, -6);
-    scene.add(rim);
-
-    var cam = { r: opts.radius || 9, th: opts.theta != null ? opts.theta : 0.85, ph: opts.phi != null ? opts.phi : 1.12 };
-    var target = new THREE.Vector3(opts.tx || 0, opts.ty || 0, opts.tz || 0);
-    var group = new THREE.Group();
-    scene.add(group);
-    var stateFn = opts.state || function () { return {}; };
-
-    if (opts.build) opts.build(group, { points: points, scene: scene, state: stateFn });
-    /* transparent shells must not write depth, otherwise they occlude the
-       particles floating inside them */
-    group.traverse(function (o) {
-      if (o.material && o.material.transparent && o.material.depthWrite !== false) o.material.depthWrite = false;
-    });
-
-    /* drag to orbit, wheel to zoom */
-    var dragging = false, lastX = 0, lastY = 0;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    var viewport = document.createElement('div'); viewport.className = 'gl-viewport'; host.appendChild(viewport);
+    var canvas = renderer.domElement; viewport.appendChild(canvas);
+    canvas.tabIndex = 0; canvas.setAttribute('role', 'img');
+    canvas.setAttribute('aria-label', opts.title + '。方向键旋转，加减键缩放；也可拖动模型。');
+    var labels = [], layer = document.createElement('div'); layer.className = 'gl-labels'; viewport.appendChild(layer);
+    var toolbar = document.createElement('div'); toolbar.className = 'gl-toolbar'; host.appendChild(toolbar);
+    function button(text, fn, pressed) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = text;
+      if (pressed != null) b.setAttribute('aria-pressed', String(pressed));
+      b.addEventListener('click', fn); toolbar.appendChild(b); return b;
+    }
+    var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var paused = motionQuery.matches, localTime = 0, visible = true, dragging = false;
+    var pauseBtn = button(paused ? '播放流动' : '暂停流动', function () {
+      paused = !paused; pauseBtn.textContent = paused ? '播放流动' : '暂停流动'; pauseBtn.setAttribute('aria-pressed', String(paused));
+    }, paused);
+    var cam = { r: opts.radius, th: opts.theta == null ? 1.16 : opts.theta, ph: opts.phi || 1.13 };
+    button('复位视角', function () { cam.r = opts.radius; cam.th = opts.theta == null ? 1.16 : opts.theta; cam.ph = opts.phi || 1.13; });
+    button('放大', function () { zoom(0.85); }); button('缩小', function () { zoom(1.18); });
+    if (opts.cutaway) {
+      var cut = true;
+      var cutBtn = button('剖切', function () { cut = !cut; opts.cutaway(cut); cutBtn.setAttribute('aria-pressed', String(cut)); }, true);
+    }
+    var readout = document.createElement('p'); readout.className = 'gl-readout'; host.appendChild(readout);
+    var legend = document.createElement('p'); legend.className = 'gl-legend';
+    opts.legend.forEach(function (item) {
+      var span = document.createElement('span'), dot = document.createElement('i'); dot.style.background = item[1];
+      span.appendChild(dot); span.appendChild(document.createTextNode(item[0])); legend.appendChild(span);
+    }); host.appendChild(legend);
+    var scene = new THREE.Scene(), group = new THREE.Group(); scene.add(group);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x626a78, 1.8));
+    var light = new THREE.DirectionalLight(0xffffff, 2.1); light.position.set(-3, 8, 6); scene.add(light);
+    var rim = new THREE.DirectionalLight(0xabc8ef, 0.8); rim.position.set(5, 2, -5); scene.add(rim);
+    var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 150), target = v(0, opts.ty || 0, 0), fit = 1;
+    opts.build(group, { points: points, label: function (text, x, y, z) {
+      var el = document.createElement('span'); el.className = 'gl-label'; el.textContent = text; layer.appendChild(el);
+      labels.push({ el: el, point: v(x, y, z) });
+    } });
+    function zoom(factor) { cam.r = clamp(cam.r * factor, opts.radius * 0.65, opts.radius * 1.8); }
     canvas.addEventListener('pointerdown', function (e) {
-      dragging = true; lastX = e.clientX; lastY = e.clientY;
-      try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* older browsers */ }
+      dragging = true; lastX = e.clientX; lastY = e.clientY; canvas.setPointerCapture(e.pointerId);
     });
+    var lastX = 0, lastY = 0;
     canvas.addEventListener('pointermove', function (e) {
       if (!dragging) return;
-      cam.th -= (e.clientX - lastX) * 0.006;
-      cam.ph = clamp(cam.ph - (e.clientY - lastY) * 0.005, 0.22, 2.72);
+      cam.th -= (e.clientX - lastX) * 0.006; cam.ph = clamp(cam.ph - (e.clientY - lastY) * 0.005, 0.3, 1.8);
       lastX = e.clientX; lastY = e.clientY;
     });
     canvas.addEventListener('pointerup', function () { dragging = false; });
     canvas.addEventListener('pointercancel', function () { dragging = false; });
-    canvas.addEventListener('wheel', function (e) {
+    canvas.addEventListener('wheel', function (e) { e.preventDefault(); zoom(Math.exp(clamp(e.deltaY, -120, 120) * 0.001)); }, { passive: false });
+    canvas.addEventListener('keydown', function (e) {
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', '+', '=', '-'].indexOf(e.key) < 0) return;
       e.preventDefault();
-      cam.r = clamp(cam.r * (1 + e.deltaY * 0.001), opts.minR || 4, opts.maxR || 40);
-    }, { passive: false });
-
-    var visible = false;
-    var io = new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }, { threshold: 0.04 });
-    io.observe(host);
-    function resize() {
-      var r = host.getBoundingClientRect();
-      var w = Math.max(60, r.width), h = Math.max(60, r.height || 260);
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
+      if (e.key === 'ArrowLeft') cam.th -= 0.1;
+      if (e.key === 'ArrowRight') cam.th += 0.1;
+      if (e.key === 'ArrowUp') cam.ph = clamp(cam.ph - 0.1, 0.3, 1.8);
+      if (e.key === 'ArrowDown') cam.ph = clamp(cam.ph + 0.1, 0.3, 1.8);
+      if (e.key === '+' || e.key === '=') zoom(0.9);
+      if (e.key === '-') zoom(1.1);
+    });
+    function reduced(e) {
+      if (e.matches) { paused = true; pauseBtn.textContent = '播放流动'; pauseBtn.setAttribute('aria-pressed', 'true'); }
     }
-    var ro = new ResizeObserver(resize);
-    ro.observe(host);
-    resize();
-    /* paint one static frame immediately so the scene is never blank,
-       even before the visibility-gated ticker gets a chance */
-    try {
-      if (opts.tick) opts.tick(group, stateFn(), 0, 0);
-      camera.position.set(
-        target.x + cam.r * Math.sin(cam.ph) * Math.cos(cam.th),
-        target.y + cam.r * Math.cos(cam.ph),
-        target.z + cam.r * Math.sin(cam.ph) * Math.sin(cam.th)
-      );
-      camera.lookAt(target);
-      renderer.render(scene, camera);
-    } catch (e) { console.error(e); }
-
+    motionQuery.addEventListener('change', reduced);
+    function resize() {
+      var w = Math.max(60, viewport.clientWidth), h = Math.max(60, viewport.clientHeight);
+      renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+      fit = Math.max(1, 1.65 / camera.aspect);
+    }
+    var ro = new ResizeObserver(resize); ro.observe(viewport); resize();
+    var io = new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }); io.observe(viewport);
+    var projection = v(0, 0, 0);
+    function render(dt) {
+      if (api.destroyed) return;
+      if (!paused) localTime += dt;
+      var s = opts.state(); opts.tick(group, s, localTime);
+      camera.position.set(target.x + cam.r * fit * Math.sin(cam.ph) * Math.cos(cam.th),
+        target.y + cam.r * fit * Math.cos(cam.ph), target.z + cam.r * fit * Math.sin(cam.ph) * Math.sin(cam.th));
+      camera.lookAt(target); camera.updateMatrixWorld(); renderer.render(scene, camera);
+      var occupied = [], w = viewport.clientWidth, h = viewport.clientHeight;
+      labels.forEach(function (l) {
+        projection.copy(l.point).project(camera);
+        var x = (projection.x + 1) * w / 2, y = (1 - projection.y) * h / 2;
+        var lw = l.el.offsetWidth || 80, lh = l.el.offsetHeight || 23;
+        var rect = { x: clamp(x - lw / 2, 5, Math.max(5, w - lw - 5)), y: y, w: lw, h: lh };
+        var hide = projection.z > 1 || projection.z < -1 || y < 6 || y > h - lh - 5 || x < 0 || x > w;
+        if (!hide) hide = occupied.some(function (r) { return rect.x < r.x + r.w + 5 && rect.x + rect.w + 5 > r.x && rect.y < r.y + r.h + 4 && rect.y + rect.h + 4 > r.y; });
+        l.el.style.visibility = hide ? 'hidden' : 'visible';
+        l.el.style.transform = 'translate(' + rect.x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+        if (!hide) occupied.push(rect);
+      });
+      var text = opts.describe(s); if (readout.textContent !== text) readout.textContent = text;
+    }
+    render(0);
+    var elapsed = 0;
     var stop = DL.charts.every(function (t, dt) {
       if (!visible || document.hidden || api.destroyed) return;
-      if (!dragging && !DL.charts.reducedMotion()) cam.th += dt * 0.10;
-      camera.position.set(
-        target.x + cam.r * Math.sin(cam.ph) * Math.cos(cam.th),
-        target.y + cam.r * Math.cos(cam.ph),
-        target.z + cam.r * Math.sin(cam.ph) * Math.sin(cam.th)
-      );
-      camera.lookAt(target);
-      if (opts.tick) opts.tick(group, stateFn(), t, dt);
-      renderer.render(scene, camera);
+      elapsed += dt; if (elapsed < 1 / 30) return; render(elapsed); elapsed = 0;
     });
-
     api.destroy = function () {
-      api.destroyed = true;
-      io.disconnect(); ro.disconnect(); stop();
-      try { renderer.dispose(); } catch (e) { /* ignore */ }
-      host.innerHTML = '';
+      if (api.destroyed) return;
+      api.destroyed = true; stop(); io.disconnect(); ro.disconnect(); motionQuery.removeEventListener('change', reduced);
+      var geometries = new Set(), materials = new Set(), textures = new Set();
+      group.traverse(function (o) {
+        if (o.geometry) geometries.add(o.geometry);
+        if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(function (m) { materials.add(m); if (m.map) textures.add(m.map); });
+      });
+      geometries.forEach(function (g) { g.dispose(); }); materials.forEach(function (m) { m.dispose(); }); textures.forEach(function (t) { t.dispose(); });
+      renderer.dispose(); renderer.forceContextLoss(); host.innerHTML = '';
     };
+    canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); if (!api.destroyed) { api.destroy(); fallback(); } });
     return api;
   }
 
-  /* ---------------- scene B: osmosis cell ---------------- */
+  /* B: a salt-side piston represents the applied pressure. Chamber heights
+   * are schematic; h is an equivalent pressure head, not a literal tank scale. */
   function osmosis(host, getState) {
-    var waterFresh = null, waterSalt = null, mol = null, ions = null, seed = null;
-    var view3d = view(host, {
-      state: getState,
-      radius: 5.2, tx: 0, ty: 0.5, minR: 3, maxR: 12,
+    var water, ions, piston, pistonRod, arrow;
+    return view(host, {
+      title: '半透膜与盐水侧加压装置', state: getState, radius: 6.4, ty: 0.8,
+      legend: [['淡水 / 水分子', '#7aa2d8'], ['盐离子（留在盐水侧）', '#e0955a'], ['半透膜', '#b09bc7']],
       build: function (g, ctx) {
-        var glass = new THREE.MeshStandardMaterial({ color: 0xbdd6ee, transparent: true, opacity: 0.14, roughness: 0.12, metalness: 0.1, side: THREE.DoubleSide });
-        function tank(x) {
-          var box = new THREE.Mesh(new THREE.BoxGeometry(1.7, 1.6, 1.15), glass);
-          box.position.set(x, 0.8, 0);
-          g.add(box);
-          var edges = new THREE.LineSegments(new THREE.EdgesGeometry(box.geometry), new THREE.LineBasicMaterial({ color: 0x8fa3b8, transparent: true, opacity: 0.65 }));
-          edges.position.copy(box.position);
-          g.add(edges);
-        }
-        tank(-0.9); tank(0.9);
-        var membrane = new THREE.Mesh(new THREE.PlaneGeometry(1.15, 1.6),
-          new THREE.MeshStandardMaterial({ color: 0xb07cd8, transparent: true, opacity: 0.5, roughness: 0.6, side: THREE.DoubleSide }));
-        membrane.rotation.y = Math.PI / 2;
-        membrane.position.set(0, 0.8, 0);
-        g.add(membrane);
-        waterFresh = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1, 1.05),
-          new THREE.MeshStandardMaterial({ color: 0x7aa2d8, transparent: true, opacity: 0.55, roughness: 0.25 }));
-        waterSalt = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1, 1.05),
-          new THREE.MeshStandardMaterial({ color: 0x5bc8be, transparent: true, opacity: 0.5, roughness: 0.25 }));
-        waterFresh.position.set(-0.9, 0.5, 0);
-        waterSalt.position.set(0.9, 0.5, 0);
-        g.add(waterFresh); g.add(waterSalt);
-        /* floor */
-        var floor = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.08, 1.6), new THREE.MeshStandardMaterial({ color: 0x2c333c, roughness: 0.9 }));
-        floor.position.y = -0.04;
-        g.add(floor);
-        mol = ctx.points(g, 110, 0x8fc7ee, 0.09);
-        ions = ctx.points(g, 70, 0xe0955a, 0.11);
-        seed = new Float32Array(110 * 2 + 70 * 2);
-        for (var i = 0; i < seed.length; i++) seed[i] = Math.random();
+        box(g, 0, -0.1, 0, 4.5, 0.18, 1.8, 0x525a64);
+        [-1, 1].forEach(function (x) {
+          var tank = box(g, x, 0.85, 0, 1.95, 1.7, 1.4, 0xaec8df, 0.08);
+          var edges = new THREE.LineSegments(new THREE.EdgesGeometry(tank.geometry), new THREE.LineBasicMaterial({ color: C.metal })); edges.position.copy(tank.position); g.add(edges);
+          box(g, x, 0.63, 0, 1.87, 1.2, 1.32, x < 0 ? C.water : C.product, 0.12);
+        });
+        box(g, 0, 0.86, 0, 0.055, 1.72, 1.4, C.membrane, 0.55);
+        piston = box(g, 1, 1.8, 0, 1.8, 0.09, 1.3, C.metal);
+        pistonRod = cylinder(g, 1, 2.08, 0, 0.07, 0.65, C.metal);
+        arrow = new THREE.ArrowHelper(v(1, 0, 0), v(-0.6, 0.8, 0.85), 1.2, C.product, 0.18, 0.11); g.add(arrow);
+        water = points(g, 90, C.water, 0.085); ions = points(g, 70, C.feed, 0.11);
+        ctx.label('淡水', -1.05, 0, 0.95); ctx.label('盐水 · 施压侧', 1.1, 0, 0.95); ctx.label('半透膜', 0, 1.85, 0);
       },
-      tick: function (g, s, t, dt) {
-        var headFrac = clamp((s.head || 0) / 300, 0, 1);
-        var saltH = 1.28 + 0.1 * clamp(s.pi ? s.appliedBar / s.pi : 0, 0, 1);
-        waterFresh.scale.set(1, Math.max(0.06, headFrac * 1.5 + 0.06), 1);
-        waterFresh.position.y = waterFresh.scale.y * 0.5 + 0.04;
-        waterSalt.scale.set(1, saltH, 1);
-        waterSalt.position.y = saltH * 0.5 + 0.04;
-        var slow = DL.charts.reducedMotion() ? 0 : 1;
+      tick: function (g, s, t) {
         var dir = s.direction === 'in' ? 1 : s.direction === 'out' ? -1 : 0;
-        var speed = (0.5 + (s.flux || 0.35)) * slow;
-        for (var i = 0; i < mol.n; i++) {
-          var b = seed[i * 2];
-          if (dir !== 0) b = (b + dt * speed * 0.16 * dir) % 1;
-          if (b < 0) b += 1;
-          seed[i * 2] = b;
-          mol.pos[i * 3] = -1.7 + b * 3.4;
-          mol.pos[i * 3 + 1] = 0.25 + seed[i * 2 + 1] * 0.9 + Math.sin(t * 1.6 + i) * 0.05;
-          mol.pos[i * 3 + 2] = (seed[i * 2 + 1] - 0.5) * 0.85;
-          mol.mat.opacity = dir === 0 ? 0.35 : 0.92;
-        }
-        mol.dirty();
+        var speed = dir * clamp(s.flux || 0, 0, 1) * 0.12;
+        piston.position.y = 1.8 - clamp(s.appliedBar / 60, 0, 1) * 0.48;
+        pistonRod.position.y = piston.position.y + 0.35;
+        arrow.visible = dir !== 0; arrow.position.x = dir > 0 ? -0.6 : 0.6; arrow.setDirection(v(dir || 1, 0, 0));
+        for (var i = 0; i < water.n; i++) {
+          var f = ((i / water.n + t * speed) % 1 + 1) % 1;
+          water.pos[i * 3] = -1.9 + f * 3.8;
+          water.pos[i * 3 + 1] = 0.18 + ((i * 0.618) % 1) * 0.93;
+          water.pos[i * 3 + 2] = (((i * 0.414) % 1) - 0.5) * 1.2;
+        } water.dirty();
+        var count = Math.round(ions.n * clamp(s.tds / 70000, 0, 1)); ions.obj.geometry.setDrawRange(0, count);
         for (var j = 0; j < ions.n; j++) {
-          ions.pos[j * 3] = 0.16 + seed[220 + j * 2] * 1.45;
-          ions.pos[j * 3 + 1] = 0.18 + seed[221 + j * 2] * Math.max(0.35, saltH - 0.18) + Math.sin(t * 2.2 + j * 1.3) * 0.05 * slow;
-          ions.pos[j * 3 + 2] = (seed[220 + j * 2] - 0.5) * 0.8;
-        }
-        ions.dirty();
-      }
+          ions.pos[j * 3] = 0.15 + ((j * 0.618) % 1) * 1.65;
+          ions.pos[j * 3 + 1] = 0.17 + ((j * 0.414) % 1) * 0.95 + Math.sin(t + j) * 0.025;
+          ions.pos[j * 3 + 2] = (((j * 0.732) % 1) - 0.5) * 1.2;
+        } ions.dirty();
+      },
+      describe: function (s) { return 'π ' + s.pi.toFixed(1) + ' bar · 盐水侧压力 ' + s.appliedBar.toFixed(1) + ' bar · ' + (s.direction === 'in' ? '淡水 → 盐水' : s.direction === 'out' ? '盐水 → 淡水（反渗透）' : '动态平衡，净通量为零') + ' · 水柱为等效压头，装置不按比例'; }
     });
-    view3d.getState = getState;
-    return view3d;
   }
 
-  /* ---------------- scene C: spiral-wound RO element ---------------- */
+  /* C: extruded spiral membrane sheets, not a helical tube. Each leaf winds
+   * around x; feed flows along x, permeate collects along the leaf then tube.
+   * A front-upper quadrant is removed to expose the collection tube. */
+  function spiralSheet(offset, phase) {
+    var pos = [], indices = [], segments = 180;
+    for (var i = 0; i <= segments; i++) {
+      var q = i / segments, a = q * Math.PI * 2.6 + phase, r = 0.38 + q * 1.02 + offset;
+      pos.push(-2.35, r * Math.cos(a), r * Math.sin(a), 2.35, r * Math.cos(a), r * Math.sin(a));
+      var angle = ((a % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+      if (i < segments && !(angle > 0 && angle < Math.PI / 2)) {
+        var k = i * 2; indices.push(k, k + 1, k + 2, k + 1, k + 3, k + 2);
+      }
+    }
+    var geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); geo.setIndex(indices); geo.computeVertexNormals(); return geo;
+  }
   function spiralRO(host, getState) {
-    var feed = null, perm = null, brine = null, glow = null;
-    var view3d = view(host, {
-      state: getState,
-      radius: 8, tx: 0, ty: 0.2, minR: 4.5, maxR: 18,
+    var shell, feedStreams = [], perm, product, brine;
+    return view(host, {
+      title: '卷式膜剖切与三条水路', state: getState, radius: 10.4, phi: 1.18,
+      legend: [['进水 → 轴向流道', '#e0955a'], ['产水 → 中心管', '#5bc8be'], ['浓水 → 端部', '#e05a5f']],
+      cutaway: function (cut) { shell.visible = !cut; },
       build: function (g, ctx) {
-        var housing = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 6.2, 40, 1, true),
-          new THREE.MeshStandardMaterial({ color: 0xcfd6df, transparent: true, opacity: 0.12, roughness: 0.2, metalness: 0.35, side: THREE.DoubleSide }));
-        housing.rotation.z = Math.PI / 2;
-        g.add(housing);
-        var core = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 5.9, 24),
-          new THREE.MeshStandardMaterial({ color: 0xe6e9ee, roughness: 0.4, metalness: 0.25 }));
-        core.rotation.z = Math.PI / 2;
-        g.add(core);
-        /* membrane spiral: radius shrinks toward the core */
-        var pts = [];
-        for (var i = 0; i <= 240; i++) {
-          var q = i / 240;
-          var r = 1.3 - 0.82 * q;
-          var a = q * Math.PI * 12;
-          pts.push(new THREE.Vector3((q - 0.5) * 5.2, r * Math.cos(a), r * Math.sin(a)));
+        shell = cylinder(g, 0, 0, 0, 1.57, 5.1, C.metal, 'x', 0.24); shell.visible = false;
+        for (var j = 0; j < 3; j++) {
+          var phase = j * Math.PI * 2 / 3;
+          mesh(g, spiralSheet(0, phase), mat(0xd5d0bd));
+          mesh(g, spiralSheet(0.045, phase), mat(0x829baf));
         }
-        var curve = new THREE.CatmullRomCurve3(pts);
-        var memb = new THREE.Mesh(new THREE.TubeGeometry(curve, 260, 0.14, 8, false),
-          new THREE.MeshStandardMaterial({ color: 0xe8e3d5, roughness: 0.7 }));
-        g.add(memb);
-        var feedSpacer = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(
-          pts.map(function (v) { var s = 1.22; return new THREE.Vector3(v.x, v.y * s, v.z * s); })
-        ), 200, 0.05, 6, false),
-          new THREE.MeshStandardMaterial({ color: 0xd07a55, transparent: true, opacity: 0.55, roughness: 0.8 }));
-        g.add(feedSpacer);
-        glow = new THREE.Mesh(new THREE.CylinderGeometry(1.72, 1.72, 0.25, 40),
-          new THREE.MeshStandardMaterial({ color: 0x7aa2d8, transparent: true, opacity: 0.35, emissive: 0x2a4a72 }));
-        glow.rotation.z = Math.PI / 2;
-        glow.position.x = -3.1;
-        g.add(glow);
-        feed = ctx.points(g, 150, 0xe0955a, 0.07);
-        perm = ctx.points(g, 120, 0x5bc8be, 0.065);
-        brine = ctx.points(g, 60, 0xe05a5f, 0.075);
+        cylinder(g, 0.3, 0, 0, 0.27, 6.1, C.product, 'x', 0.25);
+        ring(g, -2.5, 1.5, C.metal); ring(g, 2.5, 1.5, C.metal);
+        ring(g, -2.75, 0.27, C.product); ring(g, 3.35, 0.27, C.product);
+        /* Visible collector perforations. */
+        for (var h = -2; h <= 2; h += 0.5) {
+          var hole = mesh(g, new THREE.CircleGeometry(0.055, 12), mat(0x1c4447), h, 0.19, 0.2);
+          hole.rotation.x = -Math.PI / 4;
+        }
+        for (var f = 0; f < 4; f++) {
+          var a = 0.1 + f * 0.38, y = 1.12 * Math.cos(a), z = 1.12 * Math.sin(a);
+          feedStreams.push(stream(g, [[-3.4, y, z], [-2.4, y, z], [2.4, y, z]], C.feed, 24, 0.085));
+        }
+        /* One enlarged, representative leaf path; not a molecular trajectory. */
+        var coords = [];
+        for (var p = 0; p <= 60; p++) {
+          var u = p / 60, angle = 0.35 + (1 - u) * Math.PI * 2.6, rr = 0.28 + (1 - u) * 1.08;
+          coords.push([0.35, rr * Math.cos(angle), rr * Math.sin(angle)]);
+        }
+        coords.push([0.35, 0, 0], [3.8, 0, 0]); perm = stream(g, coords, C.product, 55, 0.08);
+        product = stream(g, [[3.35, 0, 0], [4, 0, 0]], C.product, 12, 0.12);
+        brine = stream(g, [[2.4, 0.8, 0.8], [2.9, 0.8, 0.8], [3.7, 0.8, 1.55]], C.brine, 36, 0.095);
+        ctx.label('卷绕膜片 / 产水流道', -0.6, 1.6, -0.3);
+        ctx.label('进水 →', -3.15, 1.5, 0.3); ctx.label('浓水 →', 3.25, 1.15, 1.55);
+        ctx.label('中心集水管 → 产水', 2.6, -0.7, 0.5);
       },
-      tick: function (g, s, t, dt) {
-        var slow = DL.charts.reducedMotion() ? 0 : 1;
-        var feas = s.feasible !== false;
-        var flux = feas ? clamp(s.flux || 0, 0, 18) : 0;
-        var feedSp = 0.24 * slow;
-        var permSp = clamp(0.06 + flux * 0.03, 0, 0.6) * slow * (feas ? 1 : 0);
-        var brineSp = 0.3 * slow * (feas ? 1 : 0.5);
-        /* seed via index hash — deterministic spread */
-        for (var i = 0; i < feed.n; i++) {
-          var ph = ((t * feedSp) + i / feed.n) % 1;
-          var a0 = (i * 2.399963) % (Math.PI * 2);
-          var rr = 1.42 + Math.sin(i * 7.7) * 0.06;
-          feed.pos[i * 3] = -3.4 + ph * 6.0;
-          feed.pos[i * 3 + 1] = rr * Math.cos(a0 + ph * 1.2);
-          feed.pos[i * 3 + 2] = rr * Math.sin(a0 + ph * 1.2);
-        }
-        feed.mat.opacity = 0.85;
-        feed.dirty();
-        for (var j = 0; j < perm.n; j++) {
-          var q = ((t * permSp) + j / perm.n) % 1;
-          var ang = (j * 2.399963) % (Math.PI * 2);
-          var r = 1.25 - 1.05 * q;
-          var x = (q - 0.5) * 4.2 + (q > 0.75 ? (q - 0.75) * 8.5 : 0);
-          perm.pos[j * 3] = Math.min(3.0, x);
-          perm.pos[j * 3 + 1] = Math.max(0.18, r) * Math.cos(ang + q * 6);
-          perm.pos[j * 3 + 2] = Math.max(0.18, r) * Math.sin(ang + q * 6);
-        }
-        perm.mat.opacity = feas ? 0.9 : 0.15;
-        perm.dirty();
-        for (var k2 = 0; k2 < brine.n; k2++) {
-          var q2 = ((t * brineSp) + k2 / brine.n) % 1;
-          var a2 = (k2 * 2.399963) % (Math.PI * 2);
-          brine.pos[k2 * 3] = 1.6 + q2 * 2.4;
-          brine.pos[k2 * 3 + 1] = 1.35 * Math.cos(a2);
-          brine.pos[k2 * 3 + 2] = 1.35 * Math.sin(a2);
-        }
-        brine.mat.opacity = feas ? 0.85 : 0.6;
-        brine.dirty();
-        if (glow) {
-          var over = Math.max(0, (s.appliedBar || 0) - (s.piBrine || 0));
-          glow.material.opacity = 0.18 + clamp(over / 20, 0, 1) * 0.5 + (slow ? 0.08 * Math.sin(t * 2.4) : 0);
-        }
-      }
+      tick: function (g, s, t) {
+        var active = s.feasible && s.flux > 0;
+        feedStreams.forEach(function (f) { f.update(t, 0.12); });
+        perm.update(t, 0.04 + clamp(s.flux, 0, 30) * 0.005, active ? s.recovery : 0);
+        product.update(t, 0.2, active ? s.recovery : 0); brine.update(t, 0.17, active ? 1 - s.recovery : 1);
+      },
+      describe: function (s) { return '进水 ' + s.appliedBar.toFixed(0) + ' bar · 净驱动压 ' + s.netPressure.toFixed(1) + ' bar · 通量 ' + s.flux.toFixed(1) + ' LMH · ' + (s.feasible ? '目标回收率 ' + Math.round(s.recovery * 100) + '%' : '压力不足：停止产水') + ' · 膜层与水路放大示意'; }
     });
-    view3d.getState = getState;
-    return view3d;
   }
 
-  /* ---------------- scene G: whole-plant flyover ---------------- */
+  /* G: pipes and particles share paths so every flow reaches its equipment.
+   * The brine outfall is a separate branch with a visible diffuser manifold. */
   function plant(host, getState) {
-    var seaIn = null, permPts = null, brinePts = null, plume = null, sea = null;
-    var view3d = view(host, {
-      state: getState,
-      radius: 12.5, theta: 1.32, phi: 1.02, tx: 2.2, ty: 0.7, minR: 6, maxR: 28,
+    var flows = [], outflows = [], brineFlow;
+    return view(host, {
+      title: '海水淡化厂与浓盐水排放支线', state: getState, radius: 16.8, theta: 1.28, phi: 0.95, ty: 0.3,
+      legend: [['海水进水', '#e0955a'], ['产水 / 配水', '#5bc8be'], ['浓盐水支线', '#e05a5f']],
       build: function (g, ctx) {
-        sea = new THREE.Mesh(new THREE.PlaneGeometry(26, 14),
-          new THREE.MeshStandardMaterial({ color: 0x1e3a52, transparent: true, opacity: 0.75, roughness: 0.6 }));
-        sea.rotation.x = -Math.PI / 2;
-        sea.position.set(-1, -0.35, 0);
-        g.add(sea);
-        var seaShelf = new THREE.Mesh(new THREE.PlaneGeometry(10, 8),
-          new THREE.MeshStandardMaterial({ color: 0x2b5578, transparent: true, opacity: 0.55, roughness: 0.7 }));
-        seaShelf.rotation.x = -Math.PI / 2;
-        seaShelf.position.set(-4.5, -0.33, 2.5);
-        g.add(seaShelf);
-        /* land strip the plant sits on */
-        var land = new THREE.Mesh(new THREE.BoxGeometry(9.6, 0.3, 4.2),
-          new THREE.MeshStandardMaterial({ color: 0x4a5563, roughness: 0.95 }));
-        land.position.set(2.6, -0.2, 0);
-        g.add(land);
-        function box(x, y, z, w, h, d, color, op) {
-          var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d),
-            new THREE.MeshStandardMaterial({ color: color, transparent: op != null, opacity: op != null ? op : 1, roughness: 0.75 }));
-          m.position.set(x, y, z);
-          g.add(m);
-          var ed = new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry),
-            new THREE.LineBasicMaterial({ color: 0xaab6c4, transparent: true, opacity: 0.4 }));
-          ed.position.copy(m.position);
-          g.add(ed);
-          return m;
+        box(g, 0, -0.18, -0.4, 14.4, 0.3, 4.1, 0x60666a);
+        box(g, 0, -0.32, 3.2, 14.4, 0.15, 3.1, 0x3f657a, 0.75);
+        /* Intake screen. */
+        box(g, -5.4, 0.18, 3.1, 0.9, 0.6, 0.8, 0x667e8d);
+        for (var s = 0; s < 6; s++) box(g, -5.75 + s * 0.14, 0.22, 3.52, 0.04, 0.6, 0.04, C.metal);
+        /* Pretreatment tanks with exposed water surfaces. */
+        [-3.9, -2.9].forEach(function (x) {
+          cylinder(g, x, 0.56, -0.25, 0.42, 1.1, C.metal);
+          var top = mesh(g, new THREE.CircleGeometry(0.39, 32), mat(C.water), x, 1.04, -0.25); top.rotation.x = -Math.PI / 2;
+        });
+        /* High-pressure pump and motor. */
+        box(g, -1.5, 0.1, 0, 1.4, 0.16, 1, 0x343b43);
+        cylinder(g, -1.6, 0.4, 0, 0.28, 0.8, C.feed, 'x');
+        box(g, -1.05, 0.4, 0, 0.35, 0.55, 0.6, C.metal);
+        /* Three parallel membrane pressure vessels with a visible skid. */
+        box(g, 0.7, 0.12, 0, 2.4, 0.18, 2, 0x3d454d);
+        [-0.66, 0, 0.66].forEach(function (z) {
+          cylinder(g, 0.7, 0.65, z, 0.25, 2, 0xd4d9df, 'x');
+          ring(g, -0.3, 0.25, C.feed, 0.65, z); ring(g, 1.7, 0.25, C.product, 0.65, z);
+          path(g, [[-0.55, 0.32, 0], [-0.55, 0.65, z], [-0.3, 0.65, z]], C.feed);
+          path(g, [[1.7, 0.65, z], [1.95, 0.65, z], [1.95, 0.32, 0]], C.product);
+          path(g, [[1.7, 0.65, z], [1.8, 0.28, z], [1.8, 0.28, 1.1]], C.brine, 0.035);
+        });
+        /* Post treatment / clear well, then distribution. */
+        cylinder(g, 3.3, 0.7, 0, 0.6, 1.4, C.product, null, 0.35);
+        cylinder(g, 4.45, 0.4, -0.5, 0.27, 0.8, C.metal);
+        box(g, 5.8, 0.65, -0.6, 0.7, 1.3, 0.8, 0x9aa5b0);
+        box(g, 6.65, 0.95, 0.2, 0.7, 1.9, 0.8, 0x87939f);
+        for (var win = 0; win < 4; win++) box(g, 6.65, 0.4 + win * 0.35, 0.61, 0.38, 0.12, 0.02, C.water);
+        flows.push(stream(g, [[-5.4, 0.3, 3.1], [-5.4, 0.3, 0], [-3.9, 0.3, 0], [-1.6, 0.3, 0], [-0.55, 0.32, 0]], C.feed, 55, 0.13));
+        flows.push(stream(g, [[-0.55, 0.32, 0], [-0.55, 0.65, 0], [1.7, 0.65, 0]], C.feed, 24, 0.09));
+        outflows.push(stream(g, [[1.95, 0.32, 0], [3.3, 0.32, 0], [4.45, 0.32, 0], [6.65, 0.32, 0]], C.product, 65, 0.12));
+        /* Concentrate pressure recovery is shown as equipment on its branch. */
+        cylinder(g, 2.6, 0.35, 1.2, 0.23, 0.6, C.metal);
+        brineFlow = stream(g, [[1.8, 0.28, 1.1], [2.6, 0.28, 1.1], [2.6, 0.08, 3.8], [0, 0.08, 3.8]], C.brine, 55, 0.12);
+        path(g, [[-1.3, 0.08, 3.8], [1.3, 0.08, 3.8]], C.brine, 0.07);
+        for (var d = -1; d <= 1; d += 0.5) {
+          outflows.push(stream(g, [[d, 0.08, 3.8], [d, 0.4, 3.8], [d + 0.18, 0.52, 4.3]], C.brine, 8, 0.08));
         }
-        box(-3.2, 0.1, 0, 1.4, 0.5, 0.9, 0x37434f);          /* intake screen */
-        box(-1.4, 0.35, 0, 1.8, 0.7, 1.1, 0x44525f);          /* pretreatment */
-        box(-1.4, 0.78, 0, 1.95, 0.12, 1.25, 0x5a6773);       /* pretreatment roof */
-        for (var f = 0; f < 2; f++) {                          /* clarifier tanks */
-          var tank2 = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.5, 20),
-            new THREE.MeshStandardMaterial({ color: 0x5f7080, roughness: 0.6 }));
-          tank2.position.set(-1.75 + f * 0.7, 1.05, -0.15);
-          g.add(tank2);
-        }
-        box(0.4, 0.35, 0, 1.2, 0.7, 0.9, 0x3fae7a, 0.5);      /* UF/DF */
-        for (var u = 0; u < 2; u++) {                          /* UF membrane trains */
-          var uf = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.85, 14),
-            new THREE.MeshStandardMaterial({ color: 0x7fd0b0, transparent: true, opacity: 0.85, roughness: 0.4 }));
-          uf.position.set(0.15 + u * 0.5, 1.12, 0.2);
-          g.add(uf);
-        }
-        box(2.6, 0.16, 0, 2.9, 0.14, 3.2, 0x46525f);          /* RO skid base */
-        for (var i = 0; i < 3; i++) {
-          var skid = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 2.2, 20),
-            new THREE.MeshStandardMaterial({ color: i === 1 ? 0xe6ebf1 : 0xd3dae2, roughness: 0.45, metalness: 0.3 }));
-          skid.rotation.z = Math.PI / 2;
-          skid.position.set(2.6, 0.55, -1.35 + i * 1.35);
-          g.add(skid);
-          var capL = new THREE.Mesh(new THREE.CylinderGeometry(0.43, 0.43, 0.1, 20),
-            new THREE.MeshStandardMaterial({ color: 0x8fa3b8, roughness: 0.5, metalness: 0.4 }));
-          capL.rotation.z = Math.PI / 2;
-          capL.position.set(1.42, 0.55, -1.35 + i * 1.35);
-          g.add(capL);
-          var capR = capL.clone();
-          capR.position.x = 3.78;
-          g.add(capR);
-        }
-        box(4.8, 0.7, 0, 1.3, 1.4, 1.3, 0x7aa2d8, 0.55);      /* clear well */
-        var wellTop = new THREE.Mesh(new THREE.PlaneGeometry(1.24, 1.24),
-          new THREE.MeshStandardMaterial({ color: 0x9fc8ee, transparent: true, opacity: 0.9, roughness: 0.12 }));
-        wellTop.rotation.x = -Math.PI / 2;
-        wellTop.position.set(4.8, 1.42, 0);
-        g.add(wellTop);
-        box(6.8, 0.6, -0.6, 0.8, 1.2, 0.8, 0x8f98a3);         /* city A */
-        box(7.4, 0.9, 0.3, 0.9, 1.8, 0.9, 0x7d8894);          /* city B */
-        box(6.6, 0.45, 0.9, 0.7, 0.9, 0.7, 0x9aa4b0);         /* city C */
-        box(7.9, 0.55, 1.1, 0.65, 1.1, 0.7, 0x86919d);        /* city D */
-        /* pipes */
-        function pipe(x1, x2, y, z, r, color, op) {
-          var m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, x2 - x1, 12),
-            new THREE.MeshStandardMaterial({ color: color, transparent: true, opacity: op != null ? op : 0.9, roughness: 0.5 }));
-          m.rotation.z = Math.PI / 2;
-          m.position.set((x1 + x2) / 2, y, z);
-          g.add(m);
-        }
-        pipe(-3.6, 1.4, 0.18, 0, 0.16, 0xe8a066);             /* seawater feed */
-        pipe(3.8, 5.6, 0.95, 0, 0.13, 0x5bc8be);              /* permeate */
-        pipe(5.5, 7.6, 0.5, 0.1, 0.11, 0x8fb7ff);             /* distribution */
-        pipe(1.4, 2.6, 0.95, -0.45, 0.1, 0xbfd3e6);           /* UF → RO feed */
-        var brinePipe = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 3.4, 12),
-          new THREE.MeshStandardMaterial({ color: 0x5f4a52, transparent: true, opacity: 0.9, roughness: 0.6 }));
-        brinePipe.rotation.z = Math.PI / 2.6;
-        brinePipe.position.set(1.4, -0.1, 1.6);
-        g.add(brinePipe);
-        seaIn = ctx.points(g, 140, 0xf0a55e, 0.085);
-        permPts = ctx.points(g, 95, 0x5bc8be, 0.07);
-        brinePts = ctx.points(g, 55, 0xe05a5f, 0.08);
-        plume = ctx.points(g, 70, 0xc26a6f, 0.09);
+        ctx.label('01 取水', -5.4, 0.7, 3.1); ctx.label('02 预处理', -3.4, 1.4, 0);
+        ctx.label('03 高压泵', -1.6, 0.9, 0); ctx.label('04 RO 膜组', 0.7, 1.2, 0);
+        ctx.label('05 再矿化 / 消毒', 3.5, 1.8, 0); ctx.label('06 配水', 6.3, 2.1, 0);
+        ctx.label('浓盐水 → 扩散器', 0, 0.7, 4.4);
       },
-      tick: function (g, s, t, dt) {
-        var slow = DL.charts.reducedMotion() ? 0 : 1;
-        var Y = clamp(s.recovery || 0.45, 0.2, 0.7);
-        for (var i = 0; i < seaIn.n; i++) {
-          var f = ((t * 0.18 * slow) + i / seaIn.n) % 1;
-          seaIn.pos[i * 3] = -3.6 + f * 5.0;
-          seaIn.pos[i * 3 + 1] = 0.32 + Math.sin(t * 2 + i) * 0.04 * slow;
-          seaIn.pos[i * 3 + 2] = (Math.sin(i * 7.1) * 0.28);
-        }
-        seaIn.mat.opacity = 0.85; seaIn.dirty();
-        for (var j = 0; j < permPts.n; j++) {
-          var q = ((t * (0.14 + Y * 0.2) * slow) + j / permPts.n) % 1;
-          permPts.pos[j * 3] = 3.8 + q * 1.8;
-          permPts.pos[j * 3 + 1] = 0.98 + Math.sin(t * 2.4 + j) * 0.03 * slow;
-          permPts.pos[j * 3 + 2] = Math.sin(j * 5.3) * 0.2;
-        }
-        permPts.mat.opacity = 0.9; permPts.dirty();
-        for (var k2 = 0; k2 < brinePts.n; k2++) {
-          var w = ((t * 0.2 * slow) + k2 / brinePts.n) % 1;
-          brinePts.pos[k2 * 3] = 0.2 + w * 2.4;
-          brinePts.pos[k2 * 3 + 1] = 0.25 - w * 0.55;
-          brinePts.pos[k2 * 3 + 2] = 1.0 + w * 1.2 + Math.sin(k2 * 3.7) * 0.12;
-        }
-        brinePts.mat.opacity = 0.85; brinePts.dirty();
-        for (var m = 0; m < plume.n; m++) {
-          var sp = ((t * 0.06 * slow) + m / plume.n) % 1;
-          plume.pos[m * 3] = 2.4 + sp * 2.6 + Math.sin(m * 9.1) * sp * 1.2;
-          plume.pos[m * 3 + 1] = -0.3 - Math.abs(Math.sin(m * 4.4)) * 0.1;
-          plume.pos[m * 3 + 2] = 2.2 + sp * 1.4 + Math.cos(m * 6.7) * sp;
-        }
-        plume.mat.opacity = 0.35; plume.dirty();
-        if (sea) sea.position.y = -0.35 + Math.sin(t * 0.9) * 0.025 * slow;
+      tick: function (g, s, t) {
+        var y = clamp(s.recovery, 0.2, 0.7);
+        flows.forEach(function (f) { f.update(t, 0.12); });
+        brineFlow.update(t, 0.12, 1 - y);
+        outflows.forEach(function (f, i) { f.update(t, 0.16, i === 0 ? y : 1 - y); });
+      },
+      describe: function (s) {
+        return '进水 100% = 产水 ' + Math.round(s.recovery * 100) + '% + 浓水 ' + Math.round((1 - s.recovery) * 100) + '% · 浓水 ' + (s.brineTds / 1000).toFixed(1) + ' g/L · 流程示意，未计算排海扩散与设备尺寸';
       }
     });
-    view3d.getState = getState;
-    return view3d;
   }
-
   DL.gl = { view: view, osmosis: osmosis, spiralRO: spiralRO, plant: plant };
 })();

@@ -124,11 +124,11 @@
 
     return {
       apply: function (p) {
-        if (p.rejection != null) rejCtl.set(p.rejection, true);
-        if (p.days != null) daysCtl.set(p.days, true);
-        if (p.scaling != null) scaleCtl.set(p.scaling, true);
-        if (p.antiscalant != null) antiCtl.set(p.antiscalant, true);
-        if (p.recovery != null) recCtl.set(p.recovery, true);
+        if (p.rejection != null) rejCtl.set(p.rejection);
+        if (p.days != null) daysCtl.set(p.days);
+        if (p.scaling != null) scaleCtl.set(p.scaling);
+        if (p.antiscalant != null) antiCtl.set(p.antiscalant);
+        if (p.recovery != null) recCtl.set(p.recovery);
         sync();
       },
       destroy: function () { layers.destroy(); line.destroy(); }

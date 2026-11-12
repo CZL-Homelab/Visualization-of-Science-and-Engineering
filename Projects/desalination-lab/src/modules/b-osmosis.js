@@ -26,15 +26,17 @@
     glHost.style.cssText = 'flex:1;min-height:220px;display:none';
     var gl3d = null;
     function setMode(three) {
-      if (three && !gl3d) gl3d = DL.gl.osmosis(glHost, function () {
-        var c = sim.osmosisCell(st.tds, st.temp, st.head);
-        return { head: st.head, pi: c.pi, appliedBar: c.appliedBar, direction: c.direction, flux: Math.min(1, Math.abs(c.appliedBar - c.pi) / Math.max(1, c.pi)) };
-      });
       cellHost.style.display = three ? 'none' : '';
       gaugeHost.style.display = three ? 'none' : '';
       glHost.style.display = three ? '' : 'none';
+      if (three && !gl3d) gl3d = DL.gl.osmosis(glHost, function () {
+        var c = sim.osmosisCell(st.tds, st.temp, st.head);
+        return { tds: st.tds, head: st.head, pi: c.pi, appliedBar: c.appliedBar, direction: c.direction, flux: Math.min(1, Math.abs(c.appliedBar - c.pi) / Math.max(1, c.pi)) };
+      });
       btn2d.className = three ? '' : 'on';
       btn3d.className = three ? 'on' : '';
+      btn2d.setAttribute('aria-pressed', String(!three));
+      btn3d.setAttribute('aria-pressed', String(three));
     }
     btn2d.addEventListener('click', function () { setMode(false); });
     btn3d.addEventListener('click', function () { setMode(true); });
@@ -53,11 +55,10 @@
       ctx2.beginPath();
       ctx2.moveTo(wallX, topY); ctx2.lineTo(wallX, baseY); ctx2.lineTo(wallX + cellW, baseY); ctx2.lineTo(wallX + cellW, topY);
       ctx2.stroke();
-      /* water levels: freshwater side rises toward equilibrium head */
+      /* Fixed schematic volumes; the control is salt-side applied pressure. */
       var maxH = baseY - topY - 10;
-      var frac = core.clamp(cell.head > 0 ? cell.appliedBar / cell.pi : 0, 0, 1);
-      var freshLevel = baseY - 14 - (st.head / 300) * maxH;
-      var saltLevel = baseY - 14 - Math.min(0.62, 0.5 + 0.12 * frac) * maxH;
+      var freshLevel = baseY - 14 - 0.52 * maxH;
+      var saltLevel = baseY - 14 - 0.52 * maxH;
       ctx2.fillStyle = p.blue; ctx2.globalAlpha = 0.55;
       charts.roundRect(ctx2, wallX + 3, freshLevel, memX - wallX - 6, baseY - freshLevel, 3); ctx2.fill();
       ctx2.fillStyle = p.cyan; ctx2.globalAlpha = 0.5;
@@ -97,7 +98,7 @@
       /* water arrow through membrane */
       var arrow = cell.direction === 'in' ? 1 : cell.direction === 'out' ? -1 : 0;
       if (arrow !== 0) {
-        var ay = (freshLevel + saltLevel) / 2;
+        var ay = baseY - maxH * 0.28;
         ctx2.strokeStyle = p.green; ctx2.lineWidth = 2.5;
         ctx2.beginPath(); ctx2.moveTo(memX - 46 * arrow, ay); ctx2.lineTo(memX + 46 * arrow, ay); ctx2.stroke();
         ctx2.beginPath();
@@ -127,7 +128,7 @@
     var gCell = ui.section(panel, 'B1 · 渗透装置', 'OSMOSIS');
     var tdsCtl = ui.slider({ label: '浓水侧含盐量', min: 1000, max: 70000, step: 500, value: 35000, unit: 'mg/L', onInput: function (v) { st.tds = v; sync(); } });
     var tempCtl = ui.slider({ label: '温度', min: 5, max: 45, step: 1, value: 25, unit: '°C', hint: '渗透压 ∝ 绝对温度：加热会抬高 π。', onInput: function (v) { st.temp = v; sync(); } });
-    var headCtl = ui.slider({ label: '淡水侧水柱高度', min: 0, max: 300, step: 5, value: 0, unit: 'm', hint: '水柱产生的静压就是“外加压力”：到 π 时渗透停止。', onInput: function (v) { st.head = v; sync(); } });
+    var headCtl = ui.slider({ label: '盐水侧等效压头', min: 0, max: 650, step: 5, value: 0, unit: 'm', hint: '盐水侧外加压力，以等效淡水柱米数表示；达到 π 时净通量为零。', onInput: function (v) { st.head = v; sync(); } });
     gCell.appendChild(tdsCtl.el); gCell.appendChild(tempCtl.el); gCell.appendChild(headCtl.el);
 
     var gMetrics = ui.section(panel, '读数', 'LIVE');
@@ -156,23 +157,24 @@
       gauge.update({ value: cell.appliedBar, marker: cell.pi, markerLabel: 'π ' + ui.fmt.num(cell.pi, 1) + ' bar', valueLabel: '外加 ' + ui.fmt.num(cell.appliedBar, 1) + ' bar' });
       cellChart.redraw();
       note.textContent = cell.direction === 'in'
-        ? '浓水侧在“抽水”：淡水自己穿过膜去稀释它，直到水柱压力 ≈ π。' + (cell.pi > 25 ? '海水要抬到约 ' + ui.fmt.int(cell.head) + ' 米水柱才停——这就是为什么渗透发电听起来很美，但产能极低。' : '')
+        ? '浓水侧在“抽水”：淡水穿过膜去稀释盐水；在盐水侧加压可抵消渗透。' + (cell.pi > 25 ? '抵消渗透所需的压力约等于 ' + ui.fmt.int(cell.head) + ' 米淡水柱；不是淡水侧自动升起这么高。' : '')
         : cell.direction === 'out'
           ? '外加压力超过了 π：水被从浓水侧挤出来——反渗透产水。压力每高一档，产水通量高一档（模块 C）。'
           : '刚好平衡：净通量为零。这是渗透压的定义时刻。';
     }
     sync();
+    setMode(true);
 
     return {
       apply: function (p) {
-        if (p.tds != null) tdsCtl.set(p.tds, true);
-        if (p.temp != null) tempCtl.set(p.temp, true);
-        if (p.head != null) headCtl.set(p.head, true);
+        if (p.tds != null) tdsCtl.set(p.tds);
+        if (p.temp != null) tempCtl.set(p.temp);
+        if (p.head != null) headCtl.set(p.head);
         if (p.head == null && p.headToPi) {
-          headCtl.set(core.round(sim.osmosisCell(st.tds, st.temp, 0).head, 0), true);
+          headCtl.set(sim.osmosisCell(st.tds, st.temp, 0).head);
         }
         if (p.headOverPi) {
-          headCtl.set(core.round(sim.osmosisCell(st.tds, st.temp, 0).head + 35, 0), true);
+          headCtl.set(core.round(sim.osmosisCell(st.tds, st.temp, 0).head + 35, 0));
         }
         sync();
       },
@@ -183,7 +185,7 @@
   DL.registerModule({
     id: 'B', slug: 'osmosis', order: 2,
     title: '渗透与渗透压', en: 'Osmosis',
-    subtitle: '水为什么会自己爬升 273 米——以及怎么把它按回去。',
+    subtitle: '渗透压为什么相当于约 273 米水柱——以及怎么把它按回去。',
     hint: '拖动含盐量、温度与水柱高度，观察净方向何时翻转。',
     scenes: [
       {
@@ -194,7 +196,7 @@
       },
       {
         title: '渗透压：27 bar ≈ 273 米水柱',
-        body: '<p>海水（35 g/L，25 °C）的渗透压约 <b>27 bar</b>——相当于把水自己抬升约 <b>270 米</b>。渗透会持续到淡水侧水柱压力 = π 为止。</p>',
+        body: '<p>海水（35 g/L，25 °C）的渗透压约 <b>27 bar</b>——相当于约 <b>270 米淡水柱的静压</b>。在盐水侧施加这一压力，便能抵消渗透；继续加压则反向产水。</p>',
         guide: '水柱滑块停在 π 处，净方向变成“平衡”。',
         patch: { headToPi: true }
       },
