@@ -19,7 +19,7 @@
   var GLOW = { plasma: 1, heat: 0.55, particles: 0.7, strike: 0.6 };
 
   var SHOT = {
-    hero: { t: [0, 0.4, 0], az: 22, pol: 66, d: 54 },
+    hero: { t: [0, -1.5, 0], az: 22, pol: 66, d: 72 },
     wide: { t: [0, 0, 0], az: -18, pol: 62, d: 62 },
     inside: { t: [0, 0.2, 2.5], az: 6, pol: 77, d: 27 },
     field: { t: [0, 0.4, 0], az: 18, pol: 58, d: 33 },
@@ -104,7 +104,7 @@
       id: 'b2', title: '只有环向场：粒子会漂走', cap: '环向磁场内强外弱，离子和电子上下分离',
       body: ['把磁力线弯成一个闭合的环，粒子沿环跑就不会从两端漏掉——这是 TF 线圈产生的<b>环向场</b>。',
         '但环向场内侧强、外侧弱（按 1/R 衰减）。这个不均匀让离子向上漂、电子向下漂，上下分离的电荷产生电场，电场再把所有粒子一起推向外壁。<b>只有环向场，约束几毫秒就垮了。</b>'],
-      set: 'machine', layers: ['tf', 'cs'], focus: ['tf'], cut: 'onion', toroidalOnly: true,
+      set: 'machine', layers: ['tf', 'cs'], focus: ['none'], cut: 'onion', toroidalOnly: true,
       fx: { plasma: 0.18, field: 1, particles: 1, drift: 1, tfGlow: 0.5 }, shot: SHOT.field, spin: 0.04,
       labels: [L.tf, { id: 'dr', text: '离子上漂 · 电子下漂', sub: '随后一起被推向外侧', at: ['torus', 1.15, 80, 122], tone: 'warn', side: 'l' }],
       legend: ['d', 't', 'e', 'field'], panel: { type: 'fieldMode' }
@@ -131,7 +131,7 @@
       body: ['只靠等离子体电流，截面是圆的。外面 6 个<b>极向场线圈</b>再推一把，把截面拉成竖长的 D 形：同样的大半径下体积更大，能承载的电流和压强也更高。',
         '底部的线圈把磁面拉出一个 <b>X 点</b>。X 点以内磁面闭合，约束等离子体；以外的磁力线是开放的，直接通向偏滤器靶板——逃出来的粒子和氦灰沿着这两条“腿”被导走，而不是随机地撞向第一壁。'],
       set: 'machine', layers: ['pf', 'cs', 'vessel', 'blanket', 'divertor'], focus: ['pf', 'divertor'], cut: 'half', q: 3,
-      fx: { plasma: 1, heat: 0.4, strike: 1, pfGlow: 0.5, particles: 0.3 }, shot: SHOT.section, spin: 0,
+      fx: { plasma: 0.28, heat: 0.15, strike: 0.35, pfGlow: 0.3, particles: 0.15 }, shot: { t: [-3, -0.5, 0], az: 2, pol: 78, d: 36 }, spin: 0,
       labels: [{ id: 'xp', text: 'X 点', at: ['p', -5.42, -3.05, 0.02], tone: 'plasma', side: 'l' }, { id: 'sp', text: '打击点', sub: '热流最集中处', at: ['p', -6.55, -4.3, 0.02], tone: 'warn' }, { id: 'pf', text: '极向场线圈', at: ['tk', 'pf', 12.2, 3.25, 180] }],
       legend: ['plasma', 'strike'], panel: { type: 'shape' }
     },

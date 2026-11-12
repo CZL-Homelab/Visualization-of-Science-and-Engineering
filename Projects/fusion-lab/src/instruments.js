@@ -440,7 +440,7 @@
     m.appendChild(list);
     info = h('div', 'part-info'); m.appendChild(info);
     title(m, '拆解与剖切');
-    ex = slider(m, { label: '爆炸图', min: 0, max: 100, step: 1, value: Math.round(app.tokamak.explodeGoal * 100), unit: '%' }, function (v) { app.tokamak.setExplode(v / 100); app.takeover(); if (v > 5) app.engine.flyTo({ t: [0, 1.5, 0], az: app.engine.view.az * 57.2958, pol: 62, d: 54 + v * 0.42 }, 0.8); });
+    ex = slider(m, { label: '爆炸图', min: 0, max: 100, step: 1, value: Math.round(app.tokamak.explodeGoal * 100), unit: '%', show: function (v) { return v.toFixed(0); } }, function (v) { app.tokamak.setExplode(v / 100); app.takeover(); if (v > 5) app.engine.flyTo({ t: [0, 1.5, 0], az: app.engine.view.az * 57.2958, pol: 62, d: 54 + v * 0.42 }, 0.8); });
     cutSeg = seg(m, '剖切方式', [['closed', '合上'], ['onion', '洋葱剖'], ['wide', '大开'], ['half', '半剖']], app.tokamak.cut, function (v) { app.tokamak.setCut(v); app.takeover(); });
     var refresh = function () {
       ids.forEach(function (id) { btn[id].setAttribute('aria-pressed', String(app.part === id)); });

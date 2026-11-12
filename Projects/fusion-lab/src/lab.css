@@ -186,7 +186,7 @@ code{font-family:var(--mono);font-size:.9em;background:var(--panel-3);padding:1p
 .intro{
   position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:flex-end;
   padding:clamp(18px,3.4vw,52px);gap:0;
-  background:linear-gradient(100deg,rgba(5,6,10,.9) 0%,rgba(5,6,10,.62) 38%,rgba(5,6,10,0) 68%),linear-gradient(to top,rgba(5,6,10,.7),rgba(5,6,10,0) 45%);
+  background:linear-gradient(100deg,rgba(5,6,10,.62) 0%,rgba(5,6,10,.24) 38%,rgba(5,6,10,0) 68%),linear-gradient(to top,rgba(5,6,10,.45),rgba(5,6,10,0) 45%);
   transition:opacity .6s,visibility .6s;
 }
 .intro.gone{opacity:0;visibility:hidden;pointer-events:none}
@@ -470,7 +470,7 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:3
   .tag3d b{font-size:11px}.tag3d small{display:none}
   .tag3d span{padding:3px 7px 4px;left:15px}.tag3d span::before{width:11px}
   .tag3d[data-side="l"] span{left:auto;right:15px}
-  .intro{padding:16px;background:linear-gradient(to top,rgba(5,6,10,.94) 0%,rgba(5,6,10,.7) 52%,rgba(5,6,10,0) 88%)}
+  .intro{padding:16px;background:linear-gradient(to top,rgba(5,6,10,.86) 0%,rgba(5,6,10,.35) 52%,rgba(5,6,10,0) 88%)}
   .intro .lede{font-size:13px;margin-top:10px}
   .intro-facts{margin-top:14px;padding-top:10px;gap:16px}
   .intro-facts b{font-size:17px}

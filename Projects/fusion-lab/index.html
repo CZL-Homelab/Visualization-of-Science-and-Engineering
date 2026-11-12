@@ -195,7 +195,7 @@ code{font-family:var(--mono);font-size:.9em;background:var(--panel-3);padding:1p
 .intro{
   position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:flex-end;
   padding:clamp(18px,3.4vw,52px);gap:0;
-  background:linear-gradient(100deg,rgba(5,6,10,.9) 0%,rgba(5,6,10,.62) 38%,rgba(5,6,10,0) 68%),linear-gradient(to top,rgba(5,6,10,.7),rgba(5,6,10,0) 45%);
+  background:linear-gradient(100deg,rgba(5,6,10,.62) 0%,rgba(5,6,10,.24) 38%,rgba(5,6,10,0) 68%),linear-gradient(to top,rgba(5,6,10,.45),rgba(5,6,10,0) 45%);
   transition:opacity .6s,visibility .6s;
 }
 .intro.gone{opacity:0;visibility:hidden;pointer-events:none}
@@ -479,7 +479,7 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:3
   .tag3d b{font-size:11px}.tag3d small{display:none}
   .tag3d span{padding:3px 7px 4px;left:15px}.tag3d span::before{width:11px}
   .tag3d[data-side="l"] span{left:auto;right:15px}
-  .intro{padding:16px;background:linear-gradient(to top,rgba(5,6,10,.94) 0%,rgba(5,6,10,.7) 52%,rgba(5,6,10,0) 88%)}
+  .intro{padding:16px;background:linear-gradient(to top,rgba(5,6,10,.86) 0%,rgba(5,6,10,.35) 52%,rgba(5,6,10,0) 88%)}
   .intro .lede{font-size:13px;margin-top:10px}
   .intro-facts{margin-top:14px;padding-top:10px;gap:16px}
   .intro-facts b{font-size:17px}
@@ -2906,7 +2906,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     this.aura.forEach(function (a) { a.renderOrder = 20; self.group.add(a); });
 
     /* the flash and two expanding shock rings at the moment of fusion */
-    this.flash = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshBasicMaterial({ color: fx.hdr(0xfff1d0, 4), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+    this.flash = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshBasicMaterial({ color: fx.hdr(0xfff1d0, 1.2), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
     this.group.add(this.flash);
     this.rings = [0, 1].map(function () {
       var r = new THREE.Mesh(new THREE.TorusGeometry(1, 0.035, 8, 80), new THREE.MeshBasicMaterial({ color: fx.hdr(0xffc27a, 2.5), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
@@ -3031,8 +3031,8 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     }
     /* flash, rings, trails */
     var f = s.stage === 'compound' ? s.after / 0.38 : s.stage === 'products' ? Math.max(0, 1 - s.after * 1.8) : 0;
-    this.flash.visible = f > 0.01; this.flash.scale.setScalar(0.8 + (s.stage === 'products' ? (1 - f) * 5 : f * 0.9));
-    this.flash.material.opacity = s.stage === 'compound' ? f * 0.5 : f * 0.9;
+    this.flash.visible = f > 0.01; this.flash.scale.setScalar(0.25 + f * 0.35);
+    this.flash.material.opacity = f * 0.18;
     for (i = 0; i < 2; i++) {
       var ring = this.rings[i], rt = s.stage === 'products' ? s.after - i * 0.22 : -1;
       ring.visible = rt > 0 && rt < 2.4;
@@ -3078,7 +3078,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
   var GLOW = { plasma: 1, heat: 0.55, particles: 0.7, strike: 0.6 };
 
   var SHOT = {
-    hero: { t: [0, 0.4, 0], az: 22, pol: 66, d: 54 },
+    hero: { t: [0, -1.5, 0], az: 22, pol: 66, d: 72 },
     wide: { t: [0, 0, 0], az: -18, pol: 62, d: 62 },
     inside: { t: [0, 0.2, 2.5], az: 6, pol: 77, d: 27 },
     field: { t: [0, 0.4, 0], az: 18, pol: 58, d: 33 },
@@ -3163,7 +3163,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
       id: 'b2', title: '只有环向场：粒子会漂走', cap: '环向磁场内强外弱，离子和电子上下分离',
       body: ['把磁力线弯成一个闭合的环，粒子沿环跑就不会从两端漏掉——这是 TF 线圈产生的<b>环向场</b>。',
         '但环向场内侧强、外侧弱（按 1/R 衰减）。这个不均匀让离子向上漂、电子向下漂，上下分离的电荷产生电场，电场再把所有粒子一起推向外壁。<b>只有环向场，约束几毫秒就垮了。</b>'],
-      set: 'machine', layers: ['tf', 'cs'], focus: ['tf'], cut: 'onion', toroidalOnly: true,
+      set: 'machine', layers: ['tf', 'cs'], focus: ['none'], cut: 'onion', toroidalOnly: true,
       fx: { plasma: 0.18, field: 1, particles: 1, drift: 1, tfGlow: 0.5 }, shot: SHOT.field, spin: 0.04,
       labels: [L.tf, { id: 'dr', text: '离子上漂 · 电子下漂', sub: '随后一起被推向外侧', at: ['torus', 1.15, 80, 122], tone: 'warn', side: 'l' }],
       legend: ['d', 't', 'e', 'field'], panel: { type: 'fieldMode' }
@@ -3190,7 +3190,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
       body: ['只靠等离子体电流，截面是圆的。外面 6 个<b>极向场线圈</b>再推一把，把截面拉成竖长的 D 形：同样的大半径下体积更大，能承载的电流和压强也更高。',
         '底部的线圈把磁面拉出一个 <b>X 点</b>。X 点以内磁面闭合，约束等离子体；以外的磁力线是开放的，直接通向偏滤器靶板——逃出来的粒子和氦灰沿着这两条“腿”被导走，而不是随机地撞向第一壁。'],
       set: 'machine', layers: ['pf', 'cs', 'vessel', 'blanket', 'divertor'], focus: ['pf', 'divertor'], cut: 'half', q: 3,
-      fx: { plasma: 1, heat: 0.4, strike: 1, pfGlow: 0.5, particles: 0.3 }, shot: SHOT.section, spin: 0,
+      fx: { plasma: 0.28, heat: 0.15, strike: 0.35, pfGlow: 0.3, particles: 0.15 }, shot: { t: [-3, -0.5, 0], az: 2, pol: 78, d: 36 }, spin: 0,
       labels: [{ id: 'xp', text: 'X 点', at: ['p', -5.42, -3.05, 0.02], tone: 'plasma', side: 'l' }, { id: 'sp', text: '打击点', sub: '热流最集中处', at: ['p', -6.55, -4.3, 0.02], tone: 'warn' }, { id: 'pf', text: '极向场线圈', at: ['tk', 'pf', 12.2, 3.25, 180] }],
       legend: ['plasma', 'strike'], panel: { type: 'shape' }
     },
@@ -3929,7 +3929,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     m.appendChild(list);
     info = h('div', 'part-info'); m.appendChild(info);
     title(m, '拆解与剖切');
-    ex = slider(m, { label: '爆炸图', min: 0, max: 100, step: 1, value: Math.round(app.tokamak.explodeGoal * 100), unit: '%' }, function (v) { app.tokamak.setExplode(v / 100); app.takeover(); if (v > 5) app.engine.flyTo({ t: [0, 1.5, 0], az: app.engine.view.az * 57.2958, pol: 62, d: 54 + v * 0.42 }, 0.8); });
+    ex = slider(m, { label: '爆炸图', min: 0, max: 100, step: 1, value: Math.round(app.tokamak.explodeGoal * 100), unit: '%', show: function (v) { return v.toFixed(0); } }, function (v) { app.tokamak.setExplode(v / 100); app.takeover(); if (v > 5) app.engine.flyTo({ t: [0, 1.5, 0], az: app.engine.view.az * 57.2958, pol: 62, d: 54 + v * 0.42 }, 0.8); });
     cutSeg = seg(m, '剖切方式', [['closed', '合上'], ['onion', '洋葱剖'], ['wide', '大开'], ['half', '半剖']], app.tokamak.cut, function (v) { app.tokamak.setCut(v); app.takeover(); });
     var refresh = function () {
       ids.forEach(function (id) { btn[id].setAttribute('aria-pressed', String(app.part === id)); });

@@ -66,7 +66,7 @@
     this.aura.forEach(function (a) { a.renderOrder = 20; self.group.add(a); });
 
     /* the flash and two expanding shock rings at the moment of fusion */
-    this.flash = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshBasicMaterial({ color: fx.hdr(0xfff1d0, 4), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+    this.flash = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshBasicMaterial({ color: fx.hdr(0xfff1d0, 1.2), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
     this.group.add(this.flash);
     this.rings = [0, 1].map(function () {
       var r = new THREE.Mesh(new THREE.TorusGeometry(1, 0.035, 8, 80), new THREE.MeshBasicMaterial({ color: fx.hdr(0xffc27a, 2.5), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
@@ -191,8 +191,8 @@
     }
     /* flash, rings, trails */
     var f = s.stage === 'compound' ? s.after / 0.38 : s.stage === 'products' ? Math.max(0, 1 - s.after * 1.8) : 0;
-    this.flash.visible = f > 0.01; this.flash.scale.setScalar(0.8 + (s.stage === 'products' ? (1 - f) * 5 : f * 0.9));
-    this.flash.material.opacity = s.stage === 'compound' ? f * 0.5 : f * 0.9;
+    this.flash.visible = f > 0.01; this.flash.scale.setScalar(0.25 + f * 0.35);
+    this.flash.material.opacity = f * 0.18;
     for (i = 0; i < 2; i++) {
       var ring = this.rings[i], rt = s.stage === 'products' ? s.after - i * 0.22 : -1;
       ring.visible = rt > 0 && rt < 2.4;

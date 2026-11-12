@@ -1,5 +1,13 @@
 # 更新记录 / Changelog
 
+## 2026-11-12 · Fusion Lab 核聚变反应堆实验室
+
+- 新增第四个离线实验室：7 章、41 幕，涵盖氘氚反应、磁约束、ITER 解剖、放电脉冲、能量账本、氚循环与聚变电站；明确教学近似和 ITER 不发电的边界。
+- 补齐 28 项物理守恒检查、离线封装测试、双语 README/AGENTS、预览图、项目注册、四个实验室目录及 CI/Pages 构建步骤。
+- 缩小反应闪光、淡化 b2 的 TF 线圈、拉远 b5 和解剖镜头、降低截面发光；爆炸图显示整数百分比，人物比例标签纳入取景，减轻首页标题渐变遮挡。
+
+English: Add the fourth offline lab with seven chapters and 41 scenes covering D–T fusion, confinement, ITER anatomy, pulse operation, power accounting, tritium inventories and plants. Include 28 physics/conservation checks, packaging tests, bilingual contributor documentation, a catalog preview, cross-lab navigation and CI/Pages integration. Reduce the reaction flash and ghost-coil opacity, widen the cross-section/anatomy views, lower cross-section glow, show integer explosion percentages, frame the scale person and lighten the intro overlay. Models disclose educational simplifications; ITER does not generate electricity.
+
 ## 2026-11-12 · Desalination Lab 海水淡化原理实验室
 
 - 新增第三个实验室：7 个模块（含盐阶梯、渗透压、单段 RO、MSF/MED、膜与污染、能耗口径、整厂流程），25 幕自动讲解，单文件离线运行。
