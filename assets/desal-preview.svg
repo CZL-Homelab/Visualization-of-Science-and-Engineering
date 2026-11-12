@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="380" viewBox="0 0 620 380" role="img" aria-labelledby="t d">
+<title id="t">Desalination Lab preview</title>
+<desc id="d">Reverse osmosis membrane with feed, permeate and brine streams on the left, osmotic pressure gauge and energy comparison bars on the right.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b1e23"/><stop offset="1" stop-color="#121417"/></linearGradient>
+  <linearGradient id="brine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e05a5f"/><stop offset="1" stop-color="#e05a5f" stop-opacity=".6"/></linearGradient>
+  <linearGradient id="perm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5bc8be"/><stop offset="1" stop-color="#5bc8be" stop-opacity=".6"/></linearGradient>
+  <linearGradient id="feed" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e0955a"/><stop offset="1" stop-color="#e0955a" stop-opacity=".7"/></linearGradient>
+  <style>
+    text{font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif}
+    .eyebrow{fill:#5bc8be;font-size:9px;letter-spacing:2.2px;font-weight:600}
+    .title{fill:#eceef1;font-size:17px;font-weight:700}
+    .sub{fill:#9aa1a9;font-size:9px;letter-spacing:0.6px}
+    .lab{fill:#c7ccd2;font-size:8.5px}
+    .dim{fill:#6e757d;font-size:8px}
+    .num{fill:#eceef1;font-size:9px;font-variant-numeric:tabular-nums}
+    .warn{fill:#e0955a;font-size:8.5px}
+    .ok{fill:#3fae7a;font-size:8.5px}
+  </style>
+</defs>
+<rect width="620" height="380" rx="10" fill="url(#bg)"/>
+<rect x="0.5" y="0.5" width="619" height="379" rx="10" fill="none" stroke="#2d3238"/>
+<text x="22" y="30" class="eyebrow">DESALINATION LAB · SEAWATER → DRINKING</text>
+<text x="22" y="52" class="title">海水淡化原理实验室</text>
+<text x="22" y="68" class="sub">OSMOSIS · REVERSE OSMOSIS · FLASH · WHOLE PLANT BALANCE</text>
+
+<!-- RO stage diagram -->
+<g transform="translate(22,86)">
+  <rect x="0" y="52" width="176" height="26" rx="6" fill="url(#feed)"/>
+  <text x="4" y="46" class="lab">进水 100 m³/h · TDS 35,000</text>
+  <rect x="182" y="26" width="8" height="76" rx="3" fill="#b07cd8"/>
+  <text x="186" y="116" class="dim" text-anchor="middle">半透膜</text>
+  <rect x="200" y="40" width="122" height="16" rx="5" fill="url(#perm)"/>
+  <text x="204" y="34" class="lab">产水 45 · TDS 245 mg/L</text>
+  <path d="M200 70 L268 70 L268 104 L322 104" stroke="#e05a5f" stroke-width="14" fill="none" stroke-linecap="round" opacity=".8"/>
+  <text x="204" y="92" class="lab">浓盐水 55 · TDS 63,400</text>
+  <g stroke="#3fae7a" stroke-width="1.6">
+    <path d="M158 48 h26"/><path d="M158 58 h26"/><path d="M158 68 h26"/><path d="M158 78 h26"/>
+  </g>
+  <text x="186" y="128" class="ok">通量 14.4 LMH · J = A(P − βπ)</text>
+</g>
+
+<!-- osmotic pressure gauge -->
+<g transform="translate(360,96)">
+  <text x="0" y="0" class="dim">外加压力 vs 渗透压 (bar)</text>
+  <rect x="0" y="10" width="230" height="14" rx="7" fill="#23272d"/>
+  <rect x="0" y="10" width="158" height="14" rx="7" fill="#7aa2d8"/>
+  <line x1="132" y1="6" x2="132" y2="28" stroke="#e0955a" stroke-width="2"/>
+  <text x="132" y="42" class="warn" text-anchor="middle">π ≈ 26.7 bar · β·π_b 53</text>
+  <text x="0" y="42" class="num">62 bar</text>
+</g>
+
+<!-- energy comparison bars -->
+<g transform="translate(360,180)">
+  <text x="0" y="0" class="dim">电耗当量 kWh/m³（文献区间）</text>
+  <rect x="0" y="12" width="22" height="14" rx="4" fill="#3fae7a"/>
+  <text x="30" y="23" class="lab">理论最小 1.06</text>
+  <rect x="0" y="34" width="77" height="14" rx="4" fill="#5bc8be"/>
+  <text x="85" y="45" class="lab">SWRO 2.5–4.5</text>
+  <rect x="0" y="56" width="93" height="14" rx="4" fill="#7aa2d8"/>
+  <text x="101" y="67" class="lab">MED 3–6</text>
+  <rect x="0" y="78" width="187" height="14" rx="4" fill="#e0955a"/>
+  <text x="195" y="89" class="lab">MSF 7.5–11</text>
+</g>
+
+<!-- salt ladder strip -->
+<g transform="translate(22,240)">
+  <text x="0" y="0" class="dim">TDS 阶梯（对数）</text>
+  <rect x="0" y="12" width="66" height="46" rx="4" fill="#7aa2d8" opacity=".28"/>
+  <rect x="74" y="12" width="66" height="46" rx="4" fill="#3fae7a" opacity=".30"/>
+  <rect x="148" y="12" width="66" height="46" rx="4" fill="#d9c069" opacity=".30"/>
+  <rect x="222" y="12" width="66" height="46" rx="4" fill="#e0955a" opacity=".34"/>
+  <rect x="296" y="12" width="66" height="46" rx="4" fill="#e05a5f" opacity=".34"/>
+  <text x="33" y="40" class="num" text-anchor="middle">雨水</text>
+  <text x="107" y="40" class="num" text-anchor="middle">河水</text>
+  <text x="181" y="40" class="num" text-anchor="middle">微咸水</text>
+  <text x="255" y="40" class="num" text-anchor="middle">海水</text>
+  <text x="329" y="40" class="num" text-anchor="middle">RO浓水</text>
+  <text x="107" y="72" class="ok">饮用水参考 500 mg/L ← 海水要砍掉 99% 的盐</text>
+</g>
+<text x="22" y="348" class="dim">教学模型 · 全部离线 · 模拟数据已标注 · 口径核对 2026-11-10</text>
+</svg>

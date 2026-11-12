@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>海水淡化原理实验室 · Desalination Lab</title>
+<meta name="description" content="用可操作的渗透压、反渗透、闪蒸与全流程模型，从零理解海水淡化如何把盐留下、把水带走。全部离线运行。">
+<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#101113"><script>(function(){try{var k='czl-lab-theme';var s=localStorage.getItem(k);var t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==='light'?'#f4f2ec':'#101113';}catch(e){}})();</script>
+<!-- SITE_ICON -->
+<style>/* LAB_STYLES */</style>
+</head>
+<body>
+<a class="skip" href="#lab">跳到实验台</a>
+
+<header class="topbar">
+  <a class="backlink" href="../index.html#projects" aria-label="返回 Lab Projects 项目列表">
+    <span aria-hidden="true">←</span><span class="backlink-label">Lab Projects</span>
+  </a>
+  <a class="brand" href="#top" aria-label="回到页首">
+    <img class="brand-mark" src="<!-- BRAND_ICON -->" alt="">
+    <span class="brand-name">海水淡化原理实验室<small>DESALINATION LAB</small></span>
+  </a>
+  <nav class="topnav" aria-label="页面导航">
+    <a href="#lab">实验台</a>
+    <a href="#rules">口径核对</a>
+    <a href="#myths">常见误区</a>
+    <a href="#limits">边界</a>
+    <a class="ext" href="https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering" target="_blank" rel="noopener">源码 <span aria-hidden="true">↗</span></a>
+  </nav>
+  <div class="top-actions">
+    <button id="themeToggle" class="ghost theme-toggle" type="button" aria-pressed="false" aria-label="切换到浅色模式" title="切换深色 / 浅色主题"><span class="theme-icon" aria-hidden="true">☀</span><span class="theme-label">浅色</span></button>
+    <button id="downloadPage" class="ghost" type="button" title="把当前页面保存为单文件 HTML">离线网页</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">SEAWATER DESALINATION MECHANICS / 7 MODULES</p>
+      <h1>把盐留下，<br>把水带走。</h1>
+      <p class="lede">从 35 g/L 的海水出发，拆开渗透压、反渗透膜、多级闪蒸与整厂物料平衡。每个概念都配一台能调参数、能验证的仪器——不是看动画，而是亲手看见质量与能量如何守恒。</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#lab">进入实验台</a>
+        <a class="btn" href="#rules">先看口径</a>
+      </div>
+      <ul class="hero-facts">
+        <li><b>7</b><span>教学模块</span></li>
+        <li><b>25</b><span>讲解场景</span></li>
+        <li><b>0</b><span>运行时联网依赖</span></li>
+      </ul>
+    </div>
+    <figure class="hero-figure">
+      <div class="tape-label">
+        <span>TDS LADDER / 含盐阶梯</span>
+        <span class="sim">教学模型</span>
+      </div>
+      <div class="hero-chart" id="heroChart"></div>
+      <figcaption class="fig-note">含盐阶梯只对数轴示意：从雨水到 RO 浓盐水，观察 TDS 跨越三个数量级，以及 500 mg/L 饮用水参考线在哪个位置。数值为教学近似。</figcaption>
+    </figure>
+  </section>
+
+  <section class="index-strip" id="indexStrip" aria-label="全球海水淡化速览"></section>
+
+  <section class="workspace" id="lab" aria-label="交互实验台">
+    <aside class="sidebar">
+      <div class="side-label">课程模块 <span>/ MODULES</span></div>
+      <nav id="moduleList" class="module-list" aria-label="课程模块列表"></nav>
+      <div class="side-progress">
+        <div class="sp-head"><span>学习进度</span><b id="progressText">0 / 7</b></div>
+        <div class="sp-bar"><i id="progressBar"></i></div>
+        <p class="sp-note">进度只记录在本机浏览器，不上传任何数据。</p>
+      </div>
+    </aside>
+
+    <div class="stage" id="stage">
+      <div class="stage-head">
+        <div class="stage-id">
+          <span class="stage-kicker" id="stageKicker">MODULE A</span>
+          <h2 id="stageTitle">水与盐</h2>
+        </div>
+        <p class="stage-sub" id="stageSub"></p>
+      </div>
+      <div class="stage-body" id="stageBody"></div>
+      <div class="stage-foot">
+        <span class="hint" id="stageHint">拖动滑块、切换场景，观察数字如何一起变化。</span>
+        <span class="sim-badge">MODEL</span>
+      </div>
+    </div>
+
+    <aside class="scene-panel" id="scenePanel" aria-label="讲解与参数面板">
+      <div class="scene-head">
+        <div class="scene-meta">
+          <span id="sceneChapter">场景 1 / 4</span>
+          <span class="sim" id="sceneBadge">自动讲解</span>
+        </div>
+        <div class="scene-dots" id="sceneDots"></div>
+        <h3 id="sceneTitle">场景标题</h3>
+        <div class="scene-body" id="sceneBody"></div>
+        <button class="takeover-link" id="takeoverBtn" type="button">⏸ 暂停讲解，我要自己试</button>
+      </div>
+      <div class="panel-scroll" id="modulePanel"></div>
+    </aside>
+
+    <div class="transport" role="group" aria-label="自动讲解控制">
+      <div class="tr-buttons">
+        <button id="prevScene" class="icon-btn" type="button" title="上一幕" aria-label="上一幕">←</button>
+        <button id="playScenes" class="icon-btn primary" type="button" title="播放 / 暂停自动讲解">▶ 自动讲解</button>
+        <button id="nextScene" class="icon-btn" type="button" title="下一幕" aria-label="下一幕">→</button>
+        <button id="replayScene" class="icon-btn" type="button" title="重播本模块" aria-label="重播本模块">↺</button>
+      </div>
+      <div class="tr-progress" aria-hidden="true"><i id="directorBar"></i></div>
+      <div class="tr-meta">
+        <label class="mini"><span>速度</span>
+          <select id="dirSpeed">
+            <option value="0.7">0.7×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.4">1.4×</option>
+            <option value="2">2×</option>
+          </select>
+        </label>
+        <label class="mini check"><input type="checkbox" id="voiceToggle"> 语音讲解</label>
+        <span class="tr-status" id="directorStatus">手动模式</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="rules">
+    <div class="section-head">
+      <p class="eyebrow">REFERENCE / 核对口径</p>
+      <h2>数字口径先钉住，再谈结论。</h2>
+      <p>下面的口径与数值按可核对的公开资料整理，并标注核对日期。教学模型只覆盖常用情形；工艺、膜片与厂址各不相同，工程决策以原始资料与实测为准。</p>
+    </div>
+    <div id="rulesTable" class="rules-wrap"></div>
+    <div class="source-row" id="ruleSources"></div>
+  </section>
+
+  <section class="content" id="myths">
+    <div class="section-head">
+      <p class="eyebrow">MISCONCEPTIONS / 常见误区</p>
+      <h2>最容易说错的十句话。</h2>
+      <p>每一条都能在实验台里找到反例。点开看为什么，以及对应哪个模块。</p>
+    </div>
+    <div id="mythList" class="myth-list"></div>
+  </section>
+
+  <section class="content" id="quiz">
+    <div class="section-head">
+      <p class="eyebrow">CHECK / 理解检验</p>
+      <h2>能算对，才算看懂。</h2>
+      <p>题目跟随当前模块。答错会给出计算过程，而不是只给一个答案。</p>
+    </div>
+    <div id="quizMount"></div>
+  </section>
+
+  <section class="content" id="limits">
+    <div class="section-head">
+      <p class="eyebrow">BOUNDARIES / 模型边界</p>
+      <h2>哪些是教学模型，哪些不是。</h2>
+    </div>
+    <div class="limit-grid">
+      <article class="limit-card">
+        <h3>物理简化</h3>
+        <p>渗透压按 NaCl 等效的 van 't Hoff 式估算（有效系数 1.8），不含离子对、活度系数与多价离子效应；真实海水的渗透压与该估算在 ±10% 内一致，但对高浓盐水与结垢判断只是量级参考。</p>
+      </article>
+      <article class="limit-card">
+        <h3>工艺边界</h3>
+        <p>RO 是单级单段教学模型：没有多段级联、能量回收的流量细节、浓差极化的局部计算与温度粘度修正；MSF 的 GEA 是单调教学相关性，不是热工设计结果。</p>
+      </article>
+      <article class="limit-card">
+        <h3>能耗与成本</h3>
+        <p>文献能耗与成本都是区间（GED 口径），随厂址、电价、 financing 与回收率变化巨大；页面数字用于量级对比，不代表任何一家水厂的实际值。</p>
+      </article>
+      <article class="limit-card">
+        <h3>程序动画 ≠ 工程仿真</h3>
+        <p>所有动画与曲线都是可复现的教学模型，用于展示因果关系与守恒律。选型、环评与产能核算请以原厂资料、实测数据与专业软件为准。</p>
+      </article>
+    </div>
+    <p class="fineprint" id="buildStamp">Desalination Lab · 教学模型 · 非工程仿真</p>
+  </section>
+</main>
+
+<section class="lab-directory" aria-labelledby="labDirectoryTitle">
+  <div class="dir-head">
+    <span class="dir-eyebrow">LAB PROJECTS / 全部实验</span>
+    <h2 id="labDirectoryTitle">换一个实验室</h2>
+    <p>三个可离线运行的交互式实验室。主题与导航在各页保持一致。</p>
+  </div>
+  <div class="dir-grid">
+    <a class="dir-card current" href="./index.html" aria-current="page">
+      <span class="dir-num">03</span>
+      <div class="dir-copy"><h3>海水淡化原理实验室 <span class="dir-tag">当前 / Current</span></h3><p>渗透压、反渗透、闪蒸与整厂物料平衡。</p></div>
+    </a>
+    <a class="dir-card" href="../motor-lab/index.html">
+      <span class="dir-num">01</span>
+      <div class="dir-copy"><h3>电机原理实验室 <span class="dir-tag">Motor Lab</span></h3><p>六类电机的三维结构、磁场与连续换向过程。</p></div>
+    </a>
+    <a class="dir-card" href="../stock-market-lab/index.html">
+      <span class="dir-num">02</span>
+      <div class="dir-copy"><h3>股票市场原理实验室 <span class="dir-tag">Stock Lab</span></h3><p>K 线、订单簿、IPO、杠杆与 A 股 / 美股制度对比。</p></div>
+    </a>
+  </div>
+  <a class="dir-all" href="../index.html#projects">返回项目目录 / All projects <span aria-hidden="true">↗</span></a>
+</section>
+
+<footer class="site-foot">
+  <div>
+    <strong>海水淡化原理实验室</strong>
+    <span>Desalination Lab · 一个可离线运行的海水淡化机制教学实验台</span>
+  </div>
+  <nav>
+    <a href="https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering" target="_blank" rel="noopener">仓库 / Repository</a>
+    <a href="#lab">回到实验台</a>
+  </nav>
+</footer>
+
+<noscript><p class="noscript">本实验台需要 JavaScript 才能绘图与计算。页面本身不含任何远程资源。</p></noscript>
+
+<!-- LAB_SCRIPTS -->
+</body>
+</html>

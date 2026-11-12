@@ -1,0 +1,3759 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>海水淡化原理实验室 · Desalination Lab</title>
+<meta name="description" content="用可操作的渗透压、反渗透、闪蒸与全流程模型，从零理解海水淡化如何把盐留下、把水带走。全部离线运行。">
+<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#101113"><script>(function(){try{var k='czl-lab-theme';var s=localStorage.getItem(k);var t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==='light'?'#f4f2ec':'#101113';}catch(e){}})();</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiBmaWxsPSJub25lIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+Q1pMIFNjaWVuY2UgYW5kIEVuZ2luZWVyaW5nIFZpc3VhbGl6YXRpb25zPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+QSBzcGF0aWFsIGZyYW1lIGFuZCBhbiBvcmJpdGFsIHBhdGg6IHN0cnVjdHVyZSwgb2JzZXJ2YXRpb24gYW5kIG1vdGlvbi48L2Rlc2M+CiAgPHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIzMCIgZmlsbD0iIzE3MTgxYSIvPgogIDxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSIxMjYiIGhlaWdodD0iMTI2IiByeD0iMjkiIHN0cm9rZT0iIzNiM2U0MiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTY0IDIxIDk5IDQxdjQzTDY0IDEwNSAyOSA4NFY0MVoiIGZpbGw9IiMyMjI0MjciIHN0cm9rZT0iIzViYzhiZSIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTI5IDQxIDM1IDIxIDM1LTIxTTY0IDYydjQzTTY0IDIxdjQxIiBzdHJva2U9IiM1YmM4YmUiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGVsbGlwc2UgY3g9IjY0IiBjeT0iNjQiIHJ4PSI1MyIgcnk9IjIwIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzAgNjQgNjQpIiBzdHJva2U9IiM3YWEyZDgiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxwYXRoIGQ9Im0yOSA0MSAzNSAyMXY0MyIgc3Ryb2tlPSIjY2ZlOGUzIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iMTA3IiBjeT0iMzkiIHI9IjciIGZpbGw9IiNkOTlhNmIiIHN0cm9rZT0iIzE3MTgxYSIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGNpcmNsZSBjeD0iNjQiIGN5PSI2MiIgcj0iNSIgZmlsbD0iI2NmZThlMyIvPgo8L3N2Zz4K">
+<style>/* Desalination Lab — shared styles.
+   Dark graphite instrument panel + paper-light alternative.
+   No webfonts, no remote assets. */
+
+:root{
+  --bg:#101113;
+  --panel:#181a1e;
+  --panel-2:#1e2126;
+  --panel-3:#23272d;
+  --line:#2d3238;
+  --line-soft:#24282e;
+  --text:#eceef1;
+  --muted:#9aa1a9;
+  --dim:#6e757d;
+  --cyan:#5bc8be;
+  --cyan-dim:#2f6f6a;
+  --orange:#e0955a;
+  --blue:#7aa2d8;
+  --violet:#b07cd8;
+  --yellow:#d9c069;
+  --red:#e05a5f;
+  --green:#3fae7a;
+  --up:#e05a5f;
+  --down:#3fae7a;
+  --grid:rgba(255,255,255,.055);
+  --grid-strong:rgba(255,255,255,.1);
+  --shadow:0 18px 48px rgba(0,0,0,.38);
+  --shadow-sm:0 6px 18px rgba(0,0,0,.24);
+  --r:14px;
+  --r-sm:10px;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:"Inter","Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+}
+html[data-theme="light"]{
+  --bg:#f4f2ec;
+  --panel:#fcfbf7;
+  --panel-2:#f7f5ef;
+  --panel-3:#efebe2;
+  --line:#d9d4c9;
+  --line-soft:#e4dfd4;
+  --text:#202327;
+  --muted:#646b74;
+  --dim:#8a9099;
+  --cyan:#127d76;
+  --cyan-dim:#9fd6d0;
+  --orange:#b4652a;
+  --blue:#3d6ea5;
+  --violet:#7d4fa8;
+  --yellow:#9a7c1f;
+  --red:#c8443f;
+  --green:#23845c;
+  --up:#c8443f;
+  --down:#23845c;
+  --grid:rgba(20,24,28,.07);
+  --grid-strong:rgba(20,24,28,.13);
+  --shadow:0 18px 44px rgba(50,45,35,.13);
+  --shadow-sm:0 6px 16px rgba(50,45,35,.1);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html{scroll-padding-top:78px}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:var(--sans);font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(1200px 500px at 70% -10%,rgba(91,200,190,.07),transparent 70%);
+}
+h1,h2,h3,h4{margin:0;line-height:1.22;letter-spacing:-.015em;font-weight:650}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+canvas{display:block}
+code,.mono{font-family:var(--mono);font-size:.92em}
+::selection{background:var(--cyan);color:#0b0d0f}
+
+.skip{position:absolute;left:-9999px;top:0;background:var(--cyan);color:#08201e;padding:8px 14px;z-index:99;border-radius:0 0 8px 0}
+.skip:focus{left:0}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  display:flex;align-items:center;gap:18px;
+  padding:0 clamp(16px,3vw,40px);height:64px;
+  background:color-mix(in srgb,var(--bg) 84%,transparent);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-soft);
+}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brand-mark{width:30px;height:30px;flex:none;border-radius:8px;background:var(--panel-2);padding:4px;border:1px solid var(--line)}
+.brand-name{display:flex;flex-direction:column;font-weight:640;font-size:15px;letter-spacing:0;white-space:nowrap}
+.brand-name small{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--dim);font-weight:500}
+.topnav{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+.topnav a{padding:6px 11px;border-radius:8px;font-size:13.5px;color:var(--muted);transition:.16s}
+.topnav a:hover{color:var(--text);background:var(--panel-2)}
+.topnav a.ext{color:var(--cyan)}
+.top-actions{display:flex;gap:8px}
+.ghost{
+  border:1px solid var(--line);background:transparent;color:var(--muted);
+  padding:6px 11px;border-radius:8px;font-size:12.5px;cursor:pointer;transition:.16s
+}
+.ghost:hover{color:var(--text);border-color:var(--dim)}
+
+/* ---------- hero ---------- */
+.hero{
+  display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1.1fr);
+  gap:clamp(24px,4vw,64px);align-items:center;
+  padding:clamp(26px,4vw,52px) clamp(16px,3vw,40px) clamp(18px,2.4vw,28px);
+  max-width:1560px;margin:0 auto;
+}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.17em;color:var(--cyan);text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-size:clamp(32px,4.2vw,56px);letter-spacing:-.03em;font-weight:680}
+.lede{margin-top:16px;max-width:52ch;color:var(--muted);font-size:clamp(15px,1.2vw,17px)}
+.hero-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);
+  background:var(--panel-2);color:var(--text);padding:9px 16px;border-radius:9px;
+  font-size:13.5px;cursor:pointer;transition:.16s;text-decoration:none
+}
+.btn:hover{border-color:var(--dim);transform:translateY(-1px)}
+.btn.primary{background:var(--cyan);color:#08201e;border-color:var(--cyan);font-weight:620}
+.btn.primary:hover{background:color-mix(in srgb,var(--cyan) 86%,#fff)}
+html[data-theme="light"] .btn.primary{color:#f6fffd}
+.btn.ghost{background:transparent;color:var(--muted)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.hero-facts{display:flex;gap:26px;list-style:none;padding:0;margin:24px 0 0;border-top:1px solid var(--line-soft);padding-top:14px}
+.hero-facts b{display:block;font-family:var(--mono);font-size:20px;color:var(--text);font-weight:600}
+.hero-facts span{font-size:11.5px;color:var(--dim);letter-spacing:.04em}
+.hero-figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px 10px;box-shadow:var(--shadow)}
+.tape-label{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--dim);padding-bottom:10px;border-bottom:1px solid var(--line-soft);margin-bottom:8px}
+.sim{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;border:1px solid color-mix(in srgb,var(--orange) 45%,transparent);color:var(--orange);padding:2px 6px;border-radius:5px;white-space:nowrap}
+.hero-chart{height:clamp(220px,22vw,300px)}
+.fig-note{font-size:11.5px;color:var(--dim);padding-top:8px;border-top:1px solid var(--line-soft);margin-top:6px}
+
+/* ---------- index strip ---------- */
+.index-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  max-width:1560px;margin:0 auto;padding:0 clamp(16px,3vw,40px);
+}
+.idx{
+  background:var(--panel);border:1px solid var(--line);border-right:0;
+  padding:12px 16px;display:flex;flex-direction:column;gap:2px
+}
+.idx:first-child{border-radius:var(--r-sm) 0 0 var(--r-sm)}
+.idx:last-child{border-right:1px solid var(--line);border-radius:0 var(--r-sm) var(--r-sm) 0}
+.idx-name{font-size:11.5px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.idx-name em{font-style:normal;font-family:var(--mono);font-size:9.5px;color:var(--dim);letter-spacing:.08em}
+.idx-val{font-family:var(--mono);font-size:19px;font-weight:600;letter-spacing:-.02em}
+.idx-chg{font-family:var(--mono);font-size:11.5px}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--muted)}
+.index-note{grid-column:1/-1;font-size:10.5px;color:var(--dim);padding:7px 2px 0}
+
+/* ---------- workspace ---------- */
+.workspace{
+  --lab-h:clamp(620px,calc(100vh - 120px),820px);
+  display:grid;
+  grid-template-columns:194px minmax(0,1fr) 356px;
+  grid-template-rows:var(--lab-h) 46px;
+  border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  background:var(--panel);box-shadow:var(--shadow);
+  max-width:1560px;margin:22px auto 0;
+}
+.sidebar{
+  border-right:1px solid var(--line);background:var(--panel-2);
+  padding:16px 10px 14px;display:flex;flex-direction:column;gap:10px;overflow:auto;min-height:0
+}
+.side-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);padding:0 8px}
+.side-label span{color:var(--dim);opacity:.7}
+.module-list{display:flex;flex-direction:column;gap:2px}
+.mod{
+  display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;align-items:start;
+  padding:8px 8px;border-radius:9px;background:transparent;border:1px solid transparent;
+  cursor:pointer;text-align:left;transition:.14s;width:100%
+}
+.mod:hover{background:var(--panel-3)}
+.mod[aria-current="true"]{background:var(--panel-3);border-color:var(--line)}
+.mod[aria-current="true"] .mod-id{background:var(--cyan);color:#08201e;border-color:var(--cyan)}
+.mod-id{
+  font-family:var(--mono);font-size:10.5px;line-height:1.5;text-align:center;
+  border:1px solid var(--line);border-radius:5px;color:var(--muted);background:var(--panel);
+  padding:1px 0;margin-top:1px
+}
+.mod-title{font-size:12.5px;line-height:1.35;color:var(--text);display:block;font-weight:530}
+.mod-sub{font-size:10px;color:var(--dim);display:block;margin-top:1px;font-family:var(--mono);letter-spacing:.02em}
+.mod.done .mod-title::after{content:"·";color:var(--cyan);margin-left:4px}
+.side-progress{margin-top:auto;border-top:1px solid var(--line-soft);padding:12px 8px 0}
+.sp-head{display:flex;justify-content:space-between;font-size:10.5px;color:var(--dim);margin-bottom:6px}
+.sp-head b{font-family:var(--mono);color:var(--muted)}
+.sp-bar{height:3px;background:var(--panel-3);border-radius:3px;overflow:hidden}
+.sp-bar i{display:block;height:100%;width:0;background:var(--cyan);transition:width .4s}
+.sp-note{font-size:9.5px;color:var(--dim);margin-top:8px;line-height:1.45}
+
+/* stage */
+.stage{
+  display:flex;flex-direction:column;min-width:0;min-height:0;padding:14px 16px 10px;
+  background:
+    linear-gradient(var(--grid) 1px,transparent 1px) 0 0/100% 32px,
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/32px 100%,
+    var(--panel);
+  background-blend-mode:normal;
+}
+.stage-head{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}
+.stage-id{display:flex;flex-direction:column;gap:3px;min-width:0}
+.stage-kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--cyan)}
+.stage h2{font-size:19px;font-weight:640}
+.stage-sub{font-size:11.5px;color:var(--dim);max-width:46ch;text-align:right}
+.stage-body{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;position:relative}
+.stage-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:8px;border-top:1px solid var(--line-soft);margin-top:8px}
+.hint{font-size:11px;color:var(--dim)}
+.sim-badge{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);border:1px solid var(--line);padding:2px 6px;border-radius:4px}
+
+/* scene panel */
+.scene-panel{
+  border-left:1px solid var(--line);background:var(--panel-2);
+  display:flex;flex-direction:column;min-height:0
+}
+.scene-head{padding:14px 16px 12px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.scene-meta{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--dim)}
+.scene-dots{display:flex;gap:4px;flex-wrap:wrap}
+.scene-dots button{
+  width:18px;height:4px;border:0;border-radius:2px;background:color-mix(in srgb,var(--muted) 38%,var(--panel-3));cursor:pointer;padding:0;transition:.2s
+}
+.scene-dots button:hover{background:var(--muted)}
+.scene-dots button[aria-current="true"]{background:var(--cyan);width:26px}
+.scene-head h3{font-size:15.5px;font-weight:620;letter-spacing:-.01em}
+.scene-body{font-size:12px;color:var(--muted);line-height:1.62;max-height:124px;overflow:auto}
+.scene-body b{color:var(--text);font-weight:600}
+.scene-body code{color:var(--cyan)}
+.takeover-link{
+  align-self:flex-start;background:none;border:0;padding:0;font-size:11px;color:var(--cyan);
+  cursor:pointer;border-bottom:1px dotted color-mix(in srgb,var(--cyan) 55%,transparent);line-height:1.6
+}
+.takeover-link[hidden]{display:none}
+.panel-scroll{overflow:auto;padding:12px 16px 20px;display:flex;flex-direction:column;gap:12px;min-height:0;flex:1;scrollbar-width:thin}
+
+/* transport */
+.transport{
+  grid-column:1/-1;display:flex;align-items:center;gap:16px;
+  border-top:1px solid var(--line);background:var(--panel-2);padding:0 16px
+}
+.tr-buttons{display:flex;gap:6px;align-items:center}
+.icon-btn{
+  border:1px solid var(--line);background:var(--panel);color:var(--muted);
+  border-radius:8px;padding:5px 11px;font-size:12px;cursor:pointer;transition:.14s;white-space:nowrap
+}
+.icon-btn:hover{color:var(--text);border-color:var(--dim)}
+.icon-btn.primary{background:var(--cyan);color:#08201e;border-color:var(--cyan);font-weight:620}
+html[data-theme="light"] .icon-btn.primary{color:#f7fffd}
+.tr-progress{flex:1;height:3px;background:var(--panel-3);border-radius:3px;overflow:hidden;min-width:40px}
+.tr-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--orange));transition:width .35s}
+.tr-meta{display:flex;align-items:center;gap:14px;font-size:10.5px;color:var(--dim)}
+.mini{display:flex;align-items:center;gap:5px;flex:none;white-space:nowrap}
+.mini span{white-space:nowrap}
+.mini select{background:var(--panel);border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:3px 4px;font-size:10.5px}
+.mini.check{cursor:pointer;user-select:none}
+.tr-status{font-family:var(--mono);letter-spacing:.06em;color:var(--dim);min-width:72px;text-align:right}
+.tr-status.live{color:var(--cyan)}
+.tr-status.taken{color:var(--orange)}
+
+/* ---------- module panel widgets ---------- */
+.pgroup{display:flex;flex-direction:column;gap:7px;border-top:1px solid var(--line-soft);padding-top:11px}
+.pgroup:first-child{border-top:0;padding-top:0}
+.pgroup-title{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:11.5px;color:var(--muted)}
+.ctl-top b{font-family:var(--mono);font-size:11.5px;color:var(--text);font-weight:550}
+.ctl-top .u{color:var(--dim);font-size:10px;margin-left:2px}
+input[type="range"]{
+  -webkit-appearance:none;appearance:none;width:100%;height:3px;border-radius:3px;
+  background:var(--panel-3);outline:0;cursor:pointer
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--cyan);
+  border:2px solid var(--panel-2);box-shadow:0 0 0 1px var(--cyan);cursor:grab
+}
+input[type="range"]::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:var(--cyan);border:2px solid var(--panel-2);box-shadow:0 0 0 1px var(--cyan);cursor:grab}
+input[type="number"],input[type="text"],select,textarea{
+  background:var(--panel);border:1px solid var(--line);color:var(--text);
+  border-radius:7px;padding:5px 8px;font-size:12px;font-family:var(--mono);width:100%
+}
+input:focus-visible,select:focus-visible,textarea:focus-visible,.btn:focus-visible,.icon-btn:focus-visible,.mod:focus-visible{
+  outline:2px solid var(--cyan);outline-offset:1px
+}
+input.invalid{border-color:var(--red)}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{
+  border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:6px;
+  padding:4px 8px;font-size:10.5px;cursor:pointer;transition:.14s;font-family:var(--mono)
+}
+.seg button[aria-pressed="true"]{background:var(--panel-3);border-color:var(--cyan);color:var(--cyan)}
+.chk{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted);cursor:pointer;user-select:none}
+.chk input{accent-color:var(--cyan);width:13px;height:13px;margin:0;cursor:pointer}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);border-radius:8px;overflow:hidden}
+.metric{background:var(--panel);padding:7px 9px;display:flex;flex-direction:column;gap:1px}
+.metric span{font-size:9.5px;color:var(--dim);letter-spacing:.02em}
+.metric b{font-family:var(--mono);font-size:13px;font-weight:560;letter-spacing:-.01em}
+.metric.wide{grid-column:1/-1}
+.metric.hi b{color:var(--cyan)}
+.metric.pos b{color:var(--up)}
+.metric.neg b{color:var(--down)}
+.formula{
+  background:var(--panel);border:1px solid var(--line);border-left:2px solid var(--cyan);
+  border-radius:0 7px 7px 0;padding:7px 9px;font-family:var(--mono);font-size:10.5px;color:var(--muted);line-height:1.7;overflow-x:auto
+}
+.formula b{color:var(--text);font-weight:500}
+.note{font-size:10.5px;color:var(--dim);line-height:1.6}
+.note b{color:var(--muted);font-weight:600}
+.warn{font-size:10.5px;color:var(--orange);background:color-mix(in srgb,var(--orange) 9%,transparent);border:1px solid color-mix(in srgb,var(--orange) 28%,transparent);border-radius:7px;padding:6px 8px;line-height:1.55}
+.ok{font-size:10.5px;color:var(--cyan);background:color-mix(in srgb,var(--cyan) 8%,transparent);border:1px solid color-mix(in srgb,var(--cyan) 26%,transparent);border-radius:7px;padding:6px 8px;line-height:1.55}
+.ptable{width:100%;border-collapse:collapse;font-size:10.5px}
+.ptable th{text-align:left;font-weight:500;color:var(--dim);font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;padding:3px 4px;border-bottom:1px solid var(--line)}
+.ptable td{padding:3px 4px;border-bottom:1px solid var(--line-soft);color:var(--muted);font-family:var(--mono)}
+.ptable td.t{font-family:var(--sans);color:var(--text)}
+.ptable tr:last-child td{border-bottom:0}
+.btn-row{display:flex;gap:5px;flex-wrap:wrap}
+.btn.sm{padding:4px 9px;font-size:10.5px;border-radius:6px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:10px;color:var(--dim);font-family:var(--mono)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.tag{display:inline-block;font-size:9px;font-family:var(--mono);letter-spacing:.08em;padding:1px 5px;border-radius:4px;border:1px solid var(--line);color:var(--dim)}
+.tag.cn{border-color:color-mix(in srgb,var(--red) 40%,transparent);color:var(--red)}
+.tag.us{border-color:color-mix(in srgb,var(--blue) 45%,transparent);color:var(--blue)}
+
+/* chart hosts */
+.chart{position:relative;width:100%;height:100%;min-height:180px;border:1px solid var(--line-soft);border-radius:9px;background:var(--panel);overflow:hidden}
+.chart canvas{position:absolute;inset:0;width:100%;height:100%}
+.chart-tip{
+  position:absolute;pointer-events:none;z-index:5;background:color-mix(in srgb,var(--panel-3) 94%,transparent);
+  border:1px solid var(--line);border-radius:7px;padding:6px 8px;font-family:var(--mono);font-size:10px;
+  color:var(--muted);box-shadow:var(--shadow-sm);white-space:nowrap;line-height:1.55;opacity:0;transition:opacity .1s
+}
+.chart-tip.on{opacity:1}
+.chart-tip b{color:var(--text);font-weight:560}
+.chart-tip .r{color:var(--up)} .chart-tip .g{color:var(--down)}
+.chart-empty{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;color:var(--dim)}
+.stage-grid{display:grid;gap:8px;height:100%;min-height:0}
+.stage-grid.two{grid-template-columns:1fr 1fr}
+.stage-grid.rows{grid-template-rows:1fr auto}
+.fill{min-height:0;display:flex;flex-direction:column}
+.fill>.chart{flex:1}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-height:0}
+.chart-label{position:absolute;top:7px;left:9px;z-index:4;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--dim);pointer-events:none;display:flex;gap:8px;align-items:center}
+.chart-label b{color:var(--muted);font-weight:500}
+
+/* ---------- content sections ---------- */
+.content{max-width:1560px;margin:0 auto;padding:clamp(46px,6vw,80px) clamp(16px,3vw,40px) 0;scroll-margin-top:80px}
+.section-head{max-width:820px;margin-bottom:28px}
+.section-head h2{font-size:clamp(24px,2.6vw,34px);letter-spacing:-.025em;font-weight:660}
+.section-head p:not(.eyebrow){margin-top:12px;color:var(--muted);font-size:14px}
+.section-head p b{color:var(--text)}
+.rules-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.rules-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+.rules-table th{
+  text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--dim);font-weight:500;
+  padding:10px 14px;border-bottom:1px solid var(--line);background:var(--panel-2);white-space:nowrap
+}
+.rules-table td{padding:11px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--muted)}
+.rules-table tr:last-child td{border-bottom:0}
+.rules-table td:first-child{color:var(--text);font-weight:550;white-space:nowrap}
+.rules-table td .asof{display:block;font-size:10px;color:var(--dim);font-family:var(--mono);margin-top:3px}
+.rules-table .cn-cell{border-left:2px solid color-mix(in srgb,var(--red) 45%,transparent)}
+.rules-table .us-cell{border-left:2px solid color-mix(in srgb,var(--blue) 45%,transparent)}
+.source-row{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:10.5px;color:var(--dim)}
+.source-row a{color:var(--muted);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:2px}
+.source-row a:hover{color:var(--cyan)}
+.myth-list{border-top:1px solid var(--line)}
+.myth{border-bottom:1px solid var(--line)}
+.myth summary{
+  display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:12px;align-items:center;
+  padding:13px 4px;cursor:pointer;list-style:none;font-size:13.5px;color:var(--text)
+}
+.myth summary::-webkit-details-marker{display:none}
+.myth summary:hover{color:var(--cyan)}
+.myth .num{font-family:var(--mono);font-size:10px;color:var(--dim)}
+.myth .where{font-family:var(--mono);font-size:9.5px;color:var(--dim);border:1px solid var(--line);border-radius:4px;padding:1px 6px;white-space:nowrap}
+.myth[open] summary{color:var(--cyan)}
+.myth-body{padding:0 4px 16px 42px;color:var(--muted);font-size:13px;max-width:88ch}
+.myth-body b{color:var(--text)}
+.myth-body code{color:var(--cyan);font-size:12px}
+
+.data-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
+.data-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.data-card h3{font-size:14.5px;margin-bottom:8px}
+.data-card .small,.small{font-size:11.5px;color:var(--dim);line-height:1.6}
+.import-row{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 10px}
+.file-btn{position:relative;overflow:hidden}
+.file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.import-status{font-size:11px;color:var(--muted);background:var(--panel-2);border:1px dashed var(--line);border-radius:7px;padding:8px 10px;line-height:1.55}
+.import-status.err{color:var(--red);border-color:color-mix(in srgb,var(--red) 45%,transparent)}
+.import-status.good{color:var(--cyan);border-color:color-mix(in srgb,var(--cyan) 40%,transparent)}
+.import-paste{margin-top:10px;font-size:11px;color:var(--dim)}
+.import-paste summary{cursor:pointer;color:var(--muted)}
+.import-paste textarea{margin:8px 0}
+.tick-list{margin:8px 0 10px;padding-left:16px;font-size:12px;color:var(--muted);line-height:1.7}
+.tick-list li::marker{color:var(--cyan)}
+.muted{color:var(--dim)}
+.limit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.limit-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.limit-card h3{font-size:12.5px;margin-bottom:6px;color:var(--text)}
+.limit-card p{font-size:11.5px;color:var(--muted);line-height:1.62}
+.fineprint{font-size:10.5px;color:var(--dim);margin-top:18px;font-family:var(--mono);letter-spacing:.02em}
+.site-foot{
+  max-width:1560px;margin:clamp(40px,6vw,80px) auto 0;padding:22px clamp(16px,3vw,40px) 44px;
+  border-top:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--dim)
+}
+.site-foot strong{color:var(--muted);display:block;font-size:12.5px}
+.site-foot nav{display:flex;gap:16px}
+.site-foot a:hover{color:var(--cyan)}
+.noscript{max-width:760px;margin:40px auto;padding:16px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
+
+/* ---------- quiz ---------- */
+.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:10px}
+.quiz-q{font-size:13.5px;margin-bottom:10px;color:var(--text)}
+.quiz-opts{display:flex;flex-direction:column;gap:5px}
+.quiz-opt{
+  display:flex;gap:9px;align-items:flex-start;text-align:left;border:1px solid var(--line);
+  background:var(--panel-2);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--muted);cursor:pointer;transition:.14s
+}
+.quiz-opt:hover{border-color:var(--dim);color:var(--text)}
+.quiz-opt .k{font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.9}
+.quiz-opt.right{border-color:var(--cyan);color:var(--text);background:color-mix(in srgb,var(--cyan) 8%,transparent)}
+.quiz-opt.wrong{border-color:var(--red);color:var(--text);background:color-mix(in srgb,var(--red) 7%,transparent)}
+.quiz-explain{margin-top:10px;font-size:11.5px;color:var(--muted);border-left:2px solid var(--cyan);padding:2px 0 2px 10px;line-height:1.65;display:none}
+.quiz-explain.on{display:block}
+.quiz-explain b{color:var(--text)}
+.quiz-set{display:flex;gap:14px;align-items:center;margin-bottom:14px;font-size:11px;color:var(--dim);flex-wrap:wrap}
+
+/* ---------- responsive ---------- */
+@media (max-width:1360px){
+  .workspace{grid-template-columns:176px minmax(0,1fr) 330px}
+  .topnav a{padding:6px 8px}
+}
+@media (max-width:1180px){
+  .hero{grid-template-columns:1fr;gap:28px}
+  .hero-figure{max-width:820px}
+  .hero-chart{height:270px}
+  .workspace{--lab-h:auto;grid-template-columns:170px minmax(0,1fr);grid-template-rows:auto auto auto}
+  .stage{min-height:560px}
+  .scene-panel{grid-column:1/-1;border-left:0;border-top:1px solid var(--line);flex-direction:row;flex-wrap:wrap;max-height:none}
+  .scene-head{flex:1 1 320px;border-bottom:0}
+  .panel-scroll{flex:1 1 380px;max-height:340px;border-left:1px solid var(--line-soft)}
+  .transport{grid-row:3}
+  .index-strip{grid-template-columns:repeat(2,1fr)}
+  .idx:nth-child(2){border-right:1px solid var(--line);border-radius:0 var(--r-sm) var(--r-sm) 0}
+  .idx:nth-child(3){border-radius:0 0 0 var(--r-sm);border-top:0}
+  .idx:nth-child(4){border-top:0;border-radius:0 0 var(--r-sm) 0}
+  .limit-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:900px){
+  .data-grid{grid-template-columns:1fr}
+  .stage-sub{text-align:left;max-width:none}
+  .topnav{display:none}
+  .top-actions{margin-left:auto}
+  .module-list{display:grid;grid-template-columns:repeat(2,1fr);gap:4px}
+  .workspace{grid-template-columns:1fr;grid-template-rows:auto auto auto auto}
+  .transport{grid-row:3}
+  .scene-panel{grid-row:4}
+  .sidebar{border-right:0;border-bottom:1px solid var(--line);padding:12px}
+  .sidebar .side-label{padding:0 2px}
+  .side-progress{display:none}
+  .mod{padding:6px}
+  .mod-sub{display:none}
+  .stage{min-height:480px;padding:12px 12px 8px}
+  .scene-panel{flex-direction:column}
+  .scene-head{flex:0 0 auto;border-bottom:1px solid var(--line-soft)}
+  .panel-scroll{border-left:0;border-top:1px solid var(--line-soft);max-height:none}
+  .transport{flex-wrap:wrap;height:auto;min-height:46px;padding:8px 12px;gap:8px;row-gap:8px}
+  .tr-progress{order:3;flex-basis:100%}
+  .tr-meta{width:100%;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .tr-meta .mini,.tr-status{white-space:nowrap}
+  .stage-grid.two,.split{grid-template-columns:1fr}
+  .hero-facts{gap:18px}
+  .myth summary{grid-template-columns:24px minmax(0,1fr)}
+  .myth .where{display:none}
+  .myth-body{padding-left:36px}
+}
+@media (max-width:600px){
+  .ed-host{overflow:hidden}
+  .brand-name small{display:none}
+  .top-actions .ghost{padding:5px 8px;font-size:11.5px}
+  .hero{padding-top:28px}
+  .hero-facts{flex-wrap:wrap;gap:14px 22px}
+  .index-strip{grid-template-columns:1fr 1fr}
+  .idx-val{font-size:16px}
+  .limit-grid{grid-template-columns:1fr}
+  .scene-body{max-height:none}
+  .tr-buttons{width:100%}
+  .tr-buttons .icon-btn{flex:1;text-align:center}
+  .tr-meta{width:100%;justify-content:space-between}
+  .stage h2{font-size:17px}
+  .metrics{grid-template-columns:1fr 1fr}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+}
+
+/* ---------- module A: cash-flow board ---------- */
+.flow{display:grid;grid-template-columns:1fr 62px 1fr 62px 1fr;align-items:stretch;gap:0;flex:1;min-height:0}
+.flow-card{
+  border:1px solid var(--line);border-radius:12px;background:var(--panel-2);
+  padding:14px 15px;display:flex;flex-direction:column;gap:9px;justify-content:center;min-width:0;
+}
+.flow-card.accent{border-color:color-mix(in srgb,var(--cyan) 38%,var(--line))}
+.flow-card.company{border-color:color-mix(in srgb,var(--orange) 42%,var(--line))}
+.fc-name{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fc-row{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;border-top:1px dashed var(--line);padding-top:8px}
+.fc-row span{color:var(--dim)}
+.fc-row b{font-family:var(--mono);font-weight:560;font-variant-numeric:tabular-nums;text-align:right}
+.fc-row.highlight b{color:var(--orange)}
+.flow-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--dim);font-family:var(--mono);font-size:9.5px;line-height:1.4}
+.flow-arrow{writing-mode:vertical-rl;letter-spacing:.06em;white-space:nowrap}
+.flow-arrow.back{writing-mode:vertical-rl;color:var(--muted)}
+
+/* ---------- module B: colour cards, period strip, SVG editor ---------- */
+.b2-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.b2-card{border:1px solid var(--line);border-radius:10px;background:var(--panel-2);padding:9px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.b2-card>span{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;color:var(--dim)}
+.b2-card b{font-family:var(--mono);font-size:17px;font-weight:600;line-height:1.25}
+.b2-card small{color:var(--muted);font-size:10.5px;font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.info-strip{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:10px;color:var(--dim);border-bottom:1px solid var(--line-soft);padding:0 2px 7px}
+.info-strip b{color:var(--muted);font-weight:500}
+.ed-host{position:relative;min-height:240px;border:1px solid var(--line-soft);border-radius:10px;background:var(--panel);overflow:hidden}
+.ed-svg{display:block;width:100%;height:100%;touch-action:none;user-select:none}
+.ed-gridline{stroke:var(--grid);stroke-dasharray:3 4}
+.ed-axis{fill:var(--dim);font-family:var(--mono);font-size:9.5px}
+.ed-cap{fill:var(--dim);font-family:var(--mono);font-size:9px;letter-spacing:.12em}
+.ed-label{fill:var(--muted);font-family:var(--mono);font-size:10px}
+.ed-status{fill:var(--muted);font-family:var(--mono);font-size:10px}
+.ed-leader{stroke:var(--line);stroke-dasharray:2 3}
+.ed-chip{fill:var(--panel-3);stroke:var(--line)}
+.ed-chip-text{fill:var(--text);font-family:var(--mono);font-size:10px;text-anchor:middle}
+.ed-handle-label{fill:var(--muted);font-family:var(--mono);font-size:9.5px;text-anchor:end}
+.ed-handle{cursor:ns-resize;outline:none}
+.ed-handle:hover{stroke-width:3.5}
+.ed-handle:focus{stroke:var(--cyan);stroke-width:3.5}
+
+/* ---------- shared feedback ---------- */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,0);z-index:80;
+  background:var(--panel-3);border:1px solid var(--line);color:var(--text);
+  padding:9px 14px;border-radius:9px;font-size:12px;box-shadow:var(--shadow-sm);
+  opacity:1;transition:opacity .22s ease,transform .22s ease;pointer-events:none;max-width:min(90vw,460px);
+}
+.toast.out{opacity:0;transform:translate(-50%,8px)}
+.stage-error{
+  margin:0;padding:14px 16px;border:1px solid color-mix(in srgb,var(--red) 55%,var(--line));
+  border-radius:10px;background:color-mix(in srgb,var(--red) 9%,var(--panel));
+  font-family:var(--mono);font-size:11.5px;color:var(--red);white-space:pre-wrap;overflow:auto;
+}
+@media (max-width:1100px){
+  .flow{grid-template-columns:1fr;gap:6px}
+  .flow-mid{flex-direction:row;gap:14px}
+  .flow-arrow{writing-mode:horizontal-tb}
+  .b2-cards{grid-template-columns:1fr}
+}
+
+/* ---------- global lab navigation & theme ---------- */
+.backlink{
+  display:inline-flex;align-items:center;gap:5px;flex:none;
+  padding:6px 9px;border:1px solid transparent;border-radius:8px;
+  color:var(--dim);font-size:12px;white-space:nowrap;transition:.16s
+}
+.backlink:hover{color:var(--cyan);background:var(--panel-2);border-color:var(--line)}
+.backlink>span[aria-hidden]{font-size:15px;line-height:1}
+.theme-toggle{display:inline-flex;align-items:center;gap:6px}
+.theme-toggle .theme-icon{font-size:14px;line-height:1}
+.lab-directory{
+  max-width:1560px;margin:clamp(34px,5vw,64px) auto 0;padding:24px clamp(16px,3vw,40px);
+  border-top:1px solid var(--line-soft)
+}
+.dir-head{display:flex;flex-direction:column;gap:5px;margin-bottom:18px}
+.dir-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--cyan)}
+.dir-head h2{font-size:clamp(20px,2.2vw,27px);font-weight:620;letter-spacing:-.02em}
+.dir-head p{font-size:12.5px;color:var(--muted);max-width:640px}
+.dir-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.dir-card{
+  display:flex;gap:14px;align-items:flex-start;padding:18px;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;transition:.18s
+}
+.dir-card:hover{border-color:var(--cyan);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.dir-card.current{border-color:color-mix(in srgb,var(--cyan) 50%,var(--line));background:color-mix(in srgb,var(--cyan) 5%,var(--panel))}
+.dir-num{font-family:var(--mono);font-size:11px;color:var(--cyan);padding-top:2px}
+.dir-copy{min-width:0}
+.dir-copy h3{font-size:15px;font-weight:640;display:flex;align-items:center;gap:8px;flex-wrap:wrap;letter-spacing:0}
+.dir-copy p{font-size:12px;color:var(--muted);line-height:1.65;margin-top:5px}
+.dir-tag{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--dim);border:1px solid var(--line);border-radius:4px;padding:2px 6px;font-weight:500}
+.dir-all{display:inline-flex;align-items:center;gap:6px;margin-top:15px;font-size:12px;color:var(--cyan)}
+.dir-all:hover{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:900px){.dir-grid{grid-template-columns:1fr}}
+@media(max-width:600px){
+  .topbar{gap:7px}
+  .backlink{padding:5px 6px}
+  .backlink-label{display:none}
+  .theme-toggle .theme-label{display:none}
+  .brand-name{font-size:13px}
+  .top-actions{gap:4px}
+  .dir-card{padding:14px}
+  .dir-copy h3{font-size:13.5px}
+}
+
+.to-top{position:fixed;right:22px;bottom:22px;z-index:60;display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:600 12px/1 var(--mono,ui-monospace,monospace);letter-spacing:.06em;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.22);opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .18s ease,transform .18s ease}
+.to-top.show{opacity:1;pointer-events:auto;transform:none}
+.to-top:hover{border-color:var(--cyan);color:var(--cyan)}
+.to-top:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+@media (max-width:640px){.to-top{display:none}}
+@media (prefers-reduced-motion:reduce){.to-top{transition:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#lab">跳到实验台</a>
+
+<header class="topbar">
+  <a class="backlink" href="../index.html#projects" aria-label="返回 Lab Projects 项目列表">
+    <span aria-hidden="true">←</span><span class="backlink-label">Lab Projects</span>
+  </a>
+  <a class="brand" href="#top" aria-label="回到页首">
+    <img class="brand-mark" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiBmaWxsPSJub25lIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+Q1pMIFNjaWVuY2UgYW5kIEVuZ2luZWVyaW5nIFZpc3VhbGl6YXRpb25zPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+QSBzcGF0aWFsIGZyYW1lIGFuZCBhbiBvcmJpdGFsIHBhdGg6IHN0cnVjdHVyZSwgb2JzZXJ2YXRpb24gYW5kIG1vdGlvbi48L2Rlc2M+CiAgPHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIzMCIgZmlsbD0iIzE3MTgxYSIvPgogIDxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSIxMjYiIGhlaWdodD0iMTI2IiByeD0iMjkiIHN0cm9rZT0iIzNiM2U0MiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTY0IDIxIDk5IDQxdjQzTDY0IDEwNSAyOSA4NFY0MVoiIGZpbGw9IiMyMjI0MjciIHN0cm9rZT0iIzViYzhiZSIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTI5IDQxIDM1IDIxIDM1LTIxTTY0IDYydjQzTTY0IDIxdjQxIiBzdHJva2U9IiM1YmM4YmUiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGVsbGlwc2UgY3g9IjY0IiBjeT0iNjQiIHJ4PSI1MyIgcnk9IjIwIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzAgNjQgNjQpIiBzdHJva2U9IiM3YWEyZDgiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxwYXRoIGQ9Im0yOSA0MSAzNSAyMXY0MyIgc3Ryb2tlPSIjY2ZlOGUzIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iMTA3IiBjeT0iMzkiIHI9IjciIGZpbGw9IiNkOTlhNmIiIHN0cm9rZT0iIzE3MTgxYSIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGNpcmNsZSBjeD0iNjQiIGN5PSI2MiIgcj0iNSIgZmlsbD0iI2NmZThlMyIvPgo8L3N2Zz4K" alt="">
+    <span class="brand-name">海水淡化原理实验室<small>DESALINATION LAB</small></span>
+  </a>
+  <nav class="topnav" aria-label="页面导航">
+    <a href="#lab">实验台</a>
+    <a href="#rules">口径核对</a>
+    <a href="#myths">常见误区</a>
+    <a href="#limits">边界</a>
+    <a class="ext" href="https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering" target="_blank" rel="noopener">源码 <span aria-hidden="true">↗</span></a>
+  </nav>
+  <div class="top-actions">
+    <button id="themeToggle" class="ghost theme-toggle" type="button" aria-pressed="false" aria-label="切换到浅色模式" title="切换深色 / 浅色主题"><span class="theme-icon" aria-hidden="true">☀</span><span class="theme-label">浅色</span></button>
+    <button id="downloadPage" class="ghost" type="button" title="把当前页面保存为单文件 HTML">离线网页</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">SEAWATER DESALINATION MECHANICS / 7 MODULES</p>
+      <h1>把盐留下，<br>把水带走。</h1>
+      <p class="lede">从 35 g/L 的海水出发，拆开渗透压、反渗透膜、多级闪蒸与整厂物料平衡。每个概念都配一台能调参数、能验证的仪器——不是看动画，而是亲手看见质量与能量如何守恒。</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#lab">进入实验台</a>
+        <a class="btn" href="#rules">先看口径</a>
+      </div>
+      <ul class="hero-facts">
+        <li><b>7</b><span>教学模块</span></li>
+        <li><b>25</b><span>讲解场景</span></li>
+        <li><b>0</b><span>运行时联网依赖</span></li>
+      </ul>
+    </div>
+    <figure class="hero-figure">
+      <div class="tape-label">
+        <span>TDS LADDER / 含盐阶梯</span>
+        <span class="sim">教学模型</span>
+      </div>
+      <div class="hero-chart" id="heroChart"></div>
+      <figcaption class="fig-note">含盐阶梯只对数轴示意：从雨水到 RO 浓盐水，观察 TDS 跨越三个数量级，以及 500 mg/L 饮用水参考线在哪个位置。数值为教学近似。</figcaption>
+    </figure>
+  </section>
+
+  <section class="index-strip" id="indexStrip" aria-label="全球海水淡化速览"></section>
+
+  <section class="workspace" id="lab" aria-label="交互实验台">
+    <aside class="sidebar">
+      <div class="side-label">课程模块 <span>/ MODULES</span></div>
+      <nav id="moduleList" class="module-list" aria-label="课程模块列表"></nav>
+      <div class="side-progress">
+        <div class="sp-head"><span>学习进度</span><b id="progressText">0 / 7</b></div>
+        <div class="sp-bar"><i id="progressBar"></i></div>
+        <p class="sp-note">进度只记录在本机浏览器，不上传任何数据。</p>
+      </div>
+    </aside>
+
+    <div class="stage" id="stage">
+      <div class="stage-head">
+        <div class="stage-id">
+          <span class="stage-kicker" id="stageKicker">MODULE A</span>
+          <h2 id="stageTitle">水与盐</h2>
+        </div>
+        <p class="stage-sub" id="stageSub"></p>
+      </div>
+      <div class="stage-body" id="stageBody"></div>
+      <div class="stage-foot">
+        <span class="hint" id="stageHint">拖动滑块、切换场景，观察数字如何一起变化。</span>
+        <span class="sim-badge">MODEL</span>
+      </div>
+    </div>
+
+    <aside class="scene-panel" id="scenePanel" aria-label="讲解与参数面板">
+      <div class="scene-head">
+        <div class="scene-meta">
+          <span id="sceneChapter">场景 1 / 4</span>
+          <span class="sim" id="sceneBadge">自动讲解</span>
+        </div>
+        <div class="scene-dots" id="sceneDots"></div>
+        <h3 id="sceneTitle">场景标题</h3>
+        <div class="scene-body" id="sceneBody"></div>
+        <button class="takeover-link" id="takeoverBtn" type="button">⏸ 暂停讲解，我要自己试</button>
+      </div>
+      <div class="panel-scroll" id="modulePanel"></div>
+    </aside>
+
+    <div class="transport" role="group" aria-label="自动讲解控制">
+      <div class="tr-buttons">
+        <button id="prevScene" class="icon-btn" type="button" title="上一幕" aria-label="上一幕">←</button>
+        <button id="playScenes" class="icon-btn primary" type="button" title="播放 / 暂停自动讲解">▶ 自动讲解</button>
+        <button id="nextScene" class="icon-btn" type="button" title="下一幕" aria-label="下一幕">→</button>
+        <button id="replayScene" class="icon-btn" type="button" title="重播本模块" aria-label="重播本模块">↺</button>
+      </div>
+      <div class="tr-progress" aria-hidden="true"><i id="directorBar"></i></div>
+      <div class="tr-meta">
+        <label class="mini"><span>速度</span>
+          <select id="dirSpeed">
+            <option value="0.7">0.7×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.4">1.4×</option>
+            <option value="2">2×</option>
+          </select>
+        </label>
+        <label class="mini check"><input type="checkbox" id="voiceToggle"> 语音讲解</label>
+        <span class="tr-status" id="directorStatus">手动模式</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="rules">
+    <div class="section-head">
+      <p class="eyebrow">REFERENCE / 核对口径</p>
+      <h2>数字口径先钉住，再谈结论。</h2>
+      <p>下面的口径与数值按可核对的公开资料整理，并标注核对日期。教学模型只覆盖常用情形；工艺、膜片与厂址各不相同，工程决策以原始资料与实测为准。</p>
+    </div>
+    <div id="rulesTable" class="rules-wrap"></div>
+    <div class="source-row" id="ruleSources"></div>
+  </section>
+
+  <section class="content" id="myths">
+    <div class="section-head">
+      <p class="eyebrow">MISCONCEPTIONS / 常见误区</p>
+      <h2>最容易说错的十句话。</h2>
+      <p>每一条都能在实验台里找到反例。点开看为什么，以及对应哪个模块。</p>
+    </div>
+    <div id="mythList" class="myth-list"></div>
+  </section>
+
+  <section class="content" id="quiz">
+    <div class="section-head">
+      <p class="eyebrow">CHECK / 理解检验</p>
+      <h2>能算对，才算看懂。</h2>
+      <p>题目跟随当前模块。答错会给出计算过程，而不是只给一个答案。</p>
+    </div>
+    <div id="quizMount"></div>
+  </section>
+
+  <section class="content" id="limits">
+    <div class="section-head">
+      <p class="eyebrow">BOUNDARIES / 模型边界</p>
+      <h2>哪些是教学模型，哪些不是。</h2>
+    </div>
+    <div class="limit-grid">
+      <article class="limit-card">
+        <h3>物理简化</h3>
+        <p>渗透压按 NaCl 等效的 van 't Hoff 式估算（有效系数 1.8），不含离子对、活度系数与多价离子效应；真实海水的渗透压与该估算在 ±10% 内一致，但对高浓盐水与结垢判断只是量级参考。</p>
+      </article>
+      <article class="limit-card">
+        <h3>工艺边界</h3>
+        <p>RO 是单级单段教学模型：没有多段级联、能量回收的流量细节、浓差极化的局部计算与温度粘度修正；MSF 的 GEA 是单调教学相关性，不是热工设计结果。</p>
+      </article>
+      <article class="limit-card">
+        <h3>能耗与成本</h3>
+        <p>文献能耗与成本都是区间（GED 口径），随厂址、电价、 financing 与回收率变化巨大；页面数字用于量级对比，不代表任何一家水厂的实际值。</p>
+      </article>
+      <article class="limit-card">
+        <h3>程序动画 ≠ 工程仿真</h3>
+        <p>所有动画与曲线都是可复现的教学模型，用于展示因果关系与守恒律。选型、环评与产能核算请以原厂资料、实测数据与专业软件为准。</p>
+      </article>
+    </div>
+    <p class="fineprint" id="buildStamp">Desalination Lab · 教学模型 · 非工程仿真</p>
+  </section>
+</main>
+
+<section class="lab-directory" aria-labelledby="labDirectoryTitle">
+  <div class="dir-head">
+    <span class="dir-eyebrow">LAB PROJECTS / 全部实验</span>
+    <h2 id="labDirectoryTitle">换一个实验室</h2>
+    <p>三个可离线运行的交互式实验室。主题与导航在各页保持一致。</p>
+  </div>
+  <div class="dir-grid">
+    <a class="dir-card current" href="./index.html" aria-current="page">
+      <span class="dir-num">03</span>
+      <div class="dir-copy"><h3>海水淡化原理实验室 <span class="dir-tag">当前 / Current</span></h3><p>渗透压、反渗透、闪蒸与整厂物料平衡。</p></div>
+    </a>
+    <a class="dir-card" href="../motor-lab/index.html">
+      <span class="dir-num">01</span>
+      <div class="dir-copy"><h3>电机原理实验室 <span class="dir-tag">Motor Lab</span></h3><p>六类电机的三维结构、磁场与连续换向过程。</p></div>
+    </a>
+    <a class="dir-card" href="../stock-market-lab/index.html">
+      <span class="dir-num">02</span>
+      <div class="dir-copy"><h3>股票市场原理实验室 <span class="dir-tag">Stock Lab</span></h3><p>K 线、订单簿、IPO、杠杆与 A 股 / 美股制度对比。</p></div>
+    </a>
+  </div>
+  <a class="dir-all" href="../index.html#projects">返回项目目录 / All projects <span aria-hidden="true">↗</span></a>
+</section>
+
+<footer class="site-foot">
+  <div>
+    <strong>海水淡化原理实验室</strong>
+    <span>Desalination Lab · 一个可离线运行的海水淡化机制教学实验台</span>
+  </div>
+  <nav>
+    <a href="https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering" target="_blank" rel="noopener">仓库 / Repository</a>
+    <a href="#lab">回到实验台</a>
+  </nav>
+</footer>
+
+<noscript><p class="noscript">本实验台需要 JavaScript 才能绘图与计算。页面本身不含任何远程资源。</p></noscript>
+
+<script>
+/* Desalination Lab — the single source of truth for all physics math.
+ * Modules must not re-derive formulas; they read them from here.
+ * Runs in the browser (window.DL.core) and in Node tests (module.exports).
+ */
+(function () {
+  'use strict';
+  var DL = globalThis.DL = globalThis.DL || {};
+
+  /* ---------- constants ---------- */
+  var R_GAS = 8.314462618;            // J/(mol·K)
+  var MW_NACL = 58.443;               // g/mol
+  var BAR_PER_R = 0.0831446;          // bar·L/(mol·K)
+  var I_EFF_NACL = 1.8;               // effective van 't Hoff factor for NaCl
+                                      // in seawater (osmotic coefficient ~0.9)
+  var G = 9.80665;                    // m/s²
+  var K_TDS_EC = 0.64;                // mg/L TDS per µS/cm (empirical seawater factor)
+  var ANCHOR_MIN_SE = 1.06;           // kWh/m³, literature minimum separation energy
+                                      // for SWRO at 50% recovery (see reference.js)
+
+  function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+  function round(v, d) { var p = Math.pow(10, d == null ? 2 : d); return Math.round((v + 0) * p) / p; }
+  function isValidNum(v) { return typeof v === 'number' && isFinite(v); }
+
+  /* ---------- water properties ---------- */
+  /* Solution density from TDS (mg/L). Linear approximation: +0.706 kg/m³ per g/L.
+   * At 35 g/L this gives ~1024.7 kg/m³, matching published seawater density. */
+  function density(tdsMgL) { return 1000 + 0.706 * tdsMgL / 1000; }
+
+  /* NaCl-equivalent molarity (mol/L) from TDS in mg/L. */
+  function molarity(tdsMgL) { return tdsMgL / 1000 / MW_NACL; }
+
+  /* van 't Hoff osmotic pressure in bar: π = i_eff · C · R · T.
+   * Simplification: NaCl-equivalent, ideal-dilute solution with an effective
+   * factor of 1.8 (captures the seawater osmotic coefficient, not ion pairing). */
+  function osmoticPressure(tdsMgL, tempC) {
+    var T = (tempC == null ? 25 : tempC) + 273.15;
+    return I_EFF_NACL * molarity(tdsMgL) * BAR_PER_R * T;
+  }
+
+  /* Static head (metres of freshwater column) equivalent to a pressure in bar. */
+  function headMeters(pressureBar) {
+    return pressureBar * 1e5 / (density(0) * G);
+  }
+
+  /* Empirical conductivity (µS/cm) from TDS; the ratio k ≈ 0.64 is the
+   * common seawater calibration factor. */
+  function conductivity(tdsMgL) { return tdsMgL / K_TDS_EC; }
+
+  /* ---------- mass balance ---------- */
+  /* Steady-state single-stage balance.
+   * F feed (m³), Y recovery fraction (P = Y·F), R salt rejection fraction,
+   * Cf feed TDS (mg/L). Returns permeate/brine flows and concentrations.
+   * Identity enforced: F·Cf = P·Cp + B·Cb. */
+  function waterBalance(F, Y, R, Cf) {
+    Y = clamp(Y, 0, 0.98);
+    R = clamp(R, 0, 0.999);
+    var P = F * Y;
+    var B = F - P;
+    var Cp = Cf * (1 - R);
+    var Cb = B > 0 ? (F * Cf - P * Cp) / B : Cf / Y;
+    return { F: F, P: P, B: B, Cp: Cp, Cb: Cb, Y: Y, R: R };
+  }
+
+  /* ---------- reverse osmosis ---------- */
+  /* Permeate flux J (L/m²·h) = A · NDN, with NDN = P − β·π_brine (permeate
+   * osmotic pressure is negligible). β is the concentration-polarisation
+   * factor on the brine side. A is the membrane permeability (LMH/bar). */
+  function roFlux(A, appliedBar, brineTdsMgL, tempC, beta) {
+    beta = beta == null ? 1.1 : beta;
+    var piB = osmoticPressure(brineTdsMgL, tempC);
+    var nd = appliedBar - beta * piB;
+    return { nd: nd, flux: A * Math.max(0, nd), piBrine: piB };
+  }
+
+  /* Specific energy of an RO train in kWh per m³ of permeate:
+   *   E = ΔP / (3.6e6·η_pump·Y) − (1−Y)·ΔP·η_erd / 3.6e6   (ΔP in Pa)
+   * First term: high-pressure pump work spread over permeate. Second term:
+   * energy recovered from the brine stream by an energy-recovery device. */
+  function roEnergy(appliedBar, recovery, etaPump, etaErd) {
+    var dp = appliedBar * 1e5;
+    etaPump = etaPump == null ? 0.82 : etaPump;
+    etaErd = etaErd == null ? 0.55 : etaErd;
+    var hp = dp / (3.6e6 * etaPump * clamp(recovery, 0.05, 0.98));
+    var recovered = (1 - recovery) * dp * etaErd / 3.6e6;
+    return { gross: hp, recovered: recovered, net: Math.max(0.15, hp - recovered) };
+  }
+
+  /* Thermodynamic minimum separation energy, teaching approximation.
+   * Anchored to the literature value ≈ 1.06 kWh/m³ at 50% recovery for
+   * 35 g/L seawater; below 50% it follows the ideal-mixing entropy term,
+   * above 50% it grows linearly (concentrating brine costs more).
+   * Labelled as an approximation everywhere it is displayed. */
+  function minSeparationEnergy(recovery) {
+    var Y = clamp(recovery, 0.01, 0.95);
+    var entropy = -(Y * Math.log(Y) + (1 - Y) * Math.log(1 - Y));
+    if (Y <= 0.5) return ANCHOR_MIN_SE * entropy / (0.5 * Math.LN2 * 2);
+    return ANCHOR_MIN_SE * (1 + 2.4 * (Y - 0.5));
+  }
+
+  /* ---------- thermal distillation (teaching flash-cascade model) ---------- */
+  /* GEA (gained output ratio) teaching correlation, monotonic in stage count
+   * and top-brine temperature; tuned to land in the 3–9 band of published
+   * MSF plants. NOT a substitute for a thermal design calculation. */
+  function gainedOutputRatio(stages, topBrineC) {
+    stages = clamp(stages, 4, 30);
+    topBrineC = clamp(topBrineC, 75, 130);
+    return clamp((topBrineC - 92) / 25 + 0.35 + 0.22 * stages, 1, 12);
+  }
+
+  /* Stage temperature cascade from the top brine temperature down to the
+   * last-stage temperature; returns per-stage flash temperatures and the
+   * average per-stage drop (which includes the brine-temperature-elevation
+   * loss conceptually, without a BPE model). */
+  function flashCascade(stages, topBrineC, lastStageC) {
+    stages = clamp(stages, 4, 30);
+    lastStageC = lastStageC == null ? 32 : lastStageC;
+    var top = clamp(topBrineC, lastStageC + 10, 130);
+    var dT = (top - lastStageC) / stages;
+    var out = [];
+    for (var i = 0; i < stages; i++) {
+      out.push({ stage: i + 1, temp: top - i * dT, flash: dT });
+    }
+    return { stages: out, dT: dT, top: top, last: lastStageC };
+  }
+
+  /* ---------- membrane fouling (teaching exponential decay) ---------- */
+  /* Flux over t days: J(t) = J0 · exp(−k·t), k reduced by antiscalant dose.
+   * k0 = 0.02 /day baseline scaling tendency for hard seawater. */
+  function foulingTimeline(days, k0, antiscalant, j0) {
+    var k = (k0 == null ? 0.02 : k0) * (1 - clamp(antiscalant == null ? 0.5 : antiscalant, 0, 0.95));
+    var out = [];
+    for (var d = 0; d <= days; d++) {
+      out.push({ day: d, flux: (j0 == null ? 16 : j0) * Math.exp(-k * d) });
+    }
+    return { points: out, k: k };
+  }
+
+  /* ---------- remineralisation ---------- */
+  /* Calcite-dissolution dosing: adding Ca (mg/L) raises alkalinity expressed
+   * as CaCO3 by the equivalent-weight ratio (50/20.04 per mg Ca). */
+  function remineralize(caMgL) {
+    var alkalinity = caMgL * 50 / 20.04;
+    /* pH teaching curve: CO2-stripped soft water sits near 6.2; alkalinity
+     * near 100 mg/L as CaCO3 buffers to ~8.3 (open CO2 system). */
+    var ph = 6.2 + 2.1 * clamp(alkalinity / 100, 0, 1);
+    return { ca: caMgL, alkalinity: alkalinity, ph: ph };
+  }
+
+  DL.core = {
+    R_GAS: R_GAS, MW_NACL: MW_NACL, I_EFF_NACL: I_EFF_NACL, K_TDS_EC: K_TDS_EC, ANCHOR_MIN_SE: ANCHOR_MIN_SE,
+    clamp: clamp, round: round, isValidNum: isValidNum,
+    density: density, molarity: molarity, osmoticPressure: osmoticPressure,
+    headMeters: headMeters, conductivity: conductivity,
+    waterBalance: waterBalance, roFlux: roFlux, roEnergy: roEnergy,
+    minSeparationEnergy: minSeparationEnergy,
+    gainedOutputRatio: gainedOutputRatio, flashCascade: flashCascade,
+    foulingTimeline: foulingTimeline, remineralize: remineralize
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = DL.core;
+})();
+
+</script>
+<script>
+/* Desalination Lab — dated reference constants and sources.
+ * Every number shown as a "literature value" must be read from here, not
+ * hard-coded in a module. Update asOf, the value and the source link together.
+ * Runs in the browser (window.DL.reference) and in Node tests.
+ */
+(function () {
+  'use strict';
+  var DL = globalThis.DL = globalThis.DL || {};
+
+  var REF = {
+    asOf: '2026-11-10',
+
+    /* Earth's water distribution (USGS Water Science School). */
+    earthWater: {
+      freshPct: 2.5,                 // % of all Earth water that is freshwater
+      icePct: 68.7,                  // % of freshwater locked in ice caps, glaciers, permanent snow
+      groundwaterPct: 30.1,          // % of freshwater in groundwater and soil moisture
+      surfaceOtherPct: 1.2,          // remainder: lakes, rivers, atmosphere, biota
+      oceanSalinityGL: 35,           // average ocean salinity g/kg (~3.5%)
+      oceanPct: 96.5                 // % of Earth's water held by oceans and inland seas
+    },
+
+    /* TDS reference bands (mg/L). River/rain values are typical textbook
+     * ranges; the 500 mg/L line is an aesthetic/acceptability value, not a
+     * WHO health-based guideline (WHO: TDS is "not of health concern"). */
+    tdsBands: [
+      { name: '雨水 / Rainwater', lo: 10, hi: 100 },
+      { name: '河水 / River water', lo: 100, hi: 500 },
+      { name: '微咸水 / Brackish', lo: 1000, hi: 10000 },
+      { name: '海水 / Seawater', lo: 33000, hi: 37000 },
+      { name: 'RO 浓盐水 / RO brine', lo: 52000, hi: 70000 }
+    ],
+    drinkingTdsAesthetic: 500,
+
+    /* Global industry snapshot (IDA milestone reporting; 2024 total installed
+     * capacity crossed 100 million m³/day; >20,000 plants in 2020). */
+    stats: [
+      { label: '全球装机产能 / World capacity', value: '>1 亿', unit: 'm³/天 (2024)', note: 'IDA 里程碑口径' },
+      { label: '海水淡化厂数量 / Plants', value: '>20,000', unit: '座 (2020)', note: '含各种规模' },
+      { label: '反渗透装机占比 / RO share', value: '约 60–70%', unit: '按产能', note: 'RO 为主流工艺' },
+      { label: '理论最小分离功 / Min. separation', value: '≈1.06', unit: 'kWh/m³', note: 'SWRO · 50% 回收率' }
+    ],
+
+    /* Specific energy bands in kWh per m³ of product water (GED-style,
+     * electricity-equivalent where thermal energy is converted). These are
+     * literature ranges for teaching comparison, not plant guarantees. */
+    energy: {
+      theoreticalMin: 1.06,
+      swro: { lo: 2.5, hi: 4.5, best: 2.5, typical: 3.7 },
+      med: { lo: 3.0, hi: 6.0, typical: 4.5 },
+      msf: { lo: 7.5, hi: 11.0, typical: 9.0 },
+      solarStill: { lo: 0, hi: 0.4, typical: 0.1, note: '燃料为零，但土地与产水密度极低' }
+    },
+
+    /* Cost bands (USD per m³, large municipal plants, rough literature ranges
+     * from industry reporting; energy price and financing dominate). */
+    cost: { swro: [0.3, 0.8], msf: [1.0, 2.2], med: [0.8, 1.6] },
+
+    /* Operating bands (teaching ranges used across modules). */
+    operating: {
+      swroPressureBar: [55, 72],
+      swroRecovery: [0.35, 0.45],
+      swroRejection: [0.990, 0.998],
+      permeateFluxLMH: [12, 18],
+      msfTopBrineC: [90, 120],
+      msfStages: [8, 24],
+      seawaterTdsMgL: 35000,
+      seawaterTempC: 25
+    },
+
+    comparison: [
+      {
+        dimension: 'TDS / 盐度口径',
+        a: 'TDS（mg/L）：蒸干后溶解性固体总质量；本页面按 NaCl 等效做渗透压估算。',
+        b: '绝对盐度（g/kg, psu）与 TDS 近似但不等价；离子组成（Mg²⁺、SO₄²⁻ 等）会影响实际渗透压与结晶倾向。'
+      },
+      {
+        dimension: '回收率 vs 截留率',
+        a: '回收率 Y = 产水量 / 进水量（海水 RO 通常 35–45%）。',
+        b: '截留率 R = 1 − 产水含盐 / 进水含盐（膜片标称 99.3–99.8%）。两者都高≠省水省能，Y 越高浓水越浓、结垢风险越大。'
+      },
+      {
+        dimension: '能耗口径',
+        a: '比能耗 SE（kWh/m³ 产水）通常指电耗当量 GED：含高压泵、预处理、后处理与辅助系统。',
+        b: '热法（MSF/MED）以热能为主，折算成电耗当量后才与 RO 同轴比较；不同文献的折算系数不同，对比时必须注明口径。'
+      },
+      {
+        dimension: '饮用水 TDS 标准',
+        a: 'WHO：TDS「不作为健康基准制定限值」（no health-based guideline）。',
+        b: '500 mg/L 是常见的口感/感官可接受参考值（如美国 EPA 二类辅助标准）；脱盐产水通常 100–300 mg/L，需再矿化。'
+      },
+      {
+        dimension: '浓盐水边界',
+        a: '浓盐水约为进水盐度的 1.7–2.2 倍（取决于回收率），经扩散器排海，近场盐度羽流需要环境评估。',
+        b: '零液体排放（ZLD）是工业场景选项，能耗与成本显著更高；本页面的排放模型只做质量守恒教学。'
+      },
+      {
+        dimension: '数据核对日期',
+        a: '产能、装机份额与能耗区间按 {{ASOF}} 可核对的公开资料整理。',
+        b: '行业报告逐年更新；引用本页面数字时请同时注明核对日期与来源。'
+      }
+    ],
+
+    sources: [
+      { label: 'USGS · How Much Water is There on Earth?', url: 'https://www.usgs.gov/water-science-school/science/how-much-water-there-earth', note: '地球水分布与淡水占比' },
+      { label: 'USGS · Where is Earth\'s Water?', url: 'https://www.usgs.gov/water-science-school/science/where-earths-water', note: '淡水在冰川/地下水/地表的分布' },
+      { label: 'WHO · TDS background document', url: 'https://www.who.int/docs/default-source/wash-documents/wash-chemicals/total-dissolved-solids-background-document.pdf', note: 'TDS 无健康基准限值口径' },
+      { label: 'EPA · Secondary drinking water standards', url: 'https://www.epa.gov/dwstandardsregulations', note: 'TDS 500 mg/L 感官（非强制）标准' },
+      { label: 'IDA · International Desalination Association', url: 'https://idawater.org', note: '全球装机与行业口径' },
+      { label: 'UF/IFAS · Desalination Systems & Environmental Impacts (SS746)', url: 'https://ask.ifas.ufl.edu/publication/SS746', note: '工艺能耗与规模综述' },
+      { label: 'Purdue MEPubs · Wave-powered batch RO (引理论最小分离功)', url: 'https://docs.lib.purdue.edu/cgi/viewcontent.cgi?article=1044&context=mepubs', note: 'SWRO 50% 回收率最小分离功 ≈1.06 kWh/m³' },
+      { label: 'Elevation-distributed multistage RO (d-nb 论文全文)', url: 'https://d-nb.info/1286073545/34', note: '理论最小分离功 1.07 kWh/m³ 口径' }
+    ]
+  };
+
+  /* fill the asOf placeholder inside the comparison table */
+  REF.comparison[REF.comparison.length - 1].a =
+    REF.comparison[REF.comparison.length - 1].a.replace('{{ASOF}}', REF.asOf);
+
+  DL.reference = REF;
+  if (typeof module !== 'undefined' && module.exports) module.exports = REF;
+})();
+
+</script>
+<script>
+/* Desalination Lab — scenario simulators built on top of DL.core.
+ * These are teaching models with declared simplifications, not engineering
+ * simulations. Browser (window.DL.sim) and Node (module.exports) compatible.
+ */
+(function () {
+  'use strict';
+  var DL = globalThis.DL = globalThis.DL || {};
+  var core = DL.core || require('./core.js');
+
+  /* ---------- hero / module A: the salinity ladder ---------- */
+  function salinityLadder() {
+    return [
+      { name: '雨水', tds: 30, color: 'blue' },
+      { name: '河水', tds: 200, color: 'cyan' },
+      { name: '饮用水上限', tds: 500, color: 'green' },
+      { name: '微咸水', tds: 3000, color: 'yellow' },
+      { name: '海水', tds: 35000, color: 'orange' },
+      { name: 'RO 浓盐水', tds: 63400, color: 'red' }
+    ];
+  }
+
+  /* Deterministic freshwater split (USGS shares) for the donut. */
+  function freshwaterSplit() {
+    return [
+      { name: '冰盖与冰川', value: 68.7, color: 'cyan' },
+      { name: '地下水与土壤', value: 30.1, color: 'blue' },
+      { name: '湖泊/河流/大气等', value: 1.2, color: 'orange' }
+    ];
+  }
+
+  /* ---------- module B: osmosis cell state ---------- */
+  /* Two chambers separated by a semipermeable membrane. Given the freshwater
+   * column height h (m) on the low side, report net water direction:
+   * osmosis lifts freshwater until the column head matches π. */
+  function osmosisCell(feedTdsMgL, tempC, freshwaterHeadM) {
+    var pi = core.osmoticPressure(feedTdsMgL, tempC);
+    var head = core.headMeters(pi);
+    var applied = freshwaterHeadM || 0;
+    var appliedBar = applied * 1000 * 9.80665 / 1e5;
+    var direction = appliedBar < pi ? 'in' : appliedBar > pi ? 'out' : 'balance';
+    return { pi: pi, head: head, appliedBar: appliedBar, direction: direction, net: pi - appliedBar };
+  }
+
+  /* ---------- module C: one-pass RO stage ---------- */
+  /* Full steady-state stage: balance → brine osmotic pressure → flux → energy.
+   * All simplifications documented in the module warning block. */
+  function roStage(o) {
+    var o = o || {};
+    var F = o.feed != null ? o.feed : 100;            // m³/h
+    var Y = o.recovery != null ? o.recovery : 0.45;   // fraction
+    var R = o.rejection != null ? o.rejection : 0.993;
+    var Cf = o.feedTds != null ? o.feedTds : 35000;   // mg/L
+    var P = o.pressure != null ? o.pressure : 62;     // bar
+    var A = o.permeability != null ? o.permeability : 1.2; // LMH/bar
+    var T = o.tempC != null ? o.tempC : 25;
+    var beta = o.beta != null ? o.beta : 1.1;
+    var etaPump = o.etaPump != null ? o.etaPump : 0.82;
+    var etaErd = o.etaErd != null ? o.etaErd : 0.55;
+
+    var bal = core.waterBalance(F, Y, R, Cf);
+    var flow = core.roFlux(A, P, bal.Cb, T, beta);
+    var energy = core.roEnergy(P, Y, etaPump, etaErd);
+    var minSe = core.minSeparationEnergy(Y);
+    var feedPi = core.osmoticPressure(Cf, T);
+    var feasible = flow.nd > 0;
+    /* Permeate output check: Q = J × membrane area; area derived from demand. */
+    var qPerm = bal.P;
+    return {
+      bal: bal, flow: flow, energy: energy, minSe: minSe, feedPi: feedPi,
+      feasible: feasible, qPerm: qPerm,
+      tempC: T, pressure: P, recovery: Y, rejection: R, permeability: A, beta: beta,
+      etaPump: etaPump, etaErd: etaErd, feed: F, feedTds: Cf
+    };
+  }
+
+  /* ---------- module D: flash cascade ---------- */
+  function thermalPlant(o) {
+    var o = o || {};
+    var N = o.stages != null ? o.stages : 16;
+    var TB = o.topBrine != null ? o.topBrine : 110;
+    var last = o.lastStage != null ? o.lastStage : 32;
+    var cascade = core.flashCascade(N, TB, last);
+    var gea = core.gainedOutputRatio(N, TB);
+    /* Brine recirculation ratio (geo) is a fixed teaching value; MSF plants
+     * recirculate many times the product flow to spread heat across stages. */
+    var geo = 70 + gea * 2.5;
+    /* Electricity for pumps per m³ product (teaching band). */
+    var elec = 1.2 + 0.8 * gea / 10;
+    return {
+      cascade: cascade, gea: gea, geo: geo, elec: elec,
+      stages: N, topBrine: TB, lastStage: last
+    };
+  }
+
+  /* ---------- module E: membrane & fouling timeline ---------- */
+  function membraneTimeline(o) {
+    var o = o || {};
+    var days = o.days != null ? o.days : 30;
+    var k0 = o.scaling != null ? o.scaling : 0.02;   // 1/day baseline
+    var anti = o.antiscalant != null ? o.antiscalant : 0.6;
+    var j0 = o.j0 != null ? o.j0 : 16;
+    var t = core.foulingTimeline(days, k0, anti, j0);
+    var hold = t.points[t.points.length - 1].flux / j0;
+    return { points: t.points, k: t.k, hold: hold, days: days };
+  }
+
+  /* Scaling-risk band as a function of recovery (teaching thresholds):
+   * carbonate/gypsum supersaturation grows sharply past ~75% without
+   * antiscalant, ~90% with dosing. */
+  function scalingRisk(recovery, antiscalant) {
+    var r = core.clamp(recovery, 0.2, 0.95);
+    var limit = 0.60 + 0.30 * core.clamp(antiscalant || 0, 0, 0.95);
+    var excess = r - limit;
+    if (excess <= 0) return { level: 'ok', limit: limit, note: '低于结垢阈值，常规加药即可稳定运行' };
+    if (excess < 0.06) return { level: 'warn', limit: limit, note: '接近结垢阈值：回收率再往上，硫酸钙/碳酸钙会超饱和析出' };
+    return { level: 'bad', limit: limit, note: '超过结垢阈值：膜面结垢会不可逆地压垮产水量' };
+  }
+
+  /* ---------- module G: whole plant ---------- */
+  function plant(o) {
+    var o = o || {};
+    var feed = o.feed != null ? o.feed : 100000;       // m³/h seawater
+    var Y = o.recovery != null ? o.recovery : 0.45;
+    var R = o.rejection != null ? o.rejection : 0.993;
+    var Cf = o.feedTds != null ? o.feedTds : 35000;
+    var ca = o.calcium != null ? o.calcium : 40;       // mg/L target
+    var bal = core.waterBalance(feed, Y, R, Cf);
+    var rem = core.remineralize(ca);
+    var brineDensityGain = bal.Cb / Cf;
+    var energy = core.roEnergy(62, Y);
+    return {
+      feed: feed, bal: bal, rem: rem, brineGain: brineDensityGain,
+      energyPerM3: energy.net,
+      dailyProduct: bal.P * 24
+    };
+  }
+
+  DL.sim = {
+    salinityLadder: salinityLadder, freshwaterSplit: freshwaterSplit,
+    osmosisCell: osmosisCell, roStage: roStage, thermalPlant: thermalPlant,
+    membraneTimeline: membraneTimeline, scalingRisk: scalingRisk, plant: plant
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = DL.sim;
+})();
+
+</script>
+<script>
+/* Desalination Lab — small DOM + control helpers.
+ * Browser only. Keeps the 10 modules visually consistent without a framework.
+ */
+(function () {
+  'use strict';
+  var DL = window.DL = window.DL || {};
+
+  function el(tag, cls, html) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html != null) n.innerHTML = html;
+    return n;
+  }
+
+  function clear(node) { while (node && node.firstChild) node.removeChild(node.firstChild); }
+
+  function fmtNum(v, d, fallback) {
+    if (v == null || !isFinite(v)) return fallback == null ? '—' : fallback;
+    d = d == null ? 2 : d;
+    return Number(v).toLocaleString('zh-CN', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+
+  var fmt = {
+    num: fmtNum,
+    int: function (v) { return fmtNum(v, 0); },
+    price: function (v) { return fmtNum(v, 2); },
+    pct: function (v, d) {
+      if (v == null || !isFinite(v)) return '—';
+      var s = fmtNum(v, d == null ? 2 : d);
+      return (v > 0 ? '+' : '') + s + '%';
+    },
+    sign: function (v) { return v > 0 ? 'up' : v < 0 ? 'down' : 'flat'; },
+    compact: function (v) {
+      if (v == null || !isFinite(v)) return '—';
+      var a = Math.abs(v);
+      if (a >= 1e12) return fmtNum(v / 1e12, 2) + ' 万亿';
+      if (a >= 1e8) return fmtNum(v / 1e8, 2) + ' 亿';
+      if (a >= 1e4) return fmtNum(v / 1e4, 2) + ' 万';
+      return fmtNum(v, 2);
+    },
+    money: function (v, currency) {
+      if (v == null || !isFinite(v)) return '—';
+      var a = Math.abs(v);
+      if (a >= 1e8) return (currency === 'USD' ? '$' : '¥') + fmtNum(v / 1e8, 2) + ' 亿';
+      if (a >= 1e4) return (currency === 'USD' ? '$' : '¥') + fmtNum(v / 1e4, 2) + ' 万';
+      return (currency === 'USD' ? '$' : '¥') + fmtNum(v, 2);
+    },
+    date: function (t) {
+      var d = new Date(t);
+      return d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate());
+    },
+    time: function (t) {
+      var d = new Date(t);
+      return p2(d.getMonth() + 1) + '-' + p2(d.getDate()) + ' ' + p2(d.getHours()) + ':' + p2(d.getMinutes());
+    }
+  };
+  function p2(n) { return (n < 10 ? '0' : '') + n; }
+
+  function onChange(node, fn) {
+    node.addEventListener('input', function (e) { fn(e, true); });
+    node.addEventListener('change', function (e) { fn(e, false); });
+  }
+
+  /* ---------- panel sections ---------- */
+  function section(panel, title, hint) {
+    var g = el('div', 'pgroup');
+    if (title) {
+      var head = el('div', 'pgroup-title');
+      head.appendChild(el('span', null, title));
+      if (hint) head.appendChild(el('span', null, hint));
+      g.appendChild(head);
+    }
+    panel.appendChild(g);
+    g.body = g;
+    return g;
+  }
+
+  /* ---------- slider with editable number ---------- */
+  function slider(o) {
+    var wrap = el('div', 'ctl');
+    var top = el('div', 'ctl-top');
+    var label = el('span', null, o.label);
+    var numWrap = el('span', 'num-wrap');
+    var input = el('input');
+    input.type = 'number';
+    input.min = o.min; input.max = o.max; input.step = o.step == null ? 1 : o.step;
+    input.value = o.value;
+    input.className = 'num-in';
+    numWrap.appendChild(input);
+    if (o.unit) numWrap.appendChild(el('span', 'u', o.unit));
+    top.appendChild(label); top.appendChild(numWrap);
+    var range = el('input');
+    range.type = 'range'; range.min = o.min; range.max = o.max; range.step = o.step == null ? 1 : o.step;
+    range.value = o.value;
+    range.setAttribute('aria-label', o.label);
+    var hint = el('div', 'note');
+    if (o.hint) hint.innerHTML = o.hint; else hint.style.display = 'none';
+    wrap.appendChild(top); wrap.appendChild(range); wrap.appendChild(hint);
+
+    var state = { value: o.value, min: o.min, max: o.max };
+    function clampVal(v) { return Math.min(state.max, Math.max(state.min, v)); }
+    function paint(v) {
+      state.value = clampVal(v);
+      range.value = state.value;
+      input.value = Number(state.value.toFixed(o.step && o.step < 1 ? 2 : 0));
+    }
+    function commit(v, fromRange) {
+      var n = Number(v);
+      if (!isFinite(n)) { input.classList.add('invalid'); return; }
+      input.classList.remove('invalid');
+      n = clampVal(n);
+      paint(n);
+      if (o.onInput) o.onInput(n, fromRange);
+    }
+    range.addEventListener('input', function () { commit(range.value, true); });
+    input.addEventListener('input', function () {
+      var n = Number(input.value);
+      if (!isFinite(n) || n < state.min || n > state.max) { input.classList.add('invalid'); return; }
+      input.classList.remove('invalid');
+      range.value = n;
+      state.value = n;
+      if (o.onInput) o.onInput(n, false);
+    });
+    input.addEventListener('blur', function () {
+      input.classList.remove('invalid');
+      commit(input.value, false);
+    });
+    return {
+      el: wrap,
+      get: function () { return state.value; },
+      set: function (v, silent) { paint(v); if (!silent && o.onInput) o.onInput(state.value, false); },
+      setRange: function (lo, hi) { state.min = lo; state.max = hi; range.min = lo; range.max = hi; input.min = lo; input.max = hi; },
+      input: input, range: range
+    };
+  }
+
+  function select(o) {
+    var wrap = el('div', 'ctl');
+    var top = el('div', 'ctl-top');
+    top.appendChild(el('span', null, o.label));
+    var sel = el('select');
+    (o.options || []).forEach(function (opt) {
+      var item = typeof opt === 'string' ? { value: opt, label: opt } : opt;
+      var op = el('option', null, item.label);
+      op.value = item.value;
+      sel.appendChild(op);
+    });
+    sel.value = o.value;
+    sel.addEventListener('change', function () { if (o.onChange) o.onChange(sel.value); });
+    wrap.appendChild(top); wrap.appendChild(sel);
+    return { el: wrap, get: function () { return sel.value; }, set: function (v) { sel.value = v; }, select: sel };
+  }
+
+  function seg(o) {
+    var wrap = el('div', 'ctl');
+    if (o.label) wrap.appendChild(el('div', 'ctl-top', '<span>' + o.label + '</span>'));
+    var box = el('div', 'seg');
+    var buttons = [];
+    var current = o.value;
+    (o.options || []).forEach(function (opt) {
+      var item = typeof opt === 'string' ? { value: opt, label: opt } : opt;
+      var b = el('button', null, item.label);
+      b.type = 'button';
+      b.dataset.value = item.value;
+      b.setAttribute('aria-pressed', item.value === o.value ? 'true' : 'false');
+      b.addEventListener('click', function () {
+        current = item.value;
+        buttons.forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+        b.setAttribute('aria-pressed', 'true');
+        if (o.onChange) o.onChange(item.value);
+      });
+      buttons.push(b);
+      box.appendChild(b);
+    });
+    wrap.appendChild(box);
+    return {
+      el: wrap,
+      get: function () { return current; },
+      set: function (v) {
+        current = v;
+        buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.value === String(v))); });
+      }
+    };
+  }
+
+  function check(o) {
+    var lab = el('label', 'chk');
+    var input = el('input');
+    input.type = 'checkbox';
+    input.checked = !!o.checked;
+    input.addEventListener('change', function () { if (o.onChange) o.onChange(input.checked); });
+    lab.appendChild(input);
+    lab.appendChild(el('span', null, o.label));
+    return { el: lab, get: function () { return input.checked; }, set: function (v) { input.checked = !!v; }, input: input };
+  }
+
+  function number(o) {
+    var wrap = el('div', 'ctl');
+    var top = el('div', 'ctl-top');
+    top.appendChild(el('span', null, o.label));
+    var input = el('input');
+    input.type = 'number';
+    input.value = o.value;
+    input.min = o.min != null ? o.min : '';
+    input.max = o.max != null ? o.max : '';
+    input.step = o.step || 1;
+    input.addEventListener('change', function () {
+      var v = Number(input.value);
+      if (o.onChange) o.onChange(v);
+    });
+    wrap.appendChild(top); wrap.appendChild(input);
+    return { el: wrap, get: function () { return Number(input.value); }, input: input };
+  }
+
+  /* ---------- metrics ---------- */
+  function metrics(items, cls) {
+    var grid = el('div', 'metrics' + (cls ? ' ' + cls : ''));
+    var refs = {};
+    (items || []).forEach(function (m) {
+      var cell = el('div', 'metric' + (m.wide ? ' wide' : '') + (m.tone ? ' ' + m.tone : ''));
+      cell.appendChild(el('span', null, m.label));
+      var b = el('b', null, m.value == null ? '—' : m.value);
+      cell.appendChild(b);
+      grid.appendChild(cell);
+      refs[m.key] = cell;
+    });
+    return {
+      el: grid,
+      set: function (obj, toneMap) {
+        Object.keys(obj).forEach(function (k) {
+          var cell = refs[k];
+          if (!cell) return;
+          var v = obj[k];
+          var tone = toneMap && toneMap[k];
+          cell.classList.remove('pos', 'neg', 'hi');
+          if (tone) cell.classList.add(tone);
+          cell.querySelector('b').textContent = v == null ? '—' : v;
+        });
+      },
+      refs: refs
+    };
+  }
+
+  function formula(html) { return el('div', 'formula', html); }
+  function note(html) { return el('div', 'note', html); }
+  function warn(html) { return el('div', 'warn', html); }
+  function ok(html) { return el('div', 'ok', html); }
+
+  function table(head, rows, cls) {
+    var t = el('table', 'ptable' + (cls ? ' ' + cls : ''));
+    if (head) {
+      var thead = el('thead'), tr = el('tr');
+      head.forEach(function (h) { tr.appendChild(el('th', null, h)); });
+      thead.appendChild(tr); t.appendChild(thead);
+    }
+    var tb = el('tbody');
+    rows.forEach(function (r) {
+      var tr = el('tr');
+      r.forEach(function (c, i) {
+        var td = el('td', i === 0 ? 't' : null, c == null ? '' : c);
+        if (c && typeof c === 'object' && c.nodeType) { td.innerHTML = ''; td.appendChild(c); }
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    return t;
+  }
+
+  function button(label, fn, cls) {
+    var b = el('button', 'btn' + (cls ? ' ' + cls : ''), label);
+    b.type = 'button';
+    b.addEventListener('click', fn);
+    return b;
+  }
+
+  function row(children, cls) {
+    var r = el('div', cls || 'btn-row');
+    children.forEach(function (c) { if (c) r.appendChild(c); });
+    return r;
+  }
+
+  function legend(items) {
+    var l = el('div', 'legend');
+    items.forEach(function (i) {
+      var s = el('span', null, '<i style="background:' + i.color + '"></i>' + i.label);
+      l.appendChild(s);
+    });
+    return l;
+  }
+
+  function reset(fn, label) { return button(label || '恢复默认', fn, 'sm ghost'); }
+
+  function download(name, text, mime) {
+    var blob = new Blob([text], { type: (mime || 'text/csv') + ';charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1200);
+  }
+
+  function spacer(h) { var d = el('div'); d.style.height = (h || 6) + 'px'; return d; }
+
+  DL.ui = {
+    el: el, clear: clear, fmt: fmt, onChange: onChange,
+    section: section, slider: slider, select: select, seg: seg, check: check, number: number,
+    metrics: metrics, formula: formula, note: note, warn: warn, ok: ok,
+    table: table, button: button, row: row, legend: legend, reset: reset, download: download, spacer: spacer
+  };
+})();
+
+</script>
+<script>
+/* Desalination Lab — canvas chart library.
+ * Bars, multi-series lines, donut and gauge on Canvas 2D, sized by
+ * ResizeObserver and re-themed on `dl:theme`. Module diagrams draw their
+ * own canvases through DL.charts.base().
+ */
+(function () {
+  'use strict';
+  var DL = globalThis.DL = globalThis.DL || {};
+
+  function cssv(name, fb) {
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v || fb;
+  }
+  function palette() {
+    return {
+      panel: cssv('--panel', '#181a1e'),
+      panel2: cssv('--panel-2', '#1e2126'),
+      panel3: cssv('--panel-3', '#23272d'),
+      text: cssv('--text', '#eceef1'),
+      muted: cssv('--muted', '#9aa1a9'),
+      dim: cssv('--dim', '#6e757d'),
+      line: cssv('--line', '#2d3238'),
+      grid: cssv('--grid', 'rgba(255,255,255,.06)'),
+      gridStrong: cssv('--grid-strong', 'rgba(255,255,255,.12)'),
+      red: cssv('--red', '#e05a5f'),
+      green: cssv('--green', '#3fae7a'),
+      cyan: cssv('--cyan', '#5bc8be'),
+      orange: cssv('--orange', '#e0955a'),
+      blue: cssv('--blue', '#7aa2d8'),
+      violet: cssv('--violet', '#b07cd8'),
+      yellow: cssv('--yellow', '#d9c069')
+    };
+  }
+  function colorOf(name, p) {
+    return p[name] || p.cyan;
+  }
+  function font(size, weight) {
+    return (weight || 400) + ' ' + size + 'px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+  }
+  function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
+  function roundRect(ctx, x, y, w, h, r) {
+    r = Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+  function niceTicks(min, max, count) {
+    var span = max - min;
+    if (!(span > 0)) return [min];
+    var step = Math.pow(10, Math.floor(Math.log10(span / Math.max(1, count - 1))));
+    var mult = [1, 2, 5, 10];
+    for (var i = 0; i < mult.length; i++) {
+      if (span / (step * mult[i]) <= count) { step *= mult[i]; break; }
+    }
+    var ticks = [];
+    for (var v = Math.ceil(min / step) * step; v <= max + step * 1e-9; v += step) ticks.push(v);
+    return ticks;
+  }
+
+  var instances = [];
+  function disposeAll() {
+    instances.forEach(function (i) { try { i.destroy(); } catch (e) { /* stale */ } });
+    instances = instances.filter(function (i) { return document.body.contains(i.host); });
+  }
+  window.addEventListener('dl:theme', function () {
+    instances.forEach(function (i) { i.redraw(); });
+  });
+
+  /* Base surface: canvas fitted to host box with devicePixelRatio. */
+  function base(host, opts) {
+    opts = opts || {};
+    host.classList.add('chart');
+    host.innerHTML = '';
+    var canvas = document.createElement('canvas');
+    host.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+    var drawFn = opts.draw || null;
+    var api = { host: host, canvas: canvas, ctx: ctx };
+
+    function redraw() {
+      var r = host.getBoundingClientRect();
+      var w = Math.max(60, r.width);
+      var h = Math.max(60, r.height || opts.height || 220);
+      var dpr = Math.max(1, window.devicePixelRatio || 1);
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      var p = palette();
+      if (drawFn) {
+        try { drawFn(ctx, w, h, p, api); } catch (e) { console.error(e); }
+      }
+    }
+    api.setDraw = function (fn) { drawFn = fn; redraw(); };
+    api.redraw = redraw;
+    var ro = new ResizeObserver(function () { requestAnimationFrame(redraw); });
+    ro.observe(host);
+    api.destroy = function () { ro.disconnect(); instances = instances.filter(function (i) { return i !== api; }); };
+    instances.push(api);
+    requestAnimationFrame(redraw);
+    return api;
+  }
+
+  /* Vertical bars, optionally log-scale values. */
+  function bars(host, opts) {
+    var o = opts || {};
+    var api = base(host, { draw: function (ctx, w, h, p) {
+      var data = o.values || [];
+      var labels = o.labels || [];
+      if (!data.length) return;
+      var padL = 44, padR = 12, padT = 22, padB = 34;
+      var useLog = !!o.log;
+      var vals = data.map(function (v) { return Math.max(useLog ? 1 : 0, v); });
+      var min = useLog ? 1 : 0;
+      var max = Math.max.apply(null, vals) * 1.12;
+      var lg = function (v) { return useLog ? (Math.log(v / min) / Math.log(max / min)) : (v / max); };
+      ctx.font = font(9);
+      ctx.fillStyle = p.dim;
+      ctx.textAlign = 'left';
+      var ticks = useLog ? [1, 10, 100, 1000, 10000, 100000] : niceTicks(0, max, 4);
+      ticks.forEach(function (t) {
+        if (t < min || t > max) return;
+        var y = h - padB - lg(t) * (h - padT - padB);
+        ctx.strokeStyle = p.grid;
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - padR, y); ctx.stroke();
+        ctx.fillText(o.yFormat ? o.yFormat(t) : String(t), 4, y + 3);
+      });
+      var n = data.length;
+      var bw = (w - padL - padR) / n;
+      var barW = Math.min(56, bw * 0.62);
+      data.forEach(function (v, i) {
+        var x = padL + bw * i + (bw - barW) / 2;
+        var bh = Math.max(2, lg(vals[i]) * (h - padT - padB));
+        var y = h - padB - bh;
+        var c = o.colors ? colorOf(o.colors[i], p) : p.cyan;
+        ctx.fillStyle = c;
+        roundRect(ctx, x, y, barW, bh, 4); ctx.fill();
+        ctx.fillStyle = p.text;
+        ctx.font = font(10, 600);
+        ctx.textAlign = 'center';
+        ctx.fillText(o.valueFormat ? o.valueFormat(v) : String(v), x + barW / 2, y - 6);
+        ctx.fillStyle = p.muted;
+        ctx.font = font(9.5);
+        var lab = labels[i] || '';
+        ctx.fillText(lab.length > 10 ? lab.slice(0, 9) + '…' : lab, padL + bw * i + bw / 2, h - padB + 16);
+      });
+      if (o.threshold != null) {
+        var ty = h - padB - lg(Math.max(min, Math.min(max, o.threshold))) * (h - padT - padB);
+        ctx.strokeStyle = p.green; ctx.setLineDash([5, 4]);
+        ctx.beginPath(); ctx.moveTo(padL, ty); ctx.lineTo(w - padR, ty); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = p.green; ctx.font = font(9, 600); ctx.textAlign = 'right';
+        ctx.fillText(o.thresholdLabel || ('阈值 ' + o.threshold), w - padR, ty - 5);
+      }
+      if (o.label) {
+        ctx.fillStyle = p.dim; ctx.font = font(9); ctx.textAlign = 'left';
+        ctx.fillText(o.label, padL, 12);
+      }
+    } });
+    api.update = function (next) { o = Object.assign(o, next); api.redraw(); };
+    return api;
+  }
+
+  /* Multi-series line chart. */
+  function lines(host, opts) {
+    var o = opts || {};
+    var api = base(host, { draw: function (ctx, w, h, p) {
+      var series = o.series || [];
+      if (!series.length) return;
+      var padL = 46, padR = 14, padT = 20, padB = 30;
+      var lo = o.yMin, hi = o.yMax;
+      if (lo == null || hi == null) {
+        lo = Infinity; hi = -Infinity;
+        series.forEach(function (s) { s.values.forEach(function (v) { if (v == null) return; if (v < lo) lo = v; if (v > hi) hi = v; }); });
+        if (!isFinite(lo) || lo === hi) { lo = 0; hi = 1; }
+        hi += (hi - lo) * 0.08; lo -= (hi - lo) * 0.06;
+      }
+      ctx.font = font(9); ctx.textAlign = 'left'; ctx.fillStyle = p.dim;
+      niceTicks(lo, hi, 4).forEach(function (t) {
+        var y = h - padB - (t - lo) / (hi - lo) * (h - padT - padB);
+        ctx.strokeStyle = p.grid;
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - padR, y); ctx.stroke();
+        ctx.fillText(o.yFormat ? o.yFormat(t) : String(Math.round(t * 100) / 100), 4, y + 3);
+      });
+      series.forEach(function (s) {
+        var n = s.values.length;
+        ctx.strokeStyle = colorOf(s.color || 'cyan', p);
+        ctx.lineWidth = s.width || 2;
+        if (s.dash) ctx.setLineDash(s.dash); else ctx.setLineDash([]);
+        ctx.beginPath();
+        var started = false;
+        s.values.forEach(function (v, i) {
+          if (v == null) return;
+          var x = padL + (n > 1 ? i / (n - 1) : 0.5) * (w - padL - padR);
+          var y = h - padB - clamp((v - lo) / (hi - lo), 0, 1) * (h - padT - padB);
+          if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.lineWidth = 1;
+        if (s.endLabel) {
+          var lastV = s.values[s.values.length - 1];
+          ctx.fillStyle = colorOf(s.color || 'cyan', p);
+          ctx.font = font(9.5, 600); ctx.textAlign = 'right';
+          ctx.fillText(s.endLabel, w - padR, h - padB - clamp((lastV - lo) / (hi - lo), 0, 1) * (h - padT - padB) - 6);
+        }
+      });
+      if (o.markers) o.markers.forEach(function (m) {
+        var x = padL + m.frac * (w - padL - padR);
+        ctx.strokeStyle = colorOf(m.color || 'orange', p); ctx.setLineDash([4, 3]);
+        ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, h - padB); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = colorOf(m.color || 'orange', p); ctx.font = font(9, 600); ctx.textAlign = 'left';
+        ctx.fillText(m.text, x + 4, padT + 10);
+      });
+      ctx.fillStyle = p.dim; ctx.font = font(9); ctx.textAlign = 'center';
+      ctx.fillText(o.xLabel || '', w / 2, h - 6);
+      if (o.label) { ctx.textAlign = 'left'; ctx.fillText(o.label, padL, 12); }
+    } });
+    api.update = function (next) { o = Object.assign(o, next); api.redraw(); };
+    return api;
+  }
+
+  /* Donut with a center readout. */
+  function donut(host, opts) {
+    var o = opts || {};
+    var api = base(host, { draw: function (ctx, w, h, p) {
+      var segs = o.segments || [];
+      var total = segs.reduce(function (a, s) { return a + s.value; }, 0);
+      var cx = w / 2, cy = h / 2, rOut = Math.min(w, h) * 0.42, rIn = rOut * 0.58;
+      var a0 = -Math.PI / 2;
+      segs.forEach(function (s) {
+        var a1 = a0 + (total > 0 ? s.value / total : 0) * Math.PI * 2;
+        ctx.fillStyle = colorOf(s.color || 'cyan', p);
+        ctx.beginPath();
+        ctx.arc(cx, cy, rOut, a0, a1);
+        ctx.arc(cx, cy, rIn, a1, a0, true);
+        ctx.closePath(); ctx.fill();
+        var am = (a0 + a1) / 2;
+        ctx.fillStyle = p.muted; ctx.font = font(9.5);
+        ctx.textAlign = Math.cos(am) < 0 ? 'right' : 'left';
+        ctx.fillText(s.name + ' ' + s.value + '%', cx + Math.cos(am) * (rOut + 10), cy + Math.sin(am) * (rOut + 10));
+        a0 = a1;
+      });
+      if (o.center) {
+        ctx.fillStyle = p.text; ctx.font = font(17, 700); ctx.textAlign = 'center';
+        ctx.fillText(o.center.value, cx, cy + 2);
+        ctx.fillStyle = p.dim; ctx.font = font(9);
+        ctx.fillText(o.center.label, cx, cy + 18);
+      }
+    } });
+    api.update = function (next) { o = Object.assign(o, next); api.redraw(); };
+    return api;
+  }
+
+  /* Horizontal gauge with an optional reference marker. */
+  function gauge(host, opts) {
+    var o = opts || {};
+    var api = base(host, { height: 96, draw: function (ctx, w, h, p) {
+      var pad = 14, bh = 20;
+      var y = h / 2 - bh / 2 + 6;
+      ctx.fillStyle = p.panel3;
+      roundRect(ctx, pad, y, w - pad * 2, bh, 6); ctx.fill();
+      var frac = clamp((o.value || 0) / (o.max || 1), 0, 1);
+      ctx.fillStyle = colorOf(o.color || 'cyan', p);
+      roundRect(ctx, pad, y, Math.max(6, frac * (w - pad * 2)), bh, 6); ctx.fill();
+      if (o.marker != null) {
+        var mx = pad + clamp(o.marker / (o.max || 1), 0, 1) * (w - pad * 2);
+        ctx.strokeStyle = p.orange; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(mx, y - 8); ctx.lineTo(mx, y + bh + 8); ctx.stroke();
+        ctx.lineWidth = 1;
+        ctx.fillStyle = p.orange; ctx.font = font(9.5, 600); ctx.textAlign = 'center';
+        ctx.fillText(o.markerLabel || '', mx, y - 12);
+      }
+      ctx.fillStyle = p.text; ctx.font = font(11, 600); ctx.textAlign = 'left';
+      ctx.fillText(o.valueLabel || String(o.value), pad, y + bh + 20);
+      ctx.fillStyle = p.dim; ctx.font = font(9); ctx.textAlign = 'right';
+      ctx.fillText(o.title || '', w - pad, y - 12);
+    } });
+    api.update = function (next) { o = Object.assign(o, next); api.redraw(); };
+    return api;
+  }
+
+  DL.charts = {
+    palette: palette, colorOf: colorOf, font: font, clamp: clamp, roundRect: roundRect,
+    niceTicks: niceTicks, base: base, bars: bars, lines: lines, donut: donut, gauge: gauge,
+    disposeAll: disposeAll
+  };
+})();
+
+</script>
+<script>
+/* Module registry — loaded before the module files so each module can call
+ * DL.registerModule() at parse time. app.js consumes DL.modules. */
+(function () {
+  'use strict';
+  var DL = window.DL = window.DL || {};
+  DL.modules = [];
+  DL.registerModule = function (def) {
+    if (!def || !def.id) throw new Error('registerModule: missing id');
+    if (DL.modules.some(function (m) { return m.id === def.id; })) {
+      throw new Error('registerModule: duplicate id ' + def.id);
+    }
+    DL.modules.push(def);
+  };
+})();
+
+</script>
+<script>
+/* Module A — water, salt and where the freshwater actually is. */
+(function () {
+  'use strict';
+  var DL = window.DL;
+  var ui = DL.ui, core = DL.core, charts = DL.charts, sim = DL.sim, ref = DL.reference;
+
+  var DEFAULT = { tds: 35000 };
+
+  function mount(ctx) {
+    var st = Object.assign({}, DEFAULT);
+    var stage = ctx.stage;
+    var panel = ctx.panel;
+
+    /* ---------------- stage ---------------- */
+    var grid = ui.el('div', 'stage-grid two');
+    grid.style.cssText = 'flex:1;min-height:0';
+    var left = ui.el('div', 'fill');
+    var donutHost = ui.el('div', 'chart');
+    donutHost.style.flex = '1';
+    left.appendChild(donutHost);
+    var right = ui.el('div', 'fill');
+    var ladderHost = ui.el('div', 'chart');
+    ladderHost.style.flex = '1';
+    right.appendChild(ladderHost);
+    grid.appendChild(left); grid.appendChild(right);
+    var note = ui.el('p', 'stage-note');
+    stage.appendChild(grid); stage.appendChild(note);
+
+    var donut = charts.donut(donutHost, {
+      segments: sim.freshwaterSplit(),
+      center: { value: '2.5%', label: '淡水占地球总水' }
+    });
+    var ladder = charts.bars(ladderHost, {
+      labels: [], values: [], colors: [], log: true,
+      threshold: ref.drinkingTdsAesthetic,
+      thresholdLabel: '饮用水参考 500 mg/L',
+      valueFormat: function (v) { return v >= 1000 ? (v / 1000).toFixed(1) + 'k' : String(v); },
+      yFormat: function (v) { return v >= 1000 ? (v / 1000) + 'k' : String(v); },
+      label: 'TDS mg/L · 对数轴 · 教学近似'
+    });
+
+    /* ---------------- panel ---------------- */
+    var gSalt = ui.section(panel, 'A2 · 水的含盐量', 'TDS');
+    var tdsCtl = ui.slider({
+      label: '含盐量 TDS', min: 10, max: 300000, step: 10, value: 35000, unit: 'mg/L',
+      hint: '拖动跨越数量级：雨水 → 河水 → 海水 → 浓盐水 → 盐湖卤水。',
+      onInput: function (v) { st.tds = v; sync(); }
+    });
+    gSalt.appendChild(tdsCtl.el);
+    var preset = ui.seg({
+      label: '跳到典型水型',
+      options: [
+        { value: '30', label: '雨水' }, { value: '200', label: '河水' },
+        { value: '3000', label: '微咸水' }, { value: '35000', label: '海水' },
+        { value: '63400', label: 'RO浓水' }, { value: '200000', label: '盐湖卤水' }
+      ],
+      value: '35000',
+      onChange: function (v) { tdsCtl.set(Number(v)); }
+    });
+    gSalt.appendChild(preset.el);
+
+    var gMetrics = ui.section(panel, '读数', 'LIVE');
+    var m = ui.metrics([
+      { key: 'tds', label: 'TDS' },
+      { key: 'ec', label: '电导率（近似）' },
+      { key: 'density', label: '密度' },
+      { key: 'vs', label: '相对饮用水参考' }
+    ]);
+    gMetrics.appendChild(m.el);
+    gMetrics.appendChild(ui.formula('电导率 ≈ TDS / 0.64（海水经验系数）<br>密度 ≈ 1000 + 0.706 × (g/L)'));
+    var bandNote = ui.note('');
+    gMetrics.appendChild(bandNote);
+
+    var gEarth = ui.section(panel, 'A1 · 地球的水', 'SPLIT');
+    gEarth.appendChild(ui.table(
+      ['水体', '占比', '说明'],
+      [
+        ['海洋与内陆海', ref.earthWater.oceanPct + '%', '盐度约 35 g/kg，不可直接饮用'],
+        ['淡水（合计）', ref.earthWater.freshPct + '%', '其中 ' + ref.earthWater.icePct + '% 在冰盖与冰川'],
+        ['地下水与土壤', ref.earthWater.groundwaterPct + '%（占淡水）', '开采速度常超过补给速度'],
+        ['湖泊/河流/大气', ref.earthWater.surfaceOtherPct + '%（占淡水）', '最容易取用，也最容易被污染']
+      ]
+    ));
+    gEarth.appendChild(ui.note('来源：USGS Water Science School（口径核对 ' + ref.asOf + '）。“可 drinking 的水”只占地球总水的极小薄片。'));
+
+    var gWhy = ui.section(panel, 'A3 · 为什么要淡化', 'WHY');
+    gWhy.appendChild(ui.note('全球装机产能已超 1 亿 m³/天（IDA 口径，2024 年跨过 100 M m³/d），因为对缺水的沿海城市来说，海水是<b>唯一不被他人占用的水源</b>——代价是能量与浓盐水。'));
+
+    function bandOf(v) {
+      var bands = ref.tdsBands;
+      for (var i = 0; i < bands.length; i++) {
+        if (v >= bands[i].lo && v <= bands[i].hi) return bands[i].name;
+      }
+      return v < 1000 ? '低矿化水' : (v > 70000 ? '高浓卤水' : '介于类别之间');
+    }
+
+    function sync() {
+      var ec = core.conductivity(st.tds);
+      m.set({
+        tds: ui.fmt.int(st.tds) + ' mg/L',
+        ec: ui.fmt.int(ec) + ' µS/cm',
+        density: ui.fmt.num(core.density(st.tds), 1) + ' kg/m³',
+        vs: st.tds <= ref.drinkingTdsAesthetic ? '低于 500' : '超出 ' + ui.fmt.num(st.tds / ref.drinkingTdsAesthetic, 1) + '×'
+      }, { vs: st.tds <= ref.drinkingTdsAesthetic ? 'pos' : 'neg' });
+      bandNote.innerHTML = '当前水型：<b>' + bandOf(st.tds) + '</b>。500 mg/L 是口感/感官参考值（WHO 不为 TDS 设健康基准），不是健康红线。';
+      ladder.update({ values: [st.tds], labels: ['当前水样'], colors: ['orange'] });
+      note.textContent = st.tds > 10000
+        ? '左侧是淡水在地球上的位置，右侧是你手上这杯“水”的含盐量。海水淡化要做的事：把右边的数字拉到 500 以下，同时别把能量烧光。'
+        : '含盐量低于 1,000 mg/L 时，通常先考虑常规净水工艺；淡化真正登场，是从“常规工艺搞不定这个盐度”开始。';
+    }
+
+    /* first paint with the ladder + current sample side by side */
+    ladder.update({
+      values: sim.salinityLadder().map(function (r) { return r.tds; }),
+      labels: sim.salinityLadder().map(function (r) { return r.name; }),
+      colors: sim.salinityLadder().map(function (r) { return r.color; })
+    });
+    sync();
+
+    return {
+      apply: function (p) {
+        if (p.tds != null) tdsCtl.set(p.tds, true);
+        if (p.donutCenter) donut.update({ center: p.donutCenter });
+        if (p.ladderFocus != null) {
+          ladder.update({
+            values: sim.salinityLadder().map(function (r) { return r.tds; }),
+            labels: sim.salinityLadder().map(function (r) { return r.name; }),
+            colors: sim.salinityLadder().map(function (r) { return r.name === p.ladderFocus ? 'orange' : r.color; })
+          });
+        }
+        sync();
+      },
+      destroy: function () { donut.destroy(); ladder.destroy(); }
+    };
+  }
+
+  DL.registerModule({
+    id: 'A', slug: 'water', order: 1,
+    title: '水与盐', en: 'Water & Salt',
+    subtitle: '地球上的淡水到底在哪，海水里到底有什么。',
+    hint: '拖动含盐量滑块，观察电导率、密度与标准线的关系。',
+    scenes: [
+      {
+        title: '地球的水几乎全是咸的',
+        body: '<p>海洋占地球总水约 <b>96.5%</b>；淡水只有 <b>2.5%</b>，其中近七成锁在冰盖与冰川里，湖河等最容易取用的地表水只占淡水的约 1%。</p><p>所以对很多沿海城市来说，“最近的淡水”根本不存在——最近的水是海，需要先处理。</p>',
+        guide: '看左图：淡水的内部结构。绿色切片小到几乎看不见。',
+        patch: { donutCenter: { value: '2.5%', label: '淡水占地球总水' } }
+      },
+      {
+        title: '35 g/L：海水的含盐量',
+        body: '<p>平均海水 TDS ≈ <b>35,000 mg/L</b>（≈35 g/kg）。把它调到右侧滑块上：电导率约 54 mS/cm，密度约 1,025 kg/m³。</p><p>而饮用水的感官参考线在 <b>500 mg/L</b>——淡化要把盐砍掉 99%。</p>',
+        guide: '把滑块停在 35,000，读右下角的“相对饮用水参考”。',
+        patch: { tds: 35000, ladderFocus: '海水' }
+      },
+      {
+        title: 'TDS 不是健康红线',
+        body: '<p>WHO 明确：<b>TDS 不作为健康基准制定限值</b>。500 mg/L 是口感与感官的可接受参考（如美国 EPA 二类辅助标准）。</p><p>真正让人拒绝喝水的是咸味、苦涩与腐蚀风险，而不是 TDS 本身。</p>',
+        guide: '读面板提示：水型判断和标准线含义。',
+        patch: { tds: 500 }
+      },
+      {
+        title: '浓盐水：淡化的另一面',
+        body: '<p>淡化不会消灭盐，只是<b>搬运盐</b>。一半海水变成淡水，剩下的浓盐水盐度接近翻倍（约 60–70 g/L）。</p><p>下一模块开始讲“水是怎么穿过膜而不带盐”的机制。</p>',
+        guide: '跳到“RO浓水”档，看它比海水浓多少。',
+        patch: { tds: 63400, ladderFocus: 'RO 浓盐水' }
+      }
+    ],
+    quiz: [
+      {
+        q: '地球总水中，淡水占比最接近？',
+        options: ['0.5%', '2.5%', '10%', '25%'],
+        answer: 1,
+        explain: 'USGS 口径：淡水约占总水的 2.5%，其中约 68.7% 在冰盖/冰川，30.1% 是地下水与土壤水。'
+      },
+      {
+        q: '关于饮用水的 TDS 500 mg/L，正确的说法是？',
+        options: ['WHO 的健康基准限值', '口感/感官参考值（非强制）', '法律强制红线', 'RO 膜的物理上限'],
+        answer: 1,
+        explain: 'WHO 对 TDS 不设健康基准限值；500 mg/L 来自口感可接受的辅助标准（如 EPA 二类标准）。'
+      }
+    ],
+    mount: mount
+  });
+})();
+
+</script>
+<script>
+/* Module B — osmosis and osmotic pressure: why water "climbs" on its own. */
+(function () {
+  'use strict';
+  var DL = window.DL;
+  var ui = DL.ui, core = DL.core, charts = DL.charts, sim = DL.sim;
+
+  var DEFAULT = { tds: 35000, temp: 25, head: 0 };
+
+  function mount(ctx) {
+    var st = Object.assign({}, DEFAULT);
+    var stage = ctx.stage;
+    var panel = ctx.panel;
+
+    /* ---------------- osmosis cell diagram ---------------- */
+    var wrap = ui.el('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;gap:12px;flex:1;min-height:0';
+    var cellHost = ui.el('div', 'chart');
+    cellHost.style.cssText = 'flex:1;min-height:220px';
+    var gaugeHost = ui.el('div', 'chart');
+    gaugeHost.style.cssText = 'flex:0 0 90px;height:90px;min-height:90px';
+    wrap.appendChild(cellHost); wrap.appendChild(gaugeHost);
+    var note = ui.el('p', 'stage-note');
+    wrap.appendChild(note);
+    stage.appendChild(wrap);
+
+    function drawCell(ctx2, w, h, p) {
+      var cell = sim.osmosisCell(st.tds, st.temp, st.head);
+      var baseY = h - 26, topY = 18, wallX = 22, cellW = w - 44;
+      var memX = wallX + cellW * 0.42;
+      /* vessel outline */
+      ctx2.strokeStyle = p.muted; ctx2.lineWidth = 2;
+      ctx2.beginPath();
+      ctx2.moveTo(wallX, topY); ctx2.lineTo(wallX, baseY); ctx2.lineTo(wallX + cellW, baseY); ctx2.lineTo(wallX + cellW, topY);
+      ctx2.stroke();
+      /* water levels: freshwater side rises toward equilibrium head */
+      var maxH = baseY - topY - 10;
+      var frac = core.clamp(cell.head > 0 ? cell.appliedBar / cell.pi : 0, 0, 1);
+      var freshLevel = baseY - 14 - (st.head / 300) * maxH;
+      var saltLevel = baseY - 14 - Math.min(0.62, 0.5 + 0.12 * frac) * maxH;
+      ctx2.fillStyle = p.blue; ctx2.globalAlpha = 0.55;
+      charts.roundRect(ctx2, wallX + 3, freshLevel, memX - wallX - 6, baseY - freshLevel, 3); ctx2.fill();
+      ctx2.fillStyle = p.cyan; ctx2.globalAlpha = 0.5;
+      charts.roundRect(ctx2, memX + 3, saltLevel, wallX + cellW - memX - 6, baseY - saltLevel, 3); ctx2.fill();
+      ctx2.globalAlpha = 1;
+      /* membrane */
+      ctx2.strokeStyle = p.violet; ctx2.lineWidth = 3;
+      ctx2.beginPath(); ctx2.moveTo(memX, topY + 6); ctx2.lineTo(memX, baseY - 4); ctx2.stroke();
+      ctx2.setLineDash([3, 5]); ctx2.strokeStyle = p.dim; ctx2.lineWidth = 1;
+      ctx2.beginPath(); ctx2.moveTo(memX, topY + 6); ctx2.lineTo(memX, baseY - 4); ctx2.stroke();
+      ctx2.setLineDash([]);
+      /* salt dots on the right */
+      var dots = Math.min(46, Math.round(st.tds / 1400));
+      ctx2.fillStyle = p.orange;
+      for (var i = 0; i < dots; i++) {
+        var dx = memX + 12 + (i * 37 % (cellW - memX + wallX - 22));
+        var dy = baseY - 12 - (i * 53 % Math.max(20, baseY - saltLevel - 12));
+        ctx2.beginPath(); ctx2.arc(dx, dy, 2.1, 0, Math.PI * 2); ctx2.fill();
+      }
+      /* water arrow through membrane */
+      var arrow = cell.direction === 'in' ? 1 : cell.direction === 'out' ? -1 : 0;
+      if (arrow !== 0) {
+        var ay = (freshLevel + saltLevel) / 2;
+        ctx2.strokeStyle = p.green; ctx2.lineWidth = 2.5;
+        ctx2.beginPath(); ctx2.moveTo(memX - 46 * arrow, ay); ctx2.lineTo(memX + 46 * arrow, ay); ctx2.stroke();
+        ctx2.beginPath();
+        ctx2.moveTo(memX + 46 * arrow, ay);
+        ctx2.lineTo(memX + 46 * arrow - 10 * arrow, ay - 5);
+        ctx2.lineTo(memX + 46 * arrow - 10 * arrow, ay + 5);
+        ctx2.closePath(); ctx2.fillStyle = p.green; ctx2.fill();
+        ctx2.fillStyle = p.green; ctx2.font = charts.font(9.5, 600); ctx2.textAlign = 'center';
+        ctx2.fillText(arrow > 0 ? '水分子向浓水侧渗透' : '反渗透：水被压向淡水侧', memX, ay - 17);
+      } else {
+        ctx2.fillStyle = p.dim; ctx2.font = charts.font(9.5); ctx2.textAlign = 'center';
+        ctx2.fillText('压力差 ≈ 渗透压：两侧动态平衡', memX, topY + 26);
+      }
+      ctx2.fillStyle = p.muted; ctx2.font = charts.font(9); ctx2.textAlign = 'left';
+      ctx2.fillText('淡水侧（纯水）', wallX + 8, topY + 12);
+      ctx2.textAlign = 'right';
+      ctx2.fillText('海水侧 ' + ui.fmt.int(st.tds) + ' mg/L', wallX + cellW - 8, topY + 12);
+      ctx2.textAlign = 'center'; ctx2.fillStyle = p.violet;
+      ctx2.fillText('半透膜', memX, baseY + 12);
+    }
+    var cellChart = charts.base(cellHost, { draw: drawCell });
+    var gauge = charts.gauge(gaugeHost, { max: 70, value: 0, color: 'blue', title: '施加压力 vs 渗透压 (bar)', marker: 0, markerLabel: 'π' });
+
+    /* ---------------- panel ---------------- */
+    var gCell = ui.section(panel, 'B1 · 渗透装置', 'OSMOSIS');
+    var tdsCtl = ui.slider({ label: '浓水侧含盐量', min: 1000, max: 70000, step: 500, value: 35000, unit: 'mg/L', onInput: function (v) { st.tds = v; sync(); } });
+    var tempCtl = ui.slider({ label: '温度', min: 5, max: 45, step: 1, value: 25, unit: '°C', hint: '渗透压 ∝ 绝对温度：加热会抬高 π。', onInput: function (v) { st.temp = v; sync(); } });
+    var headCtl = ui.slider({ label: '淡水侧水柱高度', min: 0, max: 300, step: 5, value: 0, unit: 'm', hint: '水柱产生的静压就是“外加压力”：到 π 时渗透停止。', onInput: function (v) { st.head = v; sync(); } });
+    gCell.appendChild(tdsCtl.el); gCell.appendChild(tempCtl.el); gCell.appendChild(headCtl.el);
+
+    var gMetrics = ui.section(panel, '读数', 'LIVE');
+    var m = ui.metrics([
+      { key: 'pi', label: '渗透压 π' },
+      { key: 'head', label: '等效水柱' },
+      { key: 'applied', label: '外加压力' },
+      { key: 'dir', label: '净方向' }
+    ]);
+    gMetrics.appendChild(m.el);
+    gMetrics.appendChild(ui.formula('π = i<sub>eff</sub> · C · R · T<br>i<sub>eff</sub> = 1.8（NaCl 等效，含渗透系数）'));
+    var warn = ui.warn('教学简化：按 NaCl 等效稀溶液估算，不含多价离子与活度系数；真实海水 π ≈ 26–28 bar，本模型在 ±10% 内。');
+    gMetrics.appendChild(warn);
+
+    var gPress = ui.section(panel, 'B2 · 越过 π 之后', 'REVERSE');
+    gPress.appendChild(ui.note('把外加压力推过 π，方向翻转——这就是反渗透（RO）的原理：不是“过滤”，而是<b>用压力抢赢渗透</b>。模块 C 会把这台装置装上真实膜。'));
+
+    function sync() {
+      var cell = sim.osmosisCell(st.tds, st.temp, st.head);
+      m.set({
+        pi: ui.fmt.num(cell.pi, 1) + ' bar',
+        head: ui.fmt.int(cell.head) + ' m',
+        applied: ui.fmt.num(cell.appliedBar, 1) + ' bar',
+        dir: cell.direction === 'in' ? '渗透 →' : cell.direction === 'out' ? '← 反渗' : '平衡 ⇌'
+      }, { dir: cell.direction === 'in' ? 'pos' : cell.direction === 'out' ? 'hi' : 'neg' });
+      gauge.update({ value: cell.appliedBar, marker: cell.pi, markerLabel: 'π ' + ui.fmt.num(cell.pi, 1) + ' bar', valueLabel: '外加 ' + ui.fmt.num(cell.appliedBar, 1) + ' bar' });
+      cellChart.redraw();
+      note.textContent = cell.direction === 'in'
+        ? '浓水侧在“抽水”：淡水自己穿过膜去稀释它，直到水柱压力 ≈ π。' + (cell.pi > 25 ? '海水要抬到约 ' + ui.fmt.int(cell.head) + ' 米水柱才停——这就是为什么渗透发电听起来很美，但产能极低。' : '')
+        : cell.direction === 'out'
+          ? '外加压力超过了 π：水被从浓水侧挤出来——反渗透产水。压力每高一档，产水通量高一档（模块 C）。'
+          : '刚好平衡：净通量为零。这是渗透压的定义时刻。';
+    }
+    sync();
+
+    return {
+      apply: function (p) {
+        if (p.tds != null) tdsCtl.set(p.tds, true);
+        if (p.temp != null) tempCtl.set(p.temp, true);
+        if (p.head != null) headCtl.set(p.head, true);
+        if (p.head == null && p.headToPi) {
+          headCtl.set(core.round(sim.osmosisCell(st.tds, st.temp, 0).head, 0), true);
+        }
+        if (p.headOverPi) {
+          headCtl.set(core.round(sim.osmosisCell(st.tds, st.temp, 0).head + 35, 0), true);
+        }
+        sync();
+      },
+      destroy: function () { cellChart.destroy(); gauge.destroy(); }
+    };
+  }
+
+  DL.registerModule({
+    id: 'B', slug: 'osmosis', order: 2,
+    title: '渗透与渗透压', en: 'Osmosis',
+    subtitle: '水为什么会自己爬升 273 米——以及怎么把它按回去。',
+    hint: '拖动含盐量、温度与水柱高度，观察净方向何时翻转。',
+    scenes: [
+      {
+        title: '半透膜只放行水',
+        body: '<p>膜允许水分子通过，却挡住 Na⁺ 与 Cl⁻。浓水侧要“稀释自己”，水就从淡水侧穿过来——这就是<b>渗透</b>。</p>',
+        guide: '看绿色箭头：方向指向浓水侧。',
+        patch: { tds: 35000, head: 0 }
+      },
+      {
+        title: '渗透压：27 bar ≈ 273 米水柱',
+        body: '<p>海水（35 g/L，25 °C）的渗透压约 <b>27 bar</b>——相当于把水自己抬升约 <b>270 米</b>。渗透会持续到淡水侧水柱压力 = π 为止。</p>',
+        guide: '水柱滑块停在 π 处，净方向变成“平衡”。',
+        patch: { headToPi: true }
+      },
+      {
+        title: '按回去：反渗透',
+        body: '<p>把压力加到 π 以上，方向翻转：水从海水侧被挤出去，盐被留下。<b>反渗透 = 渗透的反向操作</b>，代价是高压泵做功。</p>',
+        guide: '外加压力条已经越过 π 标记。',
+        patch: { headOverPi: true }
+      },
+      {
+        title: '温度不是旁观者',
+        body: '<p>π = C·R·T 里的 T 是绝对温度：5 °C 与 45 °C 的海水渗透压相差约 14%。冬季产水通量下降还叠加了<b>粘度上升</b>——这就是水厂按季节调压力的原因。</p>',
+        guide: '把温度拉到 45，看 π 与平衡水柱怎么变。',
+        patch: { temp: 45 }
+      }
+    ],
+    quiz: [
+      {
+        q: '10,000 mg/L NaCl 等效溶液在 25 °C 的渗透压最接近？',
+        options: ['0.8 bar', '7.7 bar', '27 bar', '77 bar'],
+        answer: 1,
+        explain: 'C = 10/58.44 = 0.171 mol/L；π = 1.8 × 0.171 × 0.08314 × 298.15 ≈ 7.7 bar。海水（35,000 mg/L）的 27 bar 就是这个式子放大 3.5 倍。'
+      },
+      {
+        q: '反渗透产水的前提条件是？',
+        options: ['膜孔比盐离子小', '外加压力高于浓水侧渗透压', '把海水加热到沸腾', '先去除全部钙镁'],
+        answer: 1,
+        explain: 'RO 是压力驱动：只有外加压力超过浓水侧（含浓差极化）渗透压，才有净水通量。膜不是靠“筛孔”挡盐。'
+      }
+    ],
+    mount: mount
+  });
+})();
+
+</script>
+<script>
+/* Module C — the reverse osmosis stage: pressure, flux, salt balance, energy. */
+(function () {
+  'use strict';
+  var DL = window.DL;
+  var ui = DL.ui, core = DL.core, charts = DL.charts, sim = DL.sim, ref = DL.reference;
+
+  var DEFAULT = { pressure: 62, recovery: 45, rejection: 99.3, A: 1.2 };
+
+  function mount(ctx) {
+    var st = Object.assign({}, DEFAULT);
+    var stage = ctx.stage;
+    var panel = ctx.panel;
+
+    /* ---------------- stage: membrane flow + pressure gauge ---------------- */
+    var wrap = ui.el('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px;flex:1;min-height:0';
+    var flowHost = ui.el('div', 'chart');
+    flowHost.style.cssText = 'flex:1;min-height:200px';
+    var gaugeHost = ui.el('div', 'chart');
+    gaugeHost.style.cssText = 'flex:0 0 84px;height:84px;min-height:84px';
+    wrap.appendChild(flowHost); wrap.appendChild(gaugeHost);
+    var note = ui.el('p', 'stage-note');
+    wrap.appendChild(note);
+    stage.appendChild(wrap);
+
+    function drawFlow(c2, w, h, p) {
+      var r = sim.roStage({
+        pressure: st.pressure, recovery: st.recovery / 100, rejection: st.rejection / 100,
+        permeability: st.A, feed: 100
+      });
+      var midY = h / 2;
+      var memX = w * 0.52;
+      /* feed pipe */
+      function pipe(x1, x2, y, frac, color, label, sub, right) {
+        var th = 5 + frac * 26;
+        c2.fillStyle = color; c2.globalAlpha = 0.75;
+        charts.roundRect(c2, x1, y - th / 2, x2 - x1, th, 4); c2.fill();
+        c2.globalAlpha = 1;
+        c2.fillStyle = p.text; c2.font = charts.font(10, 600); c2.textAlign = right ? 'right' : 'left';
+        c2.fillText(label, right ? x2 - 6 : x1 + 6, y - th / 2 - 6);
+        c2.fillStyle = p.muted; c2.font = charts.font(9);
+        c2.fillText(sub, right ? x2 - 6 : x1 + 6, y + th / 2 + 14);
+      }
+      var feedFrac = 1;
+      var permFrac = r.bal.P / 100;
+      var brineFrac = r.bal.B / 100;
+      pipe(16, memX - 14, midY, feedFrac, p.orange, '进水 ' + ui.fmt.int(r.bal.F) + ' m³/h', 'TDS ' + ui.fmt.int(r.bal.F ? 35000 : 0) + ' mg/L', false);
+      /* membrane */
+      c2.strokeStyle = p.violet; c2.lineWidth = 4;
+      c2.beginPath(); c2.moveTo(memX, midY - 52); c2.lineTo(memX, midY + 52); c2.stroke();
+      /* permeate down-right, brine right */
+      pipe(memX + 14, w - 16, midY - 46, permFrac, p.cyan, '产水 ' + ui.fmt.num(r.bal.P, 0) + ' m³/h', 'TDS ' + ui.fmt.int(r.bal.Cp) + ' mg/L', true);
+      pipe(memX + 14, w - 16, midY + 46, brineFrac, p.red, '浓水 ' + ui.fmt.num(r.bal.B, 0) + ' m³/h', 'TDS ' + ui.fmt.int(r.bal.Cb) + ' mg/L', true);
+      /* flux arrows through membrane */
+      var flux = r.flow.flux;
+      var n = Math.min(8, Math.max(0, Math.round(flux / 4)));
+      c2.fillStyle = p.green;
+      for (var i = 0; i < n; i++) {
+        var y = midY - 34 + i * 9;
+        c2.beginPath();
+        c2.moveTo(memX - 26, y); c2.lineTo(memX + 16, y); c2.lineTo(memX + 10, y - 3); c2.lineTo(memX + 16, y); c2.lineTo(memX + 10, y + 3);
+        c2.strokeStyle = p.green; c2.lineWidth = 1.6; c2.stroke();
+      }
+      c2.fillStyle = p.green; c2.font = charts.font(9.5, 600); c2.textAlign = 'center';
+      c2.fillText('通量 ' + ui.fmt.num(flux, 1) + ' LMH', memX, midY - 62);
+      if (!r.feasible) {
+        c2.fillStyle = p.red; c2.font = charts.font(10, 700);
+        c2.fillText('净驱动压力 ≤ 0：不产水', memX, midY + 70);
+      }
+    }
+    var flowChart = charts.base(flowHost, { draw: drawFlow });
+    var gauge = charts.gauge(gaugeHost, { max: 90, value: st.pressure, color: 'blue', title: '外加压力 vs 浓水侧渗透压 (bar)', marker: 40, markerLabel: 'β·π_b' });
+
+    /* ---------------- panel ---------------- */
+    var gPress = ui.section(panel, 'C1 · 压力', 'PRESSURE');
+    var pCtl = ui.slider({ label: '进水压力', min: 40, max: 85, step: 1, value: 62, unit: 'bar', hint: '真实海水 RO 高压泵一般运行在 55–72 bar。', onInput: function (v) { st.pressure = v; sync(); } });
+    gPress.appendChild(pCtl.el);
+
+    var gRecovery = ui.section(panel, 'C2 · 回收率与截留率', 'BALANCE');
+    var yCtl = ui.slider({ label: '回收率 Y', min: 20, max: 70, step: 1, value: 45, unit: '%', hint: '海水 RO 常规 35–45%；再高会撞结垢阈值（模块 E）。', onInput: function (v) { st.recovery = v; sync(); } });
+    var rCtl = ui.slider({ label: '截留率 R', min: 98.5, max: 99.9, step: 0.1, value: 99.3, unit: '%', onInput: function (v) { st.rejection = v; sync(); } });
+    gRecovery.appendChild(yCtl.el); gRecovery.appendChild(rCtl.el);
+    gRecovery.appendChild(ui.formula('质量守恒：F·C_f = P·C_p + B·C_b<br>C_b = (F·C_f − P·C_p) / B'));
+
+    var gFlux = ui.section(panel, 'C3 · 膜与通量', 'FLUX');
+    var aCtl = ui.slider({ label: '膜透水性 A', min: 0.6, max: 1.8, step: 0.05, value: 1.2, unit: 'LMH/bar', hint: 'J = A·(P − β·π_brine)，β≈1.1 是浓差极化系数。', onInput: function (v) { st.A = v; sync(); } });
+    gFlux.appendChild(aCtl.el);
+
+    var gMetrics = ui.section(panel, '读数', 'LIVE');
+    var m = ui.metrics([
+      { key: 'nd', label: '净驱动压力' },
+      { key: 'flux', label: '产水通量' },
+      { key: 'perm', label: '产水 TDS' },
+      { key: 'brine', label: '浓水 TDS' },
+      { key: 'se', label: '比能耗' },
+      { key: 'min', label: '理论最小' }
+    ]);
+    gMetrics.appendChild(m.el);
+    var energyWarn = ui.warn('能耗模型：高压泵功 + 能量回收（η_pump 0.82 / η_erd 0.55，单段简化）。不含预处理、后处理与辅助用电。');
+    gMetrics.appendChild(energyWarn);
+    var quality = ui.note('');
+    gMetrics.appendChild(quality);
+
+    function sync() {
+      var r = sim.roStage({
+        pressure: st.pressure, recovery: st.recovery / 100, rejection: st.rejection / 100,
+        permeability: st.A, feed: 100
+      });
+      m.set({
+        nd: ui.fmt.num(r.flow.nd, 1) + ' bar',
+        flux: ui.fmt.num(r.flow.flux, 1) + ' LMH',
+        perm: ui.fmt.int(r.bal.Cp) + ' mg/L',
+        brine: ui.fmt.int(r.bal.Cb) + ' mg/L',
+        se: ui.fmt.num(r.energy.net, 2) + ' kWh/m³',
+        min: ui.fmt.num(r.minSe, 2) + ' kWh/m³'
+      }, { nd: r.feasible ? null : 'neg', se: r.energy.net > ref.energy.swro.hi ? 'neg' : null });
+      gauge.update({
+        value: st.pressure, marker: r.flow.piBrine * 1.1,
+        markerLabel: 'β·π_b ' + ui.fmt.num(r.flow.piBrine * 1.1, 1) + ' bar',
+        valueLabel: '外加 ' + st.pressure + ' bar'
+      });
+      flowChart.redraw();
+      quality.innerHTML = r.bal.Cp <= 500
+        ? '产水 TDS <b>' + ui.fmt.int(r.bal.Cp) + ' mg/L</b>：达标（口感参考 500），但仍然<b>缺矿物质</b>，并网前必须再矿化（模块 G）。'
+        : '产水超标：截留率 ' + ui.fmt.num(st.rejection, 1) + '% 挡不住 ' + ui.fmt.int(r.bal.Cp) + ' mg/L——真实膜片老化、O 型圈泄漏就是这种画面。';
+      note.textContent = r.feasible
+        ? '回收率 ' + st.recovery + '% 把浓水推到 ' + ui.fmt.int(r.bal.Cb) + ' mg/L，浓水侧渗透压升到 ' + ui.fmt.num(r.flow.piBrine, 1) + ' bar；净驱动压力只剩 ' + ui.fmt.num(r.flow.nd, 1) + ' bar——压力不是白给的。'
+        : '压力低于浓水侧渗透压：膜两侧净通量为零或倒流。把压力拉回 60 bar 以上。';
+    }
+    sync();
+
+    return {
+      apply: function (p) {
+        if (p.pressure != null) pCtl.set(p.pressure, true);
+        if (p.recovery != null) yCtl.set(p.recovery, true);
+        if (p.rejection != null) rCtl.set(p.rejection, true);
+        if (p.A != null) aCtl.set(p.A, true);
+        sync();
+      },
+      destroy: function () { flowChart.destroy(); gauge.destroy(); }
+    };
+  }
+
+  DL.registerModule({
+    id: 'C', slug: 'reverse-osmosis', order: 3,
+    title: '反渗透 RO', en: 'Reverse Osmosis',
+    subtitle: '一台能调参数的单段 RO：通量、盐平衡与能耗同时守恒。',
+    hint: '调压力、回收率与截留率，盯住质量守恒两边是否配平。',
+    scenes: [
+      {
+        title: '越过渗透压才有水',
+        body: '<p>62 bar 外加压力 vs 浓水侧渗透压（约 48 bar × β）：净驱动压力决定通量。<b>产水通量 J = A·ND</b>，约 14 LMH。</p>',
+        guide: '下方压力条：绿色长度是外加压力，橙色标记是浓水侧渗透压。',
+        patch: { pressure: 62, recovery: 45, rejection: 99.3 }
+      },
+      {
+        title: '回收率：多产水，浓更浓',
+        body: '<p>回收率从 45% 拉到 60%：产水多了，但浓水盐度从约 63 k 冲向 88 k mg/L，浓水侧渗透压吃掉净驱动压力，通量反而下降——这就是工艺被锁在 35–45% 的物理原因。</p>',
+        guide: '把回收率拉到 60，看“净驱动压力”与“浓水 TDS”。',
+        patch: { recovery: 60 }
+      },
+      {
+        title: '99.3% 截留率 ≠ 无盐',
+        body: '<p>35,000 × (1 − 99.3%) = <b>245 mg/L</b>。产水达标靠的是膜片标称截留率；把滑块降到 98.6% 试试——产水立刻超过饮用水参考线。</p>',
+        guide: '把截留率降到 98.6，产水读数变红。',
+        patch: { rejection: 98.6 }
+      },
+      {
+        title: '能量回收装置的作用',
+        body: '<p>浓水带着 62 bar 的压力白白排掉是浪费。<b>压力交换器</b>把浓水压力传给进水，比能耗从约 4.9 降到 3–4 kWh/m³。滑块面板里的 η_erd 就是这台装置。</p>',
+        guide: '比能耗读数 = 泵功 − 回收功。',
+        patch: { pressure: 62, recovery: 45 }
+      },
+      {
+        title: '离理论极限还有多远',
+        body: '<p>理论最小分离功（50% 回收率）约 <b>1.06 kWh/m³</b>；现实最好的商用厂约 2.5–3 kWh/m³。系统效率约三成——省能的空间还在，但物理下限省不掉。</p>',
+        guide: '对比“比能耗”与“理论最小”两个读数。',
+        patch: { recovery: 50 }
+      }
+    ],
+    quiz: [
+      {
+        q: '进水 TDS 35,000 mg/L，回收率 45%，截留率 99.3%，浓水 TDS 最接近？',
+        options: ['35,000', '51,000', '63,400', '87,000'],
+        answer: 2,
+        explain: 'F·C_f − P·C_p = 3.5e6 − 45×245 ≈ 3.489e6 g；除以浓水 55 m³ → ≈63,400 mg/L（≈1.8×进水）。'
+      },
+      {
+        q: '回收率提高时通量下降的主要原因是？',
+        options: ['膜孔径变小', '浓水侧渗透压升高吃掉净驱动压力', '水温下降', '泵效率降低'],
+        answer: 1,
+        explain: 'ND = P − β·π_brine；回收率↑ → 浓水更浓 → π_brine↑ → ND↓ → J↓。'
+      }
+    ],
+    mount: mount
+  });
+})();
+
+</script>
+<script>
+/* Module D — thermal distillation: multi-stage flash (MSF) teaching model. */
+(function () {
+  'use strict';
+  var DL = window.DL;
+  var ui = DL.ui, core = DL.core, charts = DL.charts, sim = DL.sim, ref = DL.reference;
+
+  var DEFAULT = { stages: 16, topBrine: 110 };
+
+  function mount(ctx) {
+    var st = Object.assign({}, DEFAULT);
+    var stage = ctx.stage;
+    var panel = ctx.panel;
+
+    /* ---------------- cascade diagram ---------------- */
+    var wrap = ui.el('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px;flex:1;min-height:0';
+    var cascadeHost = ui.el('div', 'chart');
+    cascadeHost.style.cssText = 'flex:1;min-height:220px';
+    var barHost = ui.el('div', 'chart');
+    barHost.style.cssText = 'flex:0 0 150px;height:150px;min-height:150px';
+    wrap.appendChild(cascadeHost); wrap.appendChild(barHost);
+    var note = ui.el('p', 'stage-note');
+    wrap.appendChild(note);
+    stage.appendChild(wrap);
+
+    function drawCascade(c2, w, h, p) {
+      var plant = sim.thermalPlant({ stages: st.stages, topBrine: st.topBrine });
+      var list = plant.cascade.stages;
+      var n = list.length;
+      var colW = (w - 24) / n;
+      var maxT = 130;
+      list.forEach(function (s, i) {
+        var x = 12 + i * colW;
+        var frac = s.temp / maxT;
+        var bh = Math.max(8, frac * (h - 46));
+        var grad = c2.createLinearGradient(0, h - 22 - bh, 0, h - 22);
+        grad.addColorStop(0, p.orange);
+        grad.addColorStop(1, p.cyan);
+        c2.fillStyle = grad;
+        charts.roundRect(c2, x, h - 22 - bh, Math.max(4, colW - 3), bh, 3); c2.fill();
+        /* flashing vapor hint at the top */
+        c2.fillStyle = p.yellow;
+        c2.globalAlpha = 0.65;
+        for (var k = 0; k < 3; k++) {
+          c2.beginPath();
+          c2.arc(x + colW / 2 + (k - 1) * 4, h - 26 - bh - 4 - k * 3, 1.8, 0, Math.PI * 2);
+          c2.fill();
+        }
+        c2.globalAlpha = 1;
+        if (i === 0 || i === n - 1 || n <= 12) {
+          c2.fillStyle = p.muted; c2.font = charts.font(8.5); c2.textAlign = 'center';
+          c2.fillText(Math.round(s.temp) + '°', x + colW / 2, h - 8);
+        }
+      });
+      c2.fillStyle = p.dim; c2.font = charts.font(9); c2.textAlign = 'left';
+      c2.fillText('顶卤 ' + Math.round(plant.cascade.top) + '°C → 末级 ' + Math.round(plant.cascade.last) + '°C · 每级降压闪蒸', 12, 14);
+      c2.textAlign = 'right';
+      c2.fillText('GEA = ' + ui.fmt.num(plant.gea, 1), w - 12, 14);
+    }
+    var cascade = charts.base(cascadeHost, { draw: drawCascade });
+
+    var bar = charts.bars(barHost, {
+      labels: ['理论最小', 'SWRO 典型', 'MED', 'MSF'],
+      values: [ref.energy.theoreticalMin, ref.energy.swro.typical, ref.energy.med.typical, ref.energy.msf.typical],
+      colors: ['green', 'cyan', 'blue', 'orange'],
+      valueFormat: function (v) { return v.toFixed(1); },
+      yFormat: function (v) { return v.toFixed(0); },
+      label: '电耗当量 kWh/m³ · 文献区间中值（热法按折算口径）'
+    });
+
+    /* ---------------- panel ---------------- */
+    var gStages = ui.section(panel, 'D1 · 级数与顶卤温度', 'MSF');
+    var nCtl = ui.slider({ label: '闪蒸级数 N', min: 6, max: 26, step: 1, value: 16, unit: '级', hint: '级数越多，蒸汽潜热被反复利用，GEA 越高。', onInput: function (v) { st.stages = v; sync(); } });
+    var tbCtl = ui.slider({ label: '顶卤温度', min: 85, max: 125, step: 1, value: 110, unit: '°C', hint: '更高顶卤提高回收与 GEA，但结垢与腐蚀也加剧（硅垢在 ~120°C 附近出现）。', onInput: function (v) { st.topBrine = v; sync(); } });
+    gStages.appendChild(nCtl.el); gStages.appendChild(tbCtl.el);
+
+    var gMetrics = ui.section(panel, '读数', 'LIVE');
+    var m = ui.metrics([
+      { key: 'gea', label: 'GEA 产水增益比' },
+      { key: 'dT', label: '级间温差' },
+      { key: 'geo', label: '循环倍率 geo' },
+      { key: 'elec', label: '泵送电耗' }
+    ]);
+    gMetrics.appendChild(m.el);
+    gMetrics.appendChild(ui.formula('GEA = 产水 / 加热室进料蒸汽<br>每级闪蒸的蒸汽去冷凝下一级的进料，潜热反复利用'));
+    var warn = ui.warn('教学相关性：GEA 随级数与顶卤温度单调上升，落在文献 MSF 的 3–9 区间。这是教学模型，不是热工设计计算。');
+    gMetrics.appendChild(warn);
+
+    var gMed = ui.section(panel, 'D2 · MED：另一种热法', 'MED');
+    gMed.appendChild(ui.note('多效蒸馏（MED）把“效”串成瀑布：第一效的蒸汽冷凝热去蒸发第二效。它与电厂余热/太阳能耦合很自然，中东大量新建产能是 MED+RO 混配。'));
+    var gEER = ui.section(panel, 'D3 · 能耗口径', 'EER');
+    gEER.appendChild(ui.note('热法 EER 含大量热能。与 RO 比较必须折算成电耗当量（GED），不同折算系数会让 MED/MSF 排名互换——口径不一致的对比都是耍流氓。'));
+
+    function sync() {
+      var plant = sim.thermalPlant({ stages: st.stages, topBrine: st.topBrine });
+      m.set({
+        gea: ui.fmt.num(plant.gea, 2),
+        dT: ui.fmt.num(plant.cascade.dT, 2) + ' °C',
+        geo: ui.fmt.int(plant.geo),
+        elec: ui.fmt.num(plant.elec, 2) + ' kWh/m³'
+      });
+      cascade.redraw();
+      note.textContent = plant.gea > 7
+        ? 'GEA ' + ui.fmt.num(plant.gea, 1) + '：接近现代大型 MSF 的上沿——代价是更多级、更大换热面积与更高顶卤结垢风险。'
+        : 'GEA ' + ui.fmt.num(plant.gea, 1) + '：级数少时潜热利用不充分，单位产水的热耗大幅上升。';
+    }
+    sync();
+
+    return {
+      apply: function (p) {
+        if (p.stages != null) nCtl.set(p.stages, true);
+        if (p.topBrine != null) tbCtl.set(p.topBrine, true);
+        if (p.barFocus != null) {
+          var ladder = ['green', 'cyan', 'blue', 'orange'];
+          bar.update({ colors: ladder.map(function (cc, i) { return i === p.barFocus ? 'yellow' : cc; }) });
+        }
+        sync();
+      },
+      destroy: function () { cascade.destroy(); bar.destroy(); }
+    };
+  }
+
+  DL.registerModule({
+    id: 'D', slug: 'thermal', order: 4,
+    title: '蒸馏法 MSF / MED', en: 'Thermal Distillation',
+    subtitle: '不是把海水烧开——是把同一份热量反复用掉八次。',
+    hint: '调级数与顶卤温度，看闪蒸瀑布与 GEA 怎么变。',
+    scenes: [
+      {
+        title: '真空里的“闪蒸”',
+        body: '<p>MSF 的热水在<b>低于其沸点压力的真空室</b>里瞬间汽化：末级接近真空，温度只要 32–40 °C 也能闪蒸。不需要把整锅海水烧到 100 °C。</p>',
+        guide: '柱子从橙色（热）渐变到青色（冷）：每级压力更低。',
+        patch: { stages: 16, topBrine: 110 }
+      },
+      {
+        title: 'GEA：一份热产八份水',
+        body: '<p>每级产生的蒸汽去冷凝<b>下一级的进料</b>，潜热被逐级回收。级数 16 时 GEA ≈ 5；级数拉到 24、顶卤 110 °C 时逼近大型厂的实际值 ~8。</p>',
+        guide: '把级数拉到 24，右上角 GEA 读数上升。',
+        patch: { stages: 24 }
+      },
+      {
+        title: '顶卤温度的天花板',
+        body: '<p>顶卤 >120 °C 会析出<b>硅垢</b>，90–120 °C 是石膏/碳酸钙与硅垢夹缝里的操作带。温度不是越高越好——这是热法厂永远在和结垢谈判。</p>',
+        guide: '把顶卤推到 125，想想真实厂为什么会停。',
+        patch: { topBrine: 122 }
+      },
+      {
+        title: '和 RO 比能耗，先统一口径',
+        body: '<p>底部柱状图是<b>电耗当量</b>：MSF 文献区间 7.5–11 kWh/m³，MED 3–6，SWRO 2.5–4.5，理论最小 1.06。热法输给 RO 的不只是效率，还有燃料与冷却海的依赖。</p>',
+        guide: 'MSF 柱子是橙色——它最耗能。',
+        patch: { barFocus: 3 }
+      }
+    ],
+    quiz: [
+      {
+        q: 'MSF 的 GEA（产水增益比）≈ 8 的含义是？',
+        options: ['热效率 80%', '每份进料蒸汽产出约 8 份水', '8 台并联装置', '回收率 80%'],
+        answer: 1,
+        explain: 'GEA = 总产水 / 加热室进料流量：潜热被各级反复利用，一份蒸汽最终换来约 8 份淡水。'
+      },
+      {
+        q: '热法与 RO 能耗必须折算成同一口径才能比较，原因是？',
+        options: ['电价不同', '热法主要消耗热能，折算系数不同排名会变', 'RO 不用计量', 'MSF 没有电耗'],
+        answer: 1,
+        explain: 'GED 把热耗按功/热折算成电耗当量；不同系数下 MED 与 MSF 的相对排名可能互换，口径必须先声明。'
+      }
+    ],
+    mount: mount
+  });
+})();
+
+</script>
+<script>
+/* Module E — membranes, rejection mechanisms and fouling. */
+(function () {
+  'use strict';
+  var DL = window.DL;
+  var ui = DL.ui, core = DL.core, charts = DL.charts, sim = DL.sim;
+
+  var DEFAULT = { days: 30, scaling: 0.04, antiscalant: 60, recovery: 45 };
+
+  function mount(ctx) {
+    var st = Object.assign({}, DEFAULT);
+    var stage = ctx.stage;
+    var panel = ctx.panel;
+
+    /* ---------------- stage: membrane layers + timeline ---------------- */
+    var wrap = ui.el('div', 'stage-grid two');
+    wrap.style.cssText = 'flex:1;min-height:0';
+    var left = ui.el('div', 'fill');
+    var layersHost = ui.el('div', 'chart');
+    layersHost.style.flex = '1';
+    left.appendChild(layersHost);
+    var right = ui.el('div', 'fill');
+    var lineHost = ui.el('div', 'chart');
+    lineHost.style.flex = '1';
+    right.appendChild(lineHost);
+    wrap.appendChild(left); wrap.appendChild(right);
+    var riskNote = ui.el('p', 'stage-note');
+    stage.appendChild(wrap); stage.appendChild(riskNote);
+
+    function drawLayers(c2, w, h, p) {
+      var narrow = w < 560;
+      var layers = [
+        { name: '聚酯支撑层（多孔）', short: '支撑层', h: 0.42, color: p.panel3 },
+        { name: '多孔中间层', short: '中间层', h: 0.26, color: p.blue },
+        { name: '聚酰胺致密分离层 ~200 nm', short: '分离层 ~200nm', h: 0.12, color: p.violet },
+        { name: '水侧边界层', short: '边界层', h: 0.08, color: p.cyan }
+      ];
+      var x = narrow ? 72 : 84, bw = narrow ? w * 0.5 : Math.min(150, w * 0.34);
+      var y = 14;
+      layers.forEach(function (L) {
+        var lh = Math.max(14, L.h * (h - 30));
+        c2.fillStyle = L.color; c2.globalAlpha = L.color === p.panel3 ? 0.8 : 0.9;
+        charts.roundRect(c2, x, y, bw, lh, 4); c2.fill(); c2.globalAlpha = 1;
+        c2.fillStyle = p.text; c2.font = charts.font(narrow ? 8.5 : 9.5, 600);
+        if (narrow) { c2.textAlign = 'right'; c2.fillText(L.short, w - 6, y + lh / 2 + 3); }
+        else { c2.textAlign = 'left'; c2.fillText(L.name, x + bw + 10, y + lh / 2 + 3); }
+        y += lh + 2;
+      });
+      /* water molecules pass the dense layer; hydrated ions bounce */
+      var midY = h * 0.35;
+      c2.strokeStyle = p.green; c2.lineWidth = 2;
+      c2.beginPath(); c2.moveTo(x - 26, midY); c2.lineTo(x + bw + 6, midY); c2.stroke();
+      c2.beginPath(); c2.moveTo(x + bw + 6, midY); c2.lineTo(x + bw - 2, midY - 4); c2.moveTo(x + bw + 6, midY); c2.lineTo(x + bw - 2, midY + 4); c2.stroke();
+      c2.fillStyle = p.green; c2.font = charts.font(narrow ? 8 : 9);
+      if (narrow) { c2.textAlign = 'right'; c2.fillText('H₂O 透过', x - 10, midY - 9); }
+      else { c2.textAlign = 'left'; c2.fillText('H₂O 溶解-扩散透过', x + bw + 10, midY - 12); }
+      c2.strokeStyle = p.red; c2.lineWidth = 1.8;
+      [midY + 26, midY + 40].forEach(function (yy, i) {
+        c2.beginPath(); c2.moveTo(x - 30, yy); c2.lineTo(x - 6, yy);
+        c2.arc(x - 3, yy, 3.4, 0, Math.PI * 2); c2.stroke();
+        c2.beginPath(); c2.moveTo(x - 3, yy); c2.lineTo(x - 14, yy - 12); c2.stroke();
+        c2.fillStyle = p.red; c2.font = charts.font(8.5); c2.textAlign = 'right';
+        c2.fillText(i === 0 ? 'Na⁺ 被拒' : 'Cl⁻ 被拒', x - 12, yy - 6);
+      });
+      c2.fillStyle = p.dim; c2.font = charts.font(9); c2.textAlign = 'left';
+      c2.fillText('TFC 复合膜剖面（放大示意）', 12, h - 6);
+    }
+    var layers = charts.base(layersHost, { draw: drawLayers });
+
+    var line = charts.lines(lineHost, {
+      series: [{ name: '通量', values: [], color: 'cyan', endLabel: '' }],
+      yMin: 0, yFormat: function (v) { return v.toFixed(0); },
+      xLabel: '运行天数',
+      label: '产水通量随污染衰减（教学指数模型）'
+    });
+
+    /* ---------------- panel ---------------- */
+    var gRej = ui.section(panel, 'E1 · 截留率', 'REJECTION');
+    var rejCtl = ui.slider({ label: '膜片截留率', min: 98, max: 99.9, step: 0.1, value: 99.5, unit: '%', hint: '标称 99.3–99.8%；产水 TDS = 35,000 × (1 − R)。', onInput: function (v) { st.rejection = v; sync(); } });
+    gRej.appendChild(rejCtl.el);
+
+    var gFoul = ui.section(panel, 'E2 · 污染与阻垢', 'FOULING');
+    var daysCtl = ui.slider({ label: '运行天数', min: 7, max: 90, step: 1, value: 30, unit: '天', onInput: function (v) { st.days = v; sync(); } });
+    var scaleCtl = ui.slider({ label: '结垢倾向 k₀', min: 0.005, max: 0.08, step: 0.005, value: 0.04, unit: '/天', hint: '进水硬度、温度、回收率共同决定；生物污染另算。', onInput: function (v) { st.scaling = v; sync(); } });
+    var antiCtl = ui.slider({ label: '阻垢剂效率', min: 0, max: 90, step: 5, value: 60, unit: '%', onInput: function (v) { st.antiscalant = v; sync(); } });
+    gFoul.appendChild(daysCtl.el); gFoul.appendChild(scaleCtl.el); gFoul.appendChild(antiCtl.el);
+
+    var gRisk = ui.section(panel, 'E3 · 回收率 vs 结垢阈值', 'RISK');
+    var recCtl = ui.slider({ label: '回收率', min: 30, max: 85, step: 1, value: 45, unit: '%', onInput: function (v) { st.recovery = v; sync(); } });
+    gRisk.appendChild(recCtl.el);
+    var riskBox = ui.warn('');
+    gRisk.appendChild(riskBox);
+
+    var gMetrics = ui.section(panel, '读数', 'LIVE');
+    var m = ui.metrics([
+      { key: 'perm', label: '产水 TDS' },
+      { key: 'fluxNow', label: '当前通量' },
+      { key: 'hold', label: '通量保持率' },
+      { key: 'limit', label: '结垢阈值 Y' }
+    ]);
+    gMetrics.appendChild(m.el);
+    var clean = ui.note('化学清洗（CIP）能恢复一部分通量，但每一次污染都在缩短膜寿命。真实厂靠<b>预处理</b>（UF/DF + 加药）把污染速率压低，而不是事后救火。');
+    gMetrics.appendChild(clean);
+
+    function sync() {
+      var rej = (st.rejection != null ? st.rejection : 99.5) / 100;
+      var perm = 35000 * (1 - rej);
+      var timeline = sim.membraneTimeline({ days: st.days, scaling: st.scaling, antiscalant: st.antiscalant / 100, j0: 16 });
+      line.update({
+        series: [{ name: '通量', values: timeline.points.map(function (pt) { return pt.flux; }), color: 'cyan', endLabel: ui.fmt.num(timeline.points[timeline.points.length - 1].flux, 1) + ' LMH' }],
+        markers: [{ frac: 0.75, color: 'red', text: '清洗触发线' }]
+      });
+      var risk = sim.scalingRisk(st.recovery / 100, st.antiscalant / 100);
+      riskBox.className = risk.level === 'ok' ? 'ok' : risk.level === 'warn' ? 'note' : 'warn';
+      riskBox.innerHTML = risk.note + '（阈值 ' + ui.fmt.pct(risk.limit * 100, 0) + '）。';
+      m.set({
+        perm: ui.fmt.int(perm) + ' mg/L',
+        fluxNow: ui.fmt.num(timeline.points[timeline.points.length - 1].flux, 1) + ' LMH',
+        hold: ui.fmt.pct(timeline.hold * 100, 0),
+        limit: ui.fmt.pct(risk.limit * 100, 0)
+      }, { hold: timeline.hold < 0.7 ? 'neg' : null, perm: perm > 500 ? 'neg' : null });
+      riskNote.textContent = '膜不是耗材也不是永恒：图上这条曲线就是“为什么预处理比膜便宜还要做”的答案。';
+    }
+    sync();
+
+    return {
+      apply: function (p) {
+        if (p.rejection != null) rejCtl.set(p.rejection, true);
+        if (p.days != null) daysCtl.set(p.days, true);
+        if (p.scaling != null) scaleCtl.set(p.scaling, true);
+        if (p.antiscalant != null) antiCtl.set(p.antiscalant, true);
+        if (p.recovery != null) recCtl.set(p.recovery, true);
+        sync();
+      },
+      destroy: function () { layers.destroy(); line.destroy(); }
+    };
+  }
+
+  DL.registerModule({
+    id: 'E', slug: 'membrane', order: 5,
+    title: '膜与污染', en: 'Membranes & Fouling',
+    subtitle: '膜挡盐靠的不是筛孔；膜寿命靠的是预处理。',
+    hint: '调截留率、污染速率与阻垢效率，看通量曲线和结垢阈值。',
+    scenes: [
+      {
+        title: '致密层只有 200 nm',
+        body: '<p>TFC 聚酰胺分离层致密到<b>没有“孔”可谈</b>：水分子溶解进聚合物再扩散穿过，水合离子因尺寸与电荷排斥被拒（Donnan 效应）。说“膜孔比盐小”是错的。</p>',
+        guide: '左图：紫色薄层就是分离层；红色离子被弹回。',
+        patch: { rejection: 99.5 }
+      },
+      {
+        title: '通量在悄悄掉',
+        body: '<p>结垢、生物膜、胶体在膜面扎根，通量按指数滑落。右图：不治理时 30 天掉三成——这就是厂里“产水单价每月在涨”的物理原因。</p>',
+        guide: '把运行天数拉到 90，看通量保持率。',
+        patch: { days: 90, scaling: 0.05, antiscalant: 20 }
+      },
+      {
+        title: '阻垢剂把阈值后移',
+        body: '<p>阻垢剂抑制硫酸钙/碳酸钙结晶生长，让回收率安全带上移（约 60%→更高）。但加药不是万能：磷酸盐本身还会喂生物污染。</p>',
+        guide: '把阻垢效率从 20% 拉到 80%，看阈值读数。',
+        patch: { antiscalant: 80, recovery: 60 }
+      },
+      {
+        title: '撞上限的后果',
+        body: '<p>回收率越过结垢阈值：膜面析出硬垢，化学清洗救不回来，只能换膜。<b>35–45% 回收率</b>不是保守，是物理与药剂共同划的界。</p>',
+        guide: '把回收率推到 80%（阻垢 60%），读数区警告变红。',
+        patch: { recovery: 80 }
+      }
+    ],
+    quiz: [
+      {
+        q: '截留率 99.5% 的膜处理 35,000 mg/L 海水，产水 TDS 是？',
+        options: ['0 mg/L', '175 mg/L', '350 mg/L', '700 mg/L'],
+        answer: 1,
+        explain: '35,000 × (1 − 0.995) = 175 mg/L——低于 500 参考线，但仍远不是“纯水”。'
+      },
+      {
+        q: 'RO 膜拒盐的主要机制是？',
+        options: ['筛孔比离子小', '溶解-扩散 + 水合离子/电荷排斥', '磁铁吸附', '离子被蒸发'],
+        answer: 1,
+        explain: '致密聚酰胺层没有筛孔；水经溶解-扩散透过，水合离子与 Donnan 排斥被拒于膜外。'
+      }
+    ],
+    mount: mount
+  });
+})();
+
+</script>
+<script>
+/* Module F — energy & cost: compare technologies on one honest axis. */
+(function () {
+  'use strict';
+  var DL = window.DL;
+  var ui = DL.ui, core = DL.core, charts = DL.charts, sim = DL.sim, ref = DL.reference;
+
+  var DEFAULT = { tech: 'ro', recovery: 45, capacity: 80000 };
+
+  var TECH = {
+    ro: { name: 'SWRO', band: ref.energy.swro, cost: ref.cost.swro },
+    med: { name: 'MED', band: ref.energy.med, cost: ref.cost.med },
+    msf: { name: 'MSF', band: ref.energy.msf, cost: ref.cost.msf }
+  };
+
+  function mount(ctx) {
+    var st = Object.assign({}, DEFAULT);
+    var stage = ctx.stage;
+    var panel = ctx.panel;
+
+    /* ---------------- stage ---------------- */
+    var wrap = ui.el('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px;flex:1;min-height:0';
+    var barHost = ui.el('div', 'chart');
+    barHost.style.cssText = 'flex:1;min-height:200px';
+    var curveHost = ui.el('div', 'chart');
+    curveHost.style.cssText = 'flex:0 0 170px;height:170px;min-height:170px';
+    wrap.appendChild(barHost); wrap.appendChild(curveHost);
+    var note = ui.el('p', 'stage-note');
+    wrap.appendChild(note);
+    stage.appendChild(wrap);
+
+    var bar = charts.bars(barHost, {
+      labels: ['理论最小', 'SWRO', 'MED', 'MSF', '太阳能蒸馏'],
+      values: [1.06, 3.7, 4.5, 9.0, 0.1],
+      colors: ['green', 'cyan', 'blue', 'orange', 'yellow'],
+      valueFormat: function (v) { return v < 1 ? '0 kWh' : v.toFixed(2); },
+      yFormat: function (v) { return v.toFixed(0); },
+      label: '电耗当量 kWh/m³（文献区间中值；SWRO 柱随回收率联动模型）'
+    });
+
+    /* SE vs recovery curve (RO model) with theoretical minimum below */
+    var curve = charts.lines(curveHost, {
+      series: [], yMin: 0, yFormat: function (v) { return v.toFixed(1); },
+      xLabel: '回收率 20% → 70%',
+      label: '模型比能耗 vs 理论最小分离功'
+    });
+
+    /* ---------------- panel ---------------- */
+    var gTech = ui.section(panel, 'F1 · 工艺选择', 'TECH');
+    var techCtl = ui.seg({
+      label: '工艺',
+      options: [
+        { value: 'ro', label: 'SWRO' },
+        { value: 'med', label: 'MED' },
+        { value: 'msf', label: 'MSF' }
+      ],
+      value: 'ro',
+      onChange: function (v) { st.tech = v; sync(); }
+    });
+    gTech.appendChild(techCtl.el);
+
+    var gOp = ui.section(panel, 'F2 · 运行工况', 'OPERATING');
+    var yCtl = ui.slider({ label: '回收率（RO 模型）', min: 25, max: 65, step: 1, value: 45, unit: '%', hint: '曲线是 C 模块的能耗模型 + 理论最小分离功。', onInput: function (v) { st.recovery = v; sync(); } });
+    var capCtl = ui.slider({ label: '厂规模', min: 5000, max: 400000, step: 5000, value: 80000, unit: 'm³/天', onInput: function (v) { st.capacity = v; sync(); } });
+    var powerPrice = ui.slider({ label: '电价', min: 0.03, max: 0.15, step: 0.005, value: 0.06, unit: 'USD/kWh', onInput: function (v) { st.price = v; sync(); } });
+    gOp.appendChild(yCtl.el); gOp.appendChild(capCtl.el); gOp.appendChild(powerPrice.el);
+
+    var gMetrics = ui.section(panel, '读数', 'LIVE');
+    var m = ui.metrics([
+      { key: 'se', label: '比能耗（模型）' },
+      { key: 'min', label: '理论最小' },
+      { key: 'eff', label: '能效比' },
+      { key: 'energyCost', label: '能量成本' },
+      { key: 'daily', label: '日产水' },
+      { key: 'power', label: '厂用电负荷' }
+    ]);
+    gMetrics.appendChild(m.el);
+    var costNote = ui.note('');
+    gMetrics.appendChild(costNote);
+    var warn = ui.warn('文献区间是“口径混合”的数字：不同年份、不同 GED 折算、是否含 O&M。用于量级对比可以，用于决策必须回原始资料。');
+    gMetrics.appendChild(warn);
+
+    function sync() {
+      var t = TECH[st.tech];
+      var modelSE, minSE;
+      if (st.tech === 'ro') {
+        var r = sim.roStage({ recovery: st.recovery / 100, pressure: 62 });
+        modelSE = r.energy.net;
+        minSE = core.minSeparationEnergy(st.recovery / 100);
+      } else {
+        modelSE = t.band.typical;
+        minSE = ref.energy.theoreticalMin;
+      }
+      bar.update({
+        values: [ref.energy.theoreticalMin, st.tech === 'ro' ? modelSE : TECH.ro.band.typical, TECH.med.band.typical, TECH.msf.band.typical, ref.energy.solarStill.typical],
+        colors: ['green', st.tech === 'ro' ? 'yellow' : 'cyan', st.tech === 'med' ? 'yellow' : 'blue', st.tech === 'msf' ? 'yellow' : 'orange', 'yellow']
+      });
+      /* curve: recovery sweep */
+      var xs = [];
+      var model = [];
+      var minima = [];
+      for (var y = 20; y <= 70; y += 5) {
+        xs.push(y);
+        model.push(sim.roStage({ recovery: y / 100, pressure: 62 }).energy.net);
+        minima.push(core.minSeparationEnergy(y / 100));
+      }
+      curve.update({
+        series: [
+          { name: '模型 SE', values: model, color: st.tech === 'ro' ? 'cyan' : 'dim' },
+          { name: '理论最小', values: minima, color: 'green', dash: [5, 4] }
+        ],
+        markers: [{ frac: (st.recovery - 20) / 50, color: 'orange', text: st.recovery + '%' }]
+      });
+      var price = st.price != null ? st.price : 0.06;
+      var energyCost = (st.tech === 'ro' ? modelSE : t.band.typical) * price;
+      m.set({
+        se: ui.fmt.num(st.tech === 'ro' ? modelSE : t.band.typical, 2) + ' kWh/m³',
+        min: ui.fmt.num(minSE, 2) + ' kWh/m³',
+        eff: ui.fmt.pct(minSE / (st.tech === 'ro' ? modelSE : t.band.typical) * 100, 0),
+        energyCost: '$' + ui.fmt.num(energyCost, 3) + '/m³',
+        daily: ui.fmt.int(st.capacity) + ' m³',
+        power: ui.fmt.int(st.capacity / 24 * (st.tech === 'ro' ? modelSE : t.band.typical)) + ' kW'
+      });
+      costNote.innerHTML = '仅能量成本约 <b>$' + ui.fmt.num(energyCost, 3) + '/m³</b>。文献总水价区间：SWRO $' + t.cost[0].toFixed(1) + '–' + t.cost[1].toFixed(1) + '/m³——膜更换、药剂、预处理与财务费用都是大头。太阳能蒸馏“燃料免费”，但每平方米每天只有几升水。';
+      note.textContent = st.tech === 'ro'
+        ? '模型（青线）永远在理论最小（绿虚线）上方——差距就是真实世界的不可逆性：泵损、浓差极化、膜污染与系统调度。'
+        : '热法柱按电耗当量画；如果按“燃烧的热”直接比燃料，柱子会更高。口径！口径！口径！';
+    }
+    sync();
+
+    return {
+      apply: function (p) {
+        if (p.tech != null) { st.tech = p.tech; techCtl.set(p.tech); }
+        if (p.recovery != null) yCtl.set(p.recovery, true);
+        sync();
+      },
+      destroy: function () { bar.destroy(); curve.destroy(); }
+    };
+  }
+
+  DL.registerModule({
+    id: 'F', slug: 'energy', order: 6,
+    title: '能耗与成本', en: 'Energy & Cost',
+    subtitle: '1.06 kWh/m³ 是物理下限——其余都是工程账单。',
+    hint: '切换工艺、拖回收率与电价，看能耗与成本的联动。',
+    scenes: [
+      {
+        title: '先画物理下限',
+        body: '<p>把海水与淡水分开，热力学最少要做这么多功：SWRO 在 50% 回收率下文献值约 <b>1.06 kWh/m³</b>。任何工艺都不可能低于它——这是分离的账单底线。</p>',
+        guide: '绿色柱：理论最小。所有其他柱都在它上面。',
+        patch: { tech: 'ro', recovery: 50 }
+      },
+      {
+        title: 'RO 的现实账',
+        body: '<p>最好的商用 SWRO 约 2.5–3 kWh/m³（含能量回收），典型 3.7。能效比约三成——剩下七成在泵损、极化与污染里烧掉了，还能压，但不会压到零。</p>',
+        guide: '青柱 vs 绿柱，读数区的“能效比”。',
+        patch: { tech: 'ro', recovery: 45 }
+      },
+      {
+        title: '热法为什么贵',
+        body: '<p>MSF 电耗当量 7.5–11 kWh/m³：它把高品位热拉去蒸发水，热力学上比“只克服渗透压”贵得多。MED 介于中间，靠低温热（电厂余热、太阳能集热）扳回一部分。</p>',
+        guide: '切到 MSF，看柱高与能量成本翻倍。',
+        patch: { tech: 'msf' }
+      },
+      {
+        title: '太阳能蒸馏的陷阱',
+        body: '<p>燃料零 = 能量成本零，但产水密度每平方米每天只有几升：要灌满一座 10 万 m³/天的城市，需要的面积能把沙漠铺满。<b>“免费”不等于便宜。</b></p>',
+        guide: '看黄色柱的“0 kWh”和面板里那句提示。',
+        patch: { tech: 'ro', recovery: 45 }
+      }
+    ],
+    quiz: [
+      {
+        q: 'SWRO 典型比能耗 3.7 kWh/m³，理论最小 1.06 kWh/m³，系统能效比约？',
+        options: ['12%', '29%', '50%', '72%'],
+        answer: 1,
+        explain: '1.06 / 3.7 ≈ 0.29——三成左右；其余损耗来自泵效率、能量回收不完全、极化与污染。'
+      },
+      {
+        q: '“太阳能蒸馏不耗能所以最便宜”错在哪？',
+        options: ['太阳能其实要花钱买', '产水密度极低，土地/存储/泵送使单位水价不低', '海水不能太阳能淡化', '效率超过 100% 不可能'],
+        answer: 1,
+        explain: '燃料免费 ≠ 水便宜：~几升/(m²·天) 的产率意味着面积、囤储与抽水成本主导单位水价。'
+      }
+    ],
+    mount: mount
+  });
+})();
+
+</script>
+<script>
+/* Module G — the whole plant: from intake to tap, and where the brine goes. */
+(function () {
+  'use strict';
+  var DL = window.DL;
+  var ui = DL.ui, core = DL.core, charts = DL.charts, sim = DL.sim;
+
+  var DEFAULT = { recovery: 45, calcium: 40 };
+
+  function mount(ctx) {
+    var st = Object.assign({}, DEFAULT);
+    var stage = ctx.stage;
+    var panel = ctx.panel;
+
+    /* ---------------- plant flow diagram ---------------- */
+    var wrap = ui.el('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px;flex:1;min-height:0';
+    var flowHost = ui.el('div', 'chart');
+    flowHost.style.cssText = 'flex:1;min-height:210px';
+    var statHost = ui.el('div', 'chart');
+    statHost.style.cssText = 'flex:0 0 110px;height:110px;min-height:110px';
+    wrap.appendChild(flowHost); wrap.appendChild(statHost);
+    var note = ui.el('p', 'stage-note');
+    wrap.appendChild(note);
+    stage.appendChild(wrap);
+
+    function drawPlant(c2, w, h, p) {
+      var pl = sim.plant({ feed: 100000, recovery: st.recovery / 100, rejection: 0.993, calcium: st.calcium });
+      var midY = h * 0.46;
+      var steps = [
+        { x: 0.04, label: '取水', sub: '格栅/筛网' },
+        { x: 0.22, label: '预处理', sub: '混凝+UF/DF' },
+        { x: 0.42, label: 'RO 膜系列', sub: '高压泵+ERD' },
+        { x: 0.64, label: '后处理', sub: '再矿化+消毒' },
+        { x: 0.86, label: '配水管网', sub: '城市水库' }
+      ];
+      var feedTh = 26;
+      /* metric captions sit above the node chips, never inside them */
+      c2.font = charts.font(9, 600);
+      c2.fillStyle = p.orange; c2.textAlign = 'left';
+      c2.fillText('进水 100,000 m³/h · TDS 35,000', 12, 14);
+      c2.fillStyle = p.cyan; c2.textAlign = 'right';
+      c2.fillText('产水 ' + ui.fmt.int(pl.bal.P) + ' m³/h · TDS ' + ui.fmt.int(pl.bal.Cp) + ' · Ca ' + ui.fmt.int(pl.rem.ca) + ' mg/L', w - 12, 14);
+      /* main pipe widths shrink by recovery after RO */
+      c2.fillStyle = p.orange; c2.globalAlpha = 0.75;
+      charts.roundRect(c2, w * 0.04, midY - feedTh / 2, w * (0.42 - 0.04), feedTh, 6); c2.fill();
+      c2.fillStyle = p.cyan;
+      var permTh = 5 + (pl.bal.P / 100000) * feedTh;
+      charts.roundRect(c2, w * 0.42, midY - permTh / 2, w * 0.56, permTh, 6); c2.fill();
+      /* brine branch */
+      var brineTh = 5 + (pl.bal.B / 100000) * feedTh;
+      var brineY = midY + h * 0.22;
+      c2.fillStyle = p.red; c2.globalAlpha = 0.75;
+      c2.beginPath();
+      c2.moveTo(w * 0.44, midY + feedTh / 2);
+      c2.lineTo(w * 0.52, brineY);
+      c2.lineTo(w * 0.82, brineY);
+      c2.strokeStyle = p.red; c2.lineWidth = brineTh; c2.lineCap = 'round';
+      c2.stroke(); c2.lineCap = 'butt'; c2.lineWidth = 1; c2.globalAlpha = 1;
+      /* nodes */
+      steps.forEach(function (s) {
+        var x = w * s.x;
+        c2.fillStyle = p.panel3;
+        charts.roundRect(c2, x - 34, midY - 40, 68, 24, 5); c2.fill();
+        c2.strokeStyle = p.line; c2.stroke();
+        c2.fillStyle = p.text; c2.font = charts.font(9.5, 600); c2.textAlign = 'center';
+        c2.fillText(s.label, x, midY - 23);
+        c2.fillStyle = p.dim; c2.font = charts.font(8);
+        c2.fillText(s.sub, x, midY + feedTh / 2 + 14);
+      });
+      /* brine diffuser */
+      c2.fillStyle = p.red; c2.font = charts.font(9, 600); c2.textAlign = 'left';
+      c2.fillText('浓盐水 ' + ui.fmt.int(pl.bal.B) + ' m³/h · ' + ui.fmt.int(pl.bal.Cb) + ' mg/L', w * 0.54, brineY - brineTh / 2 - 5);
+      for (var i = 0; i < 5; i++) {
+        c2.strokeStyle = p.red; c2.globalAlpha = 0.5 - i * 0.09;
+        c2.beginPath();
+        c2.arc(w * 0.82 + i * 6, brineY, 4 + i * 3.4, -0.5, 0.5);
+        c2.stroke();
+      }
+      c2.globalAlpha = 1;
+      c2.fillStyle = p.dim; c2.font = charts.font(8.5); c2.textAlign = 'right';
+      c2.fillText('扩散器稀释羽流', w - 8, brineY + brineTh / 2 + 12);
+    }
+    var flow = charts.base(flowHost, { draw: drawPlant });
+
+    var stat = charts.bars(statHost, {
+      labels: ['进水', '产水', '浓盐水'],
+      values: [100, 45, 55],
+      colors: ['orange', 'cyan', 'red'],
+      valueFormat: function (v) { return v.toFixed(0) + '%'; },
+      label: '物流分配（份额随回收率联动）'
+    });
+
+    /* ---------------- panel ---------------- */
+    var gBalance = ui.section(panel, 'G1 · 物料平衡', 'BALANCE');
+    var yCtl = ui.slider({ label: '回收率 Y', min: 30, max: 60, step: 1, value: 45, unit: '%', onInput: function (v) { st.recovery = v; sync(); } });
+    gBalance.appendChild(yCtl.el);
+    gBalance.appendChild(ui.formula('F = P + B<br>F·C_f = P·C_p + B·C_b'));
+
+    var gRem = ui.section(panel, 'G2 · 再矿化', 'REMINERALIZE');
+    var caCtl = ui.slider({ label: '目标钙硬度', min: 0, max: 80, step: 2, value: 40, unit: 'mg/L', hint: '溶入方解石（CaCO₃）并补充 CO₂：产水从“腐蚀性软水”变成稳定饮用水。', onInput: function (v) { st.calcium = v; sync(); } });
+    gRem.appendChild(caCtl.el);
+    var remNote = ui.note('');
+    gRem.appendChild(remNote);
+
+    var gBrine = ui.section(panel, 'G3 · 浓盐水', 'BRINE');
+    var brineNote = ui.warn('');
+    gBrine.appendChild(brineNote);
+    gBrine.appendChild(ui.table(
+      ['环节', '教学要点'],
+      [
+        ['取水', '低速取水 + 筛网，减少海洋生物卷吸（impingement/entrainment）'],
+        ['预处理', '混凝/超滤/介质过滤：把 SDI 压到膜能受住的水平'],
+        ['能量回收', '压力交换器把浓水压力传回进水，RO 能耗的大头在这省'],
+        ['后处理', '再矿化 + pH 调节 + 氯消毒：稳定、不腐蚀、可储存'],
+        ['排放', '扩散器快速稀释；近场盐度羽流与混合区是环评核心']
+      ]
+    ));
+
+    var gMetrics = ui.section(panel, '读数', 'LIVE');
+    var m = ui.metrics([
+      { key: 'prod', label: '日产淡水' },
+      { key: 'brine', label: '浓盐水' },
+      { key: 'cb', label: '浓水盐度' },
+      { key: 'ph', label: '再矿化后 pH' },
+      { key: 'alk', label: '碱度(CaCO₃)' },
+      { key: 'kw', label: '厂负荷(模型)' }
+    ]);
+    gMetrics.appendChild(m.el);
+
+    function sync() {
+      var pl = sim.plant({ feed: 100000, recovery: st.recovery / 100, rejection: 0.993, calcium: st.calcium });
+      stat.update({ values: [100, st.recovery, 100 - st.recovery], labels: ['进水', '产水', '浓盐水'] });
+      m.set({
+        prod: ui.fmt.int(pl.dailyProduct) + ' m³',
+        brine: ui.fmt.int(pl.bal.B * 24) + ' m³/天',
+        cb: ui.fmt.int(pl.bal.Cb) + ' mg/L',
+        ph: ui.fmt.num(pl.rem.ph, 1),
+        alk: ui.fmt.int(pl.rem.alkalinity) + ' mg/L',
+        kw: ui.fmt.int(pl.dailyProduct * pl.energyPerM3 / 24) + ' kW'
+      });
+      remNote.innerHTML = st.calcium <= 5
+        ? '钙硬度几乎为零：<b>腐蚀性软水</b>会溶解管道里的金属，口感也“空”。真实厂不会让这种水进管网。'
+        : '方解石溶到 Ca ' + st.calcium + ' mg/L：碱度约 ' + ui.fmt.int(pl.rem.alkalinity) + ' mg/L（CaCO₃ 计），pH ≈ ' + ui.fmt.num(pl.rem.ph, 1) + '——稳定、口感正常。';
+      brineNote.innerHTML = '浓盐水是进水的 <b>' + ui.fmt.num(pl.bal.Cb / 35000, 2) + '×</b> 盐度、约 ' + ui.fmt.pct(100 - st.recovery, 0) + ' 体积。排海靠扩散器稀释到近场混合区；“直接倒回去”在环评里不成立。';
+      flow.redraw();
+      note.textContent = '一条城市水管的真实旅程：取水 → 预处理 → 膜 → 再矿化 → 龙头，外加一条必须交代清楚的浓盐水支线。';
+    }
+    sync();
+
+    return {
+      apply: function (p) {
+        if (p.recovery != null) yCtl.set(p.recovery, true);
+        if (p.calcium != null) caCtl.set(p.calcium, true);
+        sync();
+      },
+      destroy: function () { flow.destroy(); stat.destroy(); }
+    };
+  }
+
+  DL.registerModule({
+    id: 'G', slug: 'plant', order: 7,
+    title: '整厂流程', en: 'Whole Plant',
+    subtitle: '淡化厂不是只有一台膜：取水、预处理、再矿化与浓盐水。',
+    hint: '调回收率与再矿化目标，检查物料平衡与浓盐水读数。',
+    scenes: [
+      {
+        title: '进水 100,000 m³/h 的旅程',
+        body: '<p>主流从橙色（海水）在膜处变成青色（产水），下方红色支线是浓盐水。<b>每一滴都有去处</b>：F = P + B，盐也一样守恒。</p>',
+        guide: '看三色管道：比例就是回收率。',
+        patch: { recovery: 45 }
+      },
+      {
+        title: '膜之后必须再矿化',
+        body: '<p>RO 产水 TDS 约 245 mg/L、几乎无碱度：直接喝口感差，进管网会<b>腐蚀管道</b>。方解石溶解器把钙与碱度加回来——这是“产水”变“饮用水”的临门一脚。</p>',
+        guide: '把目标钙拉到 0 再拉回 40，读 pH 与碱度。',
+        patch: { calcium: 40 }
+      },
+      {
+        title: '浓盐水去哪',
+        body: '<p>浓盐水约为进水的 55–65% 体积、盐度近两倍。靠<b>扩散器</b>在排放口制造快速稀释，让近场盐度羽流在混合区内回到海域本底——这是环评的核心论证。</p>',
+        guide: '读“浓水盐度”：回收率越高它越刺眼。',
+        patch: { recovery: 55 }
+      },
+      {
+        title: '全厂能耗是一个系统',
+        body: '<p>高压泵占大头，但取水、预处理、化学清洗、后处理与输配都在账单里。把三个模块串起来看：<b>回收率↑ → 浓水更浓 → 能耗↑</b>，而结垢阈值决定了这不是随便拉的滑块。</p>',
+        guide: '读“厂负荷(模型)”与回收率的联动。',
+        patch: { recovery: 50 }
+      }
+    ],
+    quiz: [
+      {
+        q: '回收率 45% 时，浓盐水体积约为进水的？',
+        options: ['45%', '55%', '90%', '2×'],
+        answer: 1,
+        explain: 'B = F − P = 55% F；浓度约为进水的 1.8×，不是体积翻倍。'
+      },
+      {
+        q: '淡化产水并网前再矿化的主要目的是？',
+        options: ['让水变甜', '防止管网腐蚀并提高稳定性/口感', '杀菌', '降低水价'],
+        answer: 1,
+        explain: '低硬度低碱度水腐蚀性强且不稳定；方解石/CO₂ 再矿化把钙与碱度加回，保护管网并改善口感。'
+      }
+    ],
+    mount: mount
+  });
+})();
+
+</script>
+<script>
+/* Desalination Lab — application shell: module registry consumption,
+ * lesson director, navigation, quizzes and the static reference sections. */
+(function () {
+  'use strict';
+  var DL = window.DL = window.DL || {};
+  var ui = DL.ui;
+  var charts = DL.charts;
+  var sim = DL.sim;
+
+  var modules = DL.modules;
+
+  var busMap = {};
+  DL.bus = {
+    on: function (k, fn) { (busMap[k] = busMap[k] || []).push(fn); },
+    off: function (k, fn) { busMap[k] = (busMap[k] || []).filter(function (f) { return f !== fn; }); },
+    emit: function (k, payload) { (busMap[k] || []).forEach(function (fn) { try { fn(payload); } catch (e) { console.error(e); } }); }
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var state = {
+    modId: null, scene: 0, playing: false, speed: 1, voice: false,
+    inst: null, def: null, timer: 0, offset: 0, startedAt: 0
+  };
+  var progress = loadProgress();
+
+  function loadProgress() {
+    try {
+      var raw = localStorage.getItem('dl.progress.v1');
+      var parsed = raw ? JSON.parse(raw) : null;
+      if (parsed && parsed.scenes && parsed.done) return parsed;
+    } catch (e) { /* storage may be unavailable */ }
+    return { scenes: {}, done: {} };
+  }
+  function saveProgress() {
+    try { localStorage.setItem('dl.progress.v1', JSON.stringify(progress)); } catch (e) { /* ignore */ }
+  }
+
+  function toast(msg) {
+    var el = ui.el('div', 'toast', msg);
+    document.body.appendChild(el);
+    setTimeout(function () { el.classList.add('out'); }, 2100);
+    setTimeout(function () { el.remove(); }, 2600);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Theme                                                             */
+  /* ------------------------------------------------------------------ */
+  var THEME_KEY = 'czl-lab-theme';
+  function applyTheme(theme, persist) {
+    document.documentElement.setAttribute('data-theme', theme);
+    var btn = $('themeToggle');
+    var light = theme === 'light';
+    if (btn) {
+      var icon = btn.querySelector('.theme-icon');
+      var label = btn.querySelector('.theme-label');
+      if (icon) icon.textContent = light ? '☾' : '☀';
+      if (label) label.textContent = light ? '深色' : '浅色';
+      btn.setAttribute('aria-pressed', light ? 'false' : 'true');
+      btn.setAttribute('aria-label', light ? '当前浅色主题，切换到深色' : '当前深色主题，切换到浅色');
+    }
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', light ? '#f4f2ec' : '#101113');
+    if (persist !== false) {
+      try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* ignore */ }
+    }
+    window.dispatchEvent(new Event('dl:theme'));
+  }
+  function initTheme() {
+    var saved = null;
+    try { saved = localStorage.getItem(THEME_KEY); } catch (e) { /* ignore */ }
+    var theme = saved === 'light' || saved === 'dark' ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    applyTheme(theme, false);
+    $('themeToggle').addEventListener('click', function () {
+      applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Hero + stats strip                                                */
+  /* ------------------------------------------------------------------ */
+  function initHero() {
+    var host = $('heroChart');
+    if (!host) return;
+    var ladder = sim.salinityLadder();
+    charts.bars(host, {
+      labels: ladder.map(function (r) { return r.name; }),
+      values: ladder.map(function (r) { return r.tds; }),
+      colors: ladder.map(function (r) { return r.color; }),
+      log: true,
+      threshold: 500,
+      thresholdLabel: '饮用水参考 500 mg/L',
+      valueFormat: function (v) { return v >= 1000 ? (v / 1000).toFixed(1) + 'k' : String(v); },
+      yFormat: function (v) { return v >= 1000 ? (v / 1000) + 'k' : String(v); },
+      label: 'TDS mg/L · 对数轴'
+    });
+  }
+
+  function initIndexStrip() {
+    var host = $('indexStrip');
+    if (!host) return;
+    var rows = DL.reference.stats;
+    host.innerHTML = rows.map(function (r) {
+      return '<div class="idx"><div class="idx-name">' + r.label + '<em>' + r.note + '</em></div>' +
+        '<div class="idx-val">' + r.value + '</div>' +
+        '<div class="idx-chg flat">' + r.unit + '</div></div>';
+    }).join('') + '<p class="index-note">行业数字为公开报告口径（核对 ' + DL.reference.asOf + '），不是实时数据；引用请注明来源与日期。</p>';
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Module navigation                                                 */
+  /* ------------------------------------------------------------------ */
+  function sortedModules() { return modules.slice().sort(function (a, b) { return a.order - b.order; }); }
+
+  function renderModuleList() {
+    var host = $('moduleList');
+    host.innerHTML = '';
+    sortedModules().forEach(function (def) {
+      var btn = ui.el('button', 'mod' + (progress.done[def.id] ? ' done' : ''));
+      btn.type = 'button';
+      btn.setAttribute('aria-current', def.id === state.modId ? 'true' : 'false');
+      btn.dataset.mod = def.id;
+      btn.innerHTML = '<span class="mod-id">' + def.id + '</span><span>' +
+        '<span class="mod-title">' + def.title + '</span>' +
+        '<span class="mod-sub">' + (def.en || '') + '</span></span>';
+      btn.addEventListener('click', function () { openModule(def.id, 0); });
+      host.appendChild(btn);
+    });
+    var done = sortedModules().filter(function (d) { return progress.done[d.id]; }).length;
+    $('progressText').textContent = done + ' / ' + sortedModules().length;
+    $('progressBar').style.width = (done / Math.max(1, sortedModules().length) * 100) + '%';
+  }
+
+  function openModule(id, sceneIndex) {
+    var def = sortedModules().filter(function (m) { return m.id === id; })[0];
+    if (!def) return;
+    pause();
+    if (state.inst && state.inst.destroy) {
+      try { state.inst.destroy(); } catch (e) { console.error(e); }
+    }
+    state.inst = null;
+    state.def = def;
+    state.modId = id;
+    state.scene = 0;
+    var stageBody = $('stageBody');
+    var panel = $('modulePanel');
+    stageBody.innerHTML = '';
+    panel.innerHTML = '';
+    $('stageKicker').textContent = 'MODULE ' + def.id + ' / ' + (def.en || '').toUpperCase();
+    $('stageTitle').textContent = def.title;
+    $('stageSub').textContent = def.subtitle || '';
+    var ctx = {
+      stage: stageBody, panel: panel, id: def.id, def: def,
+      sceneIndex: function () { return state.scene; },
+      takeover: function () { takeover(); },
+      toast: toast,
+      goScene: function (i) { applyScene(i); },
+      module: function () { return state.inst; }
+    };
+    try {
+      state.inst = def.mount(ctx) || {};
+    } catch (err) {
+      console.error('模块挂载失败：' + def.id, err);
+      stageBody.innerHTML = '<div class="stage-error"><b>模块加载失败</b><p>' + String(err && err.message || err) + '</p></div>';
+      state.inst = {};
+    }
+    renderModuleList();
+    buildSceneDots();
+    applyScene(Math.max(0, Math.min(sceneIndex || 0, def.scenes.length - 1)));
+    renderQuiz(def);
+    $('takeoverBtn').hidden = def.scenes.length < 2;
+    saveProgress();
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Director                                                          */
+  /* ------------------------------------------------------------------ */
+  function buildSceneDots() {
+    var host = $('sceneDots');
+    host.innerHTML = '';
+    if (!state.def) return;
+    state.def.scenes.forEach(function (scene, i) {
+      var b = ui.el('button');
+      b.type = 'button';
+      b.title = (i + 1) + '. ' + scene.title;
+      b.setAttribute('aria-label', '第 ' + (i + 1) + ' 幕：' + scene.title);
+      b.addEventListener('click', function () {
+        applyScene(i);
+        if (!state.playing) setStatus('手动模式', '');
+      });
+      host.appendChild(b);
+    });
+  }
+
+  function sceneDuration() {
+    var sc = state.def && state.def.scenes[state.scene];
+    return ((sc && sc.duration) || 12000) / state.speed;
+  }
+
+  function setStatus(text, cls) {
+    var el = $('directorStatus');
+    el.textContent = text;
+    el.className = 'tr-status' + (cls ? ' ' + cls : '');
+  }
+
+  function updatePlayButton() {
+    $('playScenes').textContent = state.playing ? '❚❚ 暂停' : '▶ 自动讲解';
+    $('takeoverBtn').textContent = state.playing ? '⏸ 暂停讲解，我要自己试' : '▶ 继续自动讲解';
+  }
+
+  function applyScene(i, opts) {
+    if (!state.def) return;
+    var def = state.def;
+    var sc = def.scenes[i];
+    if (!sc) return;
+    state.scene = i;
+    $('sceneChapter').textContent = '场景 ' + (i + 1) + ' / ' + def.scenes.length;
+    $('sceneBadge').textContent = state.playing ? '自动讲解' : '手动模式';
+    $('sceneTitle').textContent = sc.title;
+    $('sceneBody').innerHTML = sc.body || '';
+    $('stageHint').textContent = sc.guide || def.hint || '拖动滑块、切换场景，观察数字如何一起变化。';
+    Array.prototype.forEach.call($('sceneDots').children, function (b, k) {
+      b.setAttribute('aria-current', k === i ? 'true' : 'false');
+    });
+    if (sc.patch && state.inst && state.inst.apply) {
+      try {
+        state.inst.apply(typeof sc.patch === 'function' ? sc.patch() : sc.patch);
+      } catch (err) {
+        console.error('场景应用失败：' + def.id + '/' + (i + 1), err);
+      }
+    }
+    var seen = progress.scenes[def.id] = progress.scenes[def.id] || [];
+    if (seen.indexOf(i) < 0) seen.push(i);
+    if (i === def.scenes.length - 1) progress.done[def.id] = true;
+    saveProgress();
+    renderModuleList();
+    resetDirectorProgress();
+    if (state.playing) startTimer();
+    if (state.voice) speak(sc.title + '。' + stripTags(sc.body || ''));
+    if (!opts || opts.autoplay !== false) updatePlayButton();
+  }
+
+  function stripTags(html) {
+    var d = document.createElement('div');
+    d.innerHTML = html;
+    return (d.textContent || '').replace(/\s+/g, ' ').slice(0, 160);
+  }
+
+  function resetDirectorProgress() {
+    state.offset = 0;
+    state.startedAt = performance.now();
+    $('directorBar').style.width = '0%';
+  }
+
+  function startTimer() {
+    stopTimer();
+    state.startedAt = performance.now() - state.offset;
+    state.timer = setInterval(tick, 90);
+  }
+  function stopTimer() { if (state.timer) { clearInterval(state.timer); state.timer = 0; } }
+  function tick() {
+    if (!state.playing) return;
+    var dur = sceneDuration();
+    var elapsed = performance.now() - state.startedAt;
+    $('directorBar').style.width = Math.min(100, elapsed / dur * 100) + '%';
+    if (elapsed >= dur) nextScene(true);
+  }
+
+  function play() {
+    if (!state.def) return;
+    if (state.timer) return;
+    state.playing = true;
+    $('sceneBadge').textContent = '自动讲解';
+    setStatus('自动讲解', 'live');
+    updatePlayButton();
+    startTimer();
+  }
+  function pause() {
+    if (state.timer) state.offset = performance.now() - state.startedAt;
+    stopTimer();
+    state.playing = false;
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    updatePlayButton();
+    if (state.def) $('sceneBadge').textContent = '手动模式';
+  }
+  function takeover() {
+    if (!state.playing) return;
+    pause();
+    setStatus('已接管', 'taken');
+    toast('已暂停自动讲解，现在的参数由你控制');
+  }
+  function nextScene(auto) {
+    if (!state.def) return;
+    var i = state.scene + 1;
+    if (i < state.def.scenes.length) {
+      state.offset = 0;
+      applyScene(i);
+      if (!state.playing) setStatus('手动模式', '');
+      return;
+    }
+    pause();
+    setStatus('本模块完成', 'live');
+    progress.done[state.def.id] = true;
+    saveProgress();
+    renderModuleList();
+    if (auto) toast('「' + state.def.title + '」讲解结束，可继续选择下一模块');
+  }
+  function prevScene() {
+    if (!state.def) return;
+    var i = Math.max(0, state.scene - 1);
+    state.offset = 0;
+    applyScene(i);
+    if (!state.playing) setStatus('手动模式', '');
+  }
+  function replay() {
+    if (!state.def) return;
+    pause();
+    state.offset = 0;
+    applyScene(0);
+    setStatus('手动模式', '');
+  }
+
+  function speak(text) {
+    if (!window.speechSynthesis || !text) return;
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text.slice(0, 140));
+      u.lang = 'zh-CN';
+      u.rate = 1.02;
+      window.speechSynthesis.speak(u);
+    } catch (e) { /* speech is optional */ }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Quiz                                                              */
+  /* ------------------------------------------------------------------ */
+  function renderQuiz(def) {
+    var host = $('quizMount');
+    host.innerHTML = '';
+    var qs = def.quiz || [];
+    var head = ui.el('div', 'quiz-set');
+    head.innerHTML = '<span>当前模块 · ' + def.id + ' ' + def.title + '</span><span>共 ' + qs.length + ' 题 · 点击选项立即判定</span>';
+    host.appendChild(head);
+    if (!qs.length) {
+      host.appendChild(ui.el('p', 'small muted', '本模块暂无自测题，请在实验台里完成一次参数实验。'));
+      return;
+    }
+    qs.forEach(function (q, qi) {
+      var card = ui.el('div', 'quiz-card');
+      card.innerHTML = '<div class="quiz-q"><span class="tag">Q' + (qi + 1) + '</span> ' + q.q + '</div>';
+      var opts = ui.el('div', 'quiz-opts');
+      q.options.forEach(function (opt, oi) {
+        var b = ui.el('button', 'quiz-opt');
+        b.type = 'button';
+        b.innerHTML = '<span class="k">' + 'ABCDEF'[oi] + '</span><span>' + opt + '</span>';
+        b.addEventListener('click', function () {
+          if (card.dataset.answered) return;
+          card.dataset.answered = '1';
+          Array.prototype.forEach.call(opts.children, function (el, k) {
+            if (k === q.answer) el.classList.add('right');
+            else if (k === oi) el.classList.add('wrong');
+            el.disabled = true;
+          });
+          card.querySelector('.quiz-explain').classList.add('on');
+        });
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+      var ex = ui.el('div', 'quiz-explain', q.explain || '');
+      card.appendChild(ex);
+      host.appendChild(card);
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Reference + misconceptions                                        */
+  /* ------------------------------------------------------------------ */
+  function renderRules() {
+    var r = DL.reference;
+    var t = $('rulesTable');
+    var html = '<table class="rules-table"><thead><tr><th>维度 / Dimension</th><th class="cn-cell">口径 A</th><th class="us-cell">口径 B / 边界</th></tr></thead><tbody>';
+    r.comparison.forEach(function (row) {
+      html += '<tr><td>' + row.dimension + '</td>' +
+        '<td class="cn-cell">' + row.a + '</td><td class="us-cell">' + row.b + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    t.innerHTML = html;
+    var src = '<span>口径核对日期 ' + r.asOf + ' · 来源：</span>';
+    src += r.sources.map(function (s) {
+      return '<a href="' + s.url + '" target="_blank" rel="noopener" title="' + (s.note || '') + '">' + s.label + '</a>';
+    }).join('');
+    $('ruleSources').innerHTML = src;
+  }
+
+  var MYTHS = [
+    ['淡化产水是"纯净水"，直接喝最好。', 'RO 产水几乎不含矿物质（TDS 常低于 300 mg/L），口感差、有腐蚀性，也不补矿物质。市政供水必须<b>再矿化</b>（溶入石灰石/方解石等）到合适的钙与碱度，再并网。', '模块 A / G'],
+    ['膜就是更细的筛子，把盐颗粒挡住。', '溶解的 Na⁺/Cl⁻ 不是颗粒，比筛孔小得多。RO 膜是致密聚酰胺层，靠<b>溶解-扩散</b>与电荷排斥让水分子优先透过，离子被水合层与 Donnan 排斥拒于膜外。', '模块 E'],
+    ['渗透压不需要外界能量，水自己就会"吸"过来。', '渗透是自由能下降的方向，但要<b>反</b>渗透必须施加高于渗透压的压力——海水侧约 27 bar。能量省不掉：理论最小分离功约 1.06 kWh/m³（文献值）。', '模块 B / F'],
+    ['截留率 99.3%，产水里就没有盐。', '1 − 99.3% = 0.7%：35,000 mg/L 海水的产水仍有约 <b>245 mg/L</b> TDS，正好贴近饮用水感官参考线。截留率再高一档，产水才能降到 100 mg/L 以下。', '模块 C'],
+    ['回收率可以随便调高，多产水产。', '回收率越高，浓水侧盐度越高，硫酸钙/碳酸钙超饱和就会在膜面结垢，产水量永久损失。海水 RO 常规回收率被约束在 <b>35–45%</b>，加阻垢剂也只是把阈值后移。', '模块 C / E'],
+    ['浓盐水直接倒回海里没有任何影响。', '浓盐水量约为进水的 50–65%、盐度接近翻倍。排放必须用扩散器制造快速稀释，近场盐度羽流与取水卷吸（impingement）都要做环评，不是"倒回去就完事"。', '模块 G'],
+    ['太阳能蒸馏"不花钱"，所以最便宜。', '太阳能蒸馏燃料为零，但产水密度只有每平方米每天几升，土地、存储与泵送成本让单位水价并不低；它适合小规模离网场景，不适合百万级城市供水。', '模块 F'],
+    ['蒸馏法就是把海水烧开。', 'MSF 在<b>低于常压沸点</b>的真空室里让热水"闪蒸"，靠逐级降压把一次蒸汽潜热反复利用（GEA 可达 8 左右）。把海水烧开一次只产一次蒸汽，能耗会高得离谱。', '模块 D'],
+    ['RO 能耗只有 MSF 三分之一，所以任何场合都该选 RO。', 'RO 电耗确实低（约 3–4.5 kWh/m³ vs MSF 8–11），但进水水质、膜污染、场地与既有热电厂余热（MED 常与发电耦合）都会改变结论；能耗口径也必须统一成 GED 才能比。', '模块 F'],
+    ['淡化厂建成之后能耗就固定了。', '同一种工艺，能耗随回收率、进水温度、膜污染、能量回收装置与调度大幅变化；文献给的是区间（如 SWRO 2.5–4.5 kWh/m³），任何单一数字都只是某工况。', '模块 C / F']
+  ];
+
+  function renderMyths() {
+    var host = $('mythList');
+    host.innerHTML = MYTHS.map(function (m, i) {
+      return '<details class="myth"><summary><span class="num">' + String(i + 1).padStart(2, '0') + '</span>' +
+        '<span>' + m[0] + '</span><span class="where">' + m[2] + '</span></summary>' +
+        '<div class="myth-body">' + m[1] + '</div></details>';
+    }).join('');
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Wiring                                                            */
+  /* ------------------------------------------------------------------ */
+  function initTransport() {
+    $('playScenes').addEventListener('click', function () {
+      if (state.playing) { pause(); setStatus('已暂停', ''); }
+      else { play(); }
+    });
+    $('prevScene').addEventListener('click', function () { pause(); prevScene(); });
+    $('nextScene').addEventListener('click', function () { pause(); nextScene(false); });
+    $('replayScene').addEventListener('click', function () { replay(); });
+    $('takeoverBtn').addEventListener('click', function () {
+      if (state.playing) { pause(); setStatus('已接管', 'taken'); }
+      else play();
+    });
+    $('dirSpeed').addEventListener('change', function (e) {
+      state.speed = parseFloat(e.target.value) || 1;
+      state.offset = 0;
+      if (state.playing) startTimer();
+    });
+    $('voiceToggle').addEventListener('change', function (e) {
+      state.voice = e.target.checked;
+      if (!state.voice && window.speechSynthesis) window.speechSynthesis.cancel();
+      if (state.voice) {
+        var sc = state.def && state.def.scenes[state.scene];
+        if (sc) speak(sc.title + '。' + stripTags(sc.body || ''));
+      }
+    });
+    ['pointerdown', 'input', 'change'].forEach(function (ev) {
+      $('lab').addEventListener(ev, function (e) {
+        if (e.target.closest('.transport') || e.target.closest('.scene-dots') || e.target.closest('.scene-head')) return;
+        if (!e.target.closest('#modulePanel') && !e.target.closest('#stageBody')) return;
+        takeover();
+      }, true);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+      if (e.key === ' ') {
+        e.preventDefault();
+        if (state.playing) { pause(); setStatus('已暂停', ''); } else play();
+      }
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden && state.playing) { pause(); setStatus('已暂停', ''); }
+    });
+  }
+
+  function initDownload() {
+    $('downloadPage').addEventListener('click', function () {
+      var clone = document.documentElement.cloneNode(true);
+      ['heroChart', 'indexStrip', 'moduleList', 'stageBody', 'modulePanel', 'sceneDots', 'quizMount'].forEach(function (id) {
+        var el = clone.querySelector('#' + id);
+        if (el) el.innerHTML = '';
+      });
+      clone.querySelectorAll('.chart-tip, .toast').forEach(function (el) { el.remove(); });
+      var html = '<!doctype html>\n' + clone.outerHTML;
+      DL.ui.download('desalination-lab-offline.html', html, 'text/html;charset=utf-8');
+      toast('已导出干净的离线副本（脚本会重新挂载实验）');
+    });
+  }
+
+  function initBuildStamp() {
+    $('buildStamp').textContent = 'Desalination Lab · 口径核对 ' + DL.reference.asOf + ' · 教学模型 · 非工程仿真';
+  }
+
+  function initToTop() {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'to-top';
+    b.setAttribute('aria-label', '回到页面顶部');
+    b.innerHTML = '<span aria-hidden="true">↑</span><span class="to-top-label">顶部</span>';
+    document.body.appendChild(b);
+    function sync() { b.classList.toggle('show', (window.scrollY || window.pageYOffset) > 600); }
+    window.addEventListener('scroll', sync, { passive: true });
+    b.addEventListener('click', function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+    sync();
+  }
+
+  function boot() {
+    initTheme();
+    initHero();
+    initIndexStrip();
+    renderRules();
+    renderMyths();
+    initTransport();
+    initDownload();
+    initBuildStamp();
+    initToTop();
+    renderModuleList();
+    var first = sortedModules()[0];
+    if (first) openModule(first.id, 0);
+    setStatus('手动模式', '');
+    updatePlayButton();
+  }
+
+  DL.app = {
+    openModule: openModule,
+    takeover: takeover,
+    toast: toast,
+    state: state,
+    modules: modules
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+
+</script>
+</body>
+</html>
