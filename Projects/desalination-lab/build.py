@@ -12,11 +12,13 @@ ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent.parent
 
 SCRIPTS = [
+    "vendor/three.min.js",
     "src/core.js",
     "src/reference.js",
     "src/simulations.js",
     "src/ui.js",
     "src/charts.js",
+    "src/three-views.js",
     "src/registry.js",
     "src/modules/a-water.js",
     "src/modules/b-osmosis.js",

@@ -63,6 +63,12 @@ ok('all seven teaching modules register', () => {
   assert.strictEqual(count, 7, 'expected 7 registerModule calls, got ' + count);
 });
 
+ok('the vendored 3D engine and motion layer are embedded', () => {
+  assert.ok(html.includes('WebGLRenderer'), 'vendored three.js engine not embedded');
+  assert.ok(html.includes('spiralRO'), 'WebGL scene layer not embedded');
+  assert.ok(html.includes('viewtabs'), '2D/3D view switch styles missing');
+});
+
 ok('the interactive lab anchors exist', () => {
   ['lab', 'stageBody', 'modulePanel', 'rulesTable', 'mythList', 'quizMount', 'heroChart', 'indexStrip', 'sceneDots', 'directorBar']
     .forEach((id) => assert.ok(html.includes('id="' + id + '"'), 'missing #' + id));

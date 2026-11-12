@@ -14,16 +14,34 @@
     /* ---------------- plant flow diagram ---------------- */
     var wrap = ui.el('div');
     wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px;flex:1;min-height:0';
+    var tabRow = ui.el('div', 'viewtabs');
+    var btn2d = ui.el('button'); btn2d.type = 'button'; btn2d.className = 'on'; btn2d.textContent = '2D 整厂流程';
+    var btn3d = ui.el('button'); btn3d.type = 'button'; btn3d.textContent = '3D 厂区巡览';
+    tabRow.appendChild(btn2d); tabRow.appendChild(btn3d);
     var flowHost = ui.el('div', 'chart');
     flowHost.style.cssText = 'flex:1;min-height:210px';
     var statHost = ui.el('div', 'chart');
     statHost.style.cssText = 'flex:0 0 110px;height:110px;min-height:110px';
-    wrap.appendChild(flowHost); wrap.appendChild(statHost);
+    var glHost = ui.el('div', 'chart');
+    glHost.style.cssText = 'flex:1;min-height:210px;display:none';
+    var gl3d = null;
+    function setMode(three) {
+      if (three && !gl3d) gl3d = DL.gl.plant(glHost, function () { return { recovery: st.recovery / 100 }; });
+      flowHost.style.display = three ? 'none' : '';
+      statHost.style.display = three ? 'none' : '';
+      glHost.style.display = three ? '' : 'none';
+      btn2d.className = three ? '' : 'on';
+      btn3d.className = three ? 'on' : '';
+    }
+    btn2d.addEventListener('click', function () { setMode(false); });
+    btn3d.addEventListener('click', function () { setMode(true); });
+    wrap.appendChild(tabRow);
+    wrap.appendChild(flowHost); wrap.appendChild(statHost); wrap.appendChild(glHost);
     var note = ui.el('p', 'stage-note');
     wrap.appendChild(note);
     stage.appendChild(wrap);
 
-    function drawPlant(c2, w, h, p) {
+    function drawPlant(c2, w, h, p, api) {
       var pl = sim.plant({ feed: 100000, recovery: st.recovery / 100, rejection: 0.993, calcium: st.calcium });
       var midY = h * 0.46;
       var steps = [
@@ -56,6 +74,11 @@
       c2.lineTo(w * 0.82, brineY);
       c2.strokeStyle = p.red; c2.lineWidth = brineTh; c2.lineCap = 'round';
       c2.stroke(); c2.lineCap = 'butt'; c2.lineWidth = 1; c2.globalAlpha = 1;
+      /* travelling flow dots along the three liquid paths */
+      var tt = api && api.t ? api.t : 0;
+      charts.flow(c2, [[w * 0.04, midY], [w * 0.42, midY]], tt, { color: '#ffffff', count: 10, speed: 0.16, r: 1.6, alpha: 0.5 });
+      charts.flow(c2, [[w * 0.42, midY], [w * 0.86, midY]], tt, { color: '#ffffff', count: 9, speed: 0.12 + pl.bal.P / 100000 * 0.18, r: 1.5, alpha: 0.55 });
+      charts.flow(c2, [[w * 0.44, midY + feedTh / 2], [w * 0.52, brineY], [w * 0.82, brineY]], tt, { color: '#ffffff', count: 8, speed: 0.12 + pl.bal.B / 100000 * 0.16, r: 1.5, alpha: 0.5 });
       /* nodes */
       steps.forEach(function (s) {
         var x = w * s.x;
@@ -80,7 +103,7 @@
       c2.fillStyle = p.dim; c2.font = charts.font(8.5); c2.textAlign = 'right';
       c2.fillText('扩散器稀释羽流', w - 8, brineY + brineTh / 2 + 12);
     }
-    var flow = charts.base(flowHost, { draw: drawPlant });
+    var flow = charts.base(flowHost, { draw: drawPlant, animate: true });
 
     var stat = charts.bars(statHost, {
       labels: ['进水', '产水', '浓盐水'],
@@ -153,7 +176,7 @@
         if (p.calcium != null) caCtl.set(p.calcium, true);
         sync();
       },
-      destroy: function () { flow.destroy(); stat.destroy(); }
+      destroy: function () { flow.destroy(); stat.destroy(); if (gl3d) gl3d.destroy(); }
     };
   }
 

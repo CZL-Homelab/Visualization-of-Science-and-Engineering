@@ -14,16 +14,37 @@
     /* ---------------- stage: membrane flow + pressure gauge ---------------- */
     var wrap = ui.el('div');
     wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px;flex:1;min-height:0';
+    var tabRow = ui.el('div', 'viewtabs');
+    var btn2d = ui.el('button'); btn2d.type = 'button'; btn2d.className = 'on'; btn2d.textContent = '2D 单段剖面';
+    var btn3d = ui.el('button'); btn3d.type = 'button'; btn3d.textContent = '3D 卷式膜元件';
+    tabRow.appendChild(btn2d); tabRow.appendChild(btn3d);
     var flowHost = ui.el('div', 'chart');
     flowHost.style.cssText = 'flex:1;min-height:200px';
     var gaugeHost = ui.el('div', 'chart');
     gaugeHost.style.cssText = 'flex:0 0 84px;height:84px;min-height:84px';
-    wrap.appendChild(flowHost); wrap.appendChild(gaugeHost);
+    var glHost = ui.el('div', 'chart');
+    glHost.style.cssText = 'flex:1;min-height:200px;display:none';
+    var gl3d = null;
+    function setMode(three) {
+      if (three && !gl3d) gl3d = DL.gl.spiralRO(glHost, function () {
+        var r = sim.roStage({ pressure: st.pressure, recovery: st.recovery / 100, rejection: st.rejection / 100, permeability: st.A, feed: 100 });
+        return { flux: r.flow.flux, feasible: r.feasible, appliedBar: st.pressure, piBrine: r.flow.piBrine };
+      });
+      flowHost.style.display = three ? 'none' : '';
+      gaugeHost.style.display = three ? 'none' : '';
+      glHost.style.display = three ? '' : 'none';
+      btn2d.className = three ? '' : 'on';
+      btn3d.className = three ? 'on' : '';
+    }
+    btn2d.addEventListener('click', function () { setMode(false); });
+    btn3d.addEventListener('click', function () { setMode(true); });
+    wrap.appendChild(tabRow);
+    wrap.appendChild(flowHost); wrap.appendChild(gaugeHost); wrap.appendChild(glHost);
     var note = ui.el('p', 'stage-note');
     wrap.appendChild(note);
     stage.appendChild(wrap);
 
-    function drawFlow(c2, w, h, p) {
+    function drawFlow(c2, w, h, p, api) {
       var r = sim.roStage({
         pressure: st.pressure, recovery: st.recovery / 100, rejection: st.rejection / 100,
         permeability: st.A, feed: 100
@@ -51,14 +72,21 @@
       /* permeate down-right, brine right */
       pipe(memX + 14, w - 16, midY - 46, permFrac, p.cyan, '产水 ' + ui.fmt.num(r.bal.P, 0) + ' m³/h', 'TDS ' + ui.fmt.int(r.bal.Cp) + ' mg/L', true);
       pipe(memX + 14, w - 16, midY + 46, brineFrac, p.red, '浓水 ' + ui.fmt.num(r.bal.B, 0) + ' m³/h', 'TDS ' + ui.fmt.int(r.bal.Cb) + ' mg/L', true);
+      /* travelling flow dots inside each pipe */
+      var tt = api && api.t ? api.t : 0;
+      var sp = r.feasible ? 0.22 + r.flow.flux * 0.02 : 0.06;
+      charts.flow(c2, [[16, midY], [memX - 14, midY]], tt, { color: '#ffffff', count: 9, speed: sp, r: 1.7, alpha: 0.55 });
+      charts.flow(c2, [[memX + 14, midY - 46], [w - 16, midY - 46]], tt, { color: '#ffffff', count: 7, speed: sp * (0.5 + r.bal.P / 100), r: 1.6, alpha: 0.6 });
+      charts.flow(c2, [[memX + 14, midY + 46], [w - 16, midY + 46]], tt, { color: '#ffffff', count: 7, speed: sp * (0.5 + r.bal.B / 100), r: 1.6, alpha: 0.6 });
       /* flux arrows through membrane */
       var flux = r.flow.flux;
       var n = Math.min(8, Math.max(0, Math.round(flux / 4)));
       c2.fillStyle = p.green;
       for (var i = 0; i < n; i++) {
         var y = midY - 34 + i * 9;
+        var xj = ((tt * 0.5 + i * 0.13) % 1) * 22;
         c2.beginPath();
-        c2.moveTo(memX - 26, y); c2.lineTo(memX + 16, y); c2.lineTo(memX + 10, y - 3); c2.lineTo(memX + 16, y); c2.lineTo(memX + 10, y + 3);
+        c2.moveTo(memX - 26 + xj, y); c2.lineTo(memX + 16, y); c2.lineTo(memX + 10, y - 3); c2.lineTo(memX + 16, y); c2.lineTo(memX + 10, y + 3);
         c2.strokeStyle = p.green; c2.lineWidth = 1.6; c2.stroke();
       }
       c2.fillStyle = p.green; c2.font = charts.font(9.5, 600); c2.textAlign = 'center';
@@ -68,7 +96,7 @@
         c2.fillText('净驱动压力 ≤ 0：不产水', memX, midY + 70);
       }
     }
-    var flowChart = charts.base(flowHost, { draw: drawFlow });
+    var flowChart = charts.base(flowHost, { draw: drawFlow, animate: true });
     var gauge = charts.gauge(gaugeHost, { max: 90, value: st.pressure, color: 'blue', title: '外加压力 vs 浓水侧渗透压 (bar)', marker: 40, markerLabel: 'β·π_b' });
 
     /* ---------------- panel ---------------- */
@@ -137,7 +165,7 @@
         if (p.A != null) aCtl.set(p.A, true);
         sync();
       },
-      destroy: function () { flowChart.destroy(); gauge.destroy(); }
+      destroy: function () { flowChart.destroy(); gauge.destroy(); if (gl3d) gl3d.destroy(); }
     };
   }
 

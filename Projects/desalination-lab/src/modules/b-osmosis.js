@@ -14,16 +14,37 @@
     /* ---------------- osmosis cell diagram ---------------- */
     var wrap = ui.el('div');
     wrap.style.cssText = 'display:flex;flex-direction:column;gap:12px;flex:1;min-height:0';
+    var tabRow = ui.el('div', 'viewtabs');
+    var btn2d = ui.el('button'); btn2d.type = 'button'; btn2d.className = 'on'; btn2d.textContent = '2D 剖面';
+    var btn3d = ui.el('button'); btn3d.type = 'button'; btn3d.textContent = '3D 渗透装置';
+    tabRow.appendChild(btn2d); tabRow.appendChild(btn3d);
     var cellHost = ui.el('div', 'chart');
     cellHost.style.cssText = 'flex:1;min-height:220px';
     var gaugeHost = ui.el('div', 'chart');
     gaugeHost.style.cssText = 'flex:0 0 90px;height:90px;min-height:90px';
-    wrap.appendChild(cellHost); wrap.appendChild(gaugeHost);
+    var glHost = ui.el('div', 'chart');
+    glHost.style.cssText = 'flex:1;min-height:220px;display:none';
+    var gl3d = null;
+    function setMode(three) {
+      if (three && !gl3d) gl3d = DL.gl.osmosis(glHost, function () {
+        var c = sim.osmosisCell(st.tds, st.temp, st.head);
+        return { head: st.head, pi: c.pi, appliedBar: c.appliedBar, direction: c.direction, flux: Math.min(1, Math.abs(c.appliedBar - c.pi) / Math.max(1, c.pi)) };
+      });
+      cellHost.style.display = three ? 'none' : '';
+      gaugeHost.style.display = three ? 'none' : '';
+      glHost.style.display = three ? '' : 'none';
+      btn2d.className = three ? '' : 'on';
+      btn3d.className = three ? 'on' : '';
+    }
+    btn2d.addEventListener('click', function () { setMode(false); });
+    btn3d.addEventListener('click', function () { setMode(true); });
+    wrap.appendChild(tabRow);
+    wrap.appendChild(cellHost); wrap.appendChild(gaugeHost); wrap.appendChild(glHost);
     var note = ui.el('p', 'stage-note');
     wrap.appendChild(note);
     stage.appendChild(wrap);
 
-    function drawCell(ctx2, w, h, p) {
+    function drawCell(ctx2, w, h, p, api) {
       var cell = sim.osmosisCell(st.tds, st.temp, st.head);
       var baseY = h - 26, topY = 18, wallX = 22, cellW = w - 44;
       var memX = wallX + cellW * 0.42;
@@ -41,6 +62,23 @@
       charts.roundRect(ctx2, wallX + 3, freshLevel, memX - wallX - 6, baseY - freshLevel, 3); ctx2.fill();
       ctx2.fillStyle = p.cyan; ctx2.globalAlpha = 0.5;
       charts.roundRect(ctx2, memX + 3, saltLevel, wallX + cellW - memX - 6, baseY - saltLevel, 3); ctx2.fill();
+      /* animated surface shimmer on both water levels */
+      var tt = api && api.t ? api.t : 0;
+      ctx2.strokeStyle = p.cyan; ctx2.globalAlpha = 0.55; ctx2.lineWidth = 1.2;
+      ctx2.beginPath();
+      for (var xq = memX + 6; xq < wallX + cellW - 6; xq += 5) {
+        var yy = saltLevel + Math.sin(xq * 0.13 + tt * 1.9) * 1.3 + Math.sin(xq * 0.05 - tt * 1.1) * 1.0;
+        if (xq === memX + 6) ctx2.moveTo(xq, yy); else ctx2.lineTo(xq, yy);
+      }
+      ctx2.stroke();
+      ctx2.strokeStyle = p.blue; ctx2.globalAlpha = 0.5;
+      ctx2.beginPath();
+      for (var xq2 = wallX + 6; xq2 < memX - 6; xq2 += 5) {
+        var y2 = freshLevel + Math.sin(xq2 * 0.12 - tt * 1.5) * 1.1;
+        if (xq2 === wallX + 6) ctx2.moveTo(xq2, y2); else ctx2.lineTo(xq2, y2);
+      }
+      ctx2.stroke();
+      ctx2.globalAlpha = 1; ctx2.lineWidth = 1;
       ctx2.globalAlpha = 1;
       /* membrane */
       ctx2.strokeStyle = p.violet; ctx2.lineWidth = 3;
@@ -69,6 +107,8 @@
         ctx2.closePath(); ctx2.fillStyle = p.green; ctx2.fill();
         ctx2.fillStyle = p.green; ctx2.font = charts.font(9.5, 600); ctx2.textAlign = 'center';
         ctx2.fillText(arrow > 0 ? '水分子向浓水侧渗透' : '反渗透：水被压向淡水侧', memX, ay - 17);
+        charts.flow(ctx2, [[memX - 46, ay], [memX + 46, ay]], api && api.t ? api.t : 0,
+          { color: p.green, count: 7, speed: 0.45, r: 1.7, alpha: 0.95, reverse: arrow < 0 });
       } else {
         ctx2.fillStyle = p.dim; ctx2.font = charts.font(9.5); ctx2.textAlign = 'center';
         ctx2.fillText('压力差 ≈ 渗透压：两侧动态平衡', memX, topY + 26);
@@ -80,7 +120,7 @@
       ctx2.textAlign = 'center'; ctx2.fillStyle = p.violet;
       ctx2.fillText('半透膜', memX, baseY + 12);
     }
-    var cellChart = charts.base(cellHost, { draw: drawCell });
+    var cellChart = charts.base(cellHost, { draw: drawCell, animate: true });
     var gauge = charts.gauge(gaugeHost, { max: 70, value: 0, color: 'blue', title: '施加压力 vs 渗透压 (bar)', marker: 0, markerLabel: 'π' });
 
     /* ---------------- panel ---------------- */
@@ -136,7 +176,7 @@
         }
         sync();
       },
-      destroy: function () { cellChart.destroy(); gauge.destroy(); }
+      destroy: function () { cellChart.destroy(); gauge.destroy(); if (gl3d) gl3d.destroy(); }
     };
   }
 
