@@ -1,0 +1,29 @@
+# 核聚变反应堆实验室 · Fusion Lab
+
+7 章、41 幕交互讲解：氘氚反应、磁约束、ITER 装置解剖、一次放电、能量平衡、氚燃料循环与聚变电站。三维模型支持旋转、缩放、剖切与零件选择；讲解与动效可以暂停，默认尊重减少动态效果偏好。不默认播放语音。
+
+## 构建与验证 / Build and verify
+
+需要 Python 3.9+ 与 Node.js 22+，不需要安装依赖。在本目录运行：
+
+```sh
+python3 build.py
+node tests/check-physics.cjs
+node tests/check-build.cjs
+```
+
+修改 `src/` 后重新生成并提交 `index.html`。生成页内嵌 Three.js、样式、脚本与图标，可直接从 `file://` 离线打开。完整站点导航需保留目录结构；从仓库根目录运行 `python3 scripts/check_site.py`，再用 `python3 -m http.server 8767 --bind 127.0.0.1 --directory _site` 预览。
+
+## 模型与来源 / Models and sources
+
+`src/core.js` 集中管理反应质量亏损、Bosch–Hale 热反应率、零维能量平衡、回旋运动、圆柱安全因子近似、氚三库存模型与电站功率记账。图形中的粒子、磁力线、脉冲与设备布局都是教学示意，不是工程仿真。温度与密度剖面、输运、磁流体稳定性、材料损伤与完整工厂经济性未求解。ITER 不发电；其设计目标与电站净电输出必须区分。路线图日期是引用来源的计划，不是已实现的结果。
+
+页面“数字口径”列出来源、核对日期及简化边界；外部参考链接需要联网，实验台运行不需要。保留仓库 MIT 许可与 `vendor/THREE-LICENSE.txt` 中的 Three.js 署名。
+
+## English
+
+Seven chapters and 41 scenes explain D–T fusion, confinement, ITER anatomy, pulse operation, power balance, tritium inventories and power plants. Rotate and inspect the 3D machine, adjust instruments, or use the pausable guided tour. Reduced motion is respected by default; speech does not autoplay.
+
+Run the commands above with Python 3.9+ and Node.js 22+. No package installation is required. Edit `src/`, rebuild, and commit the generated `index.html` together with source. All runtime assets are embedded for offline `file://` use; retain the complete site layout for cross-lab navigation.
+
+The physics is a teaching model: flat profiles and zero-dimensional power balance, approximate safety factor, a three-reservoir tritium inventory, and a plant power ledger. Particle motion, magnetic lines, geometry and pulse traces are illustrative, not engineering simulations. ITER performance figures are design targets; it does not generate electricity. Roadmap dates are attributed plans. The reference section lists sources and boundaries. External reference links require a connection; the lab itself does not. Preserve the repository MIT license and the vendored Three.js license.

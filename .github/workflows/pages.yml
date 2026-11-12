@@ -46,6 +46,13 @@ jobs:
           for script in src/*.js src/modules/*.js; do node --check "$script"; done
           node tests/check-physics.cjs
           node tests/check-build.cjs
+      - name: Build and verify Fusion Lab
+        working-directory: Projects/fusion-lab
+        run: |
+          python build.py
+          for script in src/*.js; do node --check "$script"; done
+          node tests/check-physics.cjs
+          node tests/check-build.cjs
       - name: Prepare static pages
         run: |
           python scripts/build_site.py

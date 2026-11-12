@@ -25,6 +25,10 @@ Stock Market Lab 面向没有金融基础的学习者：从一根 K 线的四个
 
 Desalination Lab 面向工程与环保兴趣的学习者：从含盐阶梯到渗透压（≈27 bar、273 米水柱），再到可手调的单段 RO（质量守恒与能耗联动）、MSF 闪蒸瀑布、膜污染曲线、统一口径的能耗对比与整厂浓盐水平衡。B/C/G 三个模块提供可拖拽的 WebGL 3D 视图（渗透装置、卷式膜元件、厂区巡览），2D 剖面保留为默认视图。所有模型为教学近似并标注边界；物理不变量由 `tests/check-physics.cjs` 锁定，文献数值标注核对日期与来源。
 
+Fusion Lab 核聚变反应堆实验室提供 7 章、41 幕讲解：氘氚反应、磁约束、ITER 三维解剖、放电脉冲、功率平衡、氚循环与电站。所有运行资源内嵌，模型为教学近似。源码、构建与验证见 [Projects/fusion-lab](Projects/fusion-lab)。
+
+Fusion Lab adds seven chapters and 41 scenes covering D–T fusion, confinement, ITER anatomy, pulse operation, power accounting, tritium inventories and power plants. All runtime assets are embedded; the models are educational approximations. See [the project README](Projects/fusion-lab/README.md) for build commands and limitations.
+
 ## 主题与实验室导航 / Theme and lab navigation
 
 根目录页与各实验室共用同一套主题偏好。页面在首次绘制前读取 `czl-lab-theme`；没有记录时跟随系统 `prefers-color-scheme`，右上角按钮切换后写回 `localStorage`，并把 `meta[name="theme-color"]` 同步为当前背景。两套主题都内联在单文件页面中，不请求远程样式或字体，断网、直接打开 `index.html` 仍然有效。

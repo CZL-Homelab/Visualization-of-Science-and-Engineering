@@ -43,5 +43,20 @@
     "metrics": "7 个模块 · 25 幕讲解 · 3 个 WebGL 3D 视图 · 21 项物理不变量测试",
     "preview": "assets/desal-preview.svg",
     "previewAlt": "反渗透膜、浓水与产物流及能耗对比示意图 / RO membrane streams, osmotic gauge and energy comparison bars"
+  },
+  {
+    "slug": "fusion-lab",
+    "title": "核聚变反应堆实验室 · Fusion Lab",
+    "category": "核工程 / Nuclear engineering",
+    "description": "拆开 ITER：从氘氚反应、磁约束与一次放电，到氚燃料循环和聚变电站功率账本。",
+    "english": "Explore fusion reactions, ITER anatomy, magnetic confinement, tritium inventories and plant power balances.",
+    "tags": [
+      "交互 3D / Interactive 3D",
+      "离线可用 / Offline",
+      "自动讲解 / Guided tours"
+    ],
+    "metrics": "7 章 · 41 幕讲解 · 可调物理仪器",
+    "preview": "assets/fusion-preview.svg",
+    "previewAlt": "托卡马克磁体、等离子体与热电转换示意 / Tokamak magnets, plasma and thermal power cycle"
   }
 ]
