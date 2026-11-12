@@ -59,9 +59,9 @@ no chart at all.
 
 ## Theme and navigation
 
-- The shared theme key is `czl-lab-theme`. `src/page.html` sets `data-theme` before first paint;
-  `src/app.js` owns `applyTheme`, the button label/icon, `aria-pressed`, `meta[name="theme-color"]`
-  and keeps the legacy `sml.theme` key readable during migration.
+- The shared theme key is `czl-lab-theme`. the build embeds assets/theme.js at THEME_BOOT before first paint.
+  src/app.js initTheme mounts the shared controller, which updates button state/meta, dispatches
+  sm:theme and migrates legacy sml.theme. Do not duplicate the controller locally.
 - Keep `#themeToggle` a native button with a readable label. Charts must redraw on the `sm:theme`
   event; do not cache CSS colors at construction time.
 - The header keeps a `Lab Projects` back link (catalog with `#projects`); the pre-footer
@@ -70,6 +70,8 @@ no chart at all.
 - When adding a lab, update every lab directory and `site/projects.json`; derive coverage from the registry.
 - Verify both palettes for text contrast, chart grid/axis colors, focus rings and 390px layouts.
   A passing console check is not a visual check.
+
+The shared entrance uses the market-chart motif with skip/replay and reduced-motion behavior from the root AGENTS. Theme defaults follow the system until overridden, with footer automatic reset. Keep these features documented in this project README.
 
 ## Build and verification
 

@@ -1,6 +1,9 @@
 """Build the self-contained offline HTML using Python's standard library."""
 from pathlib import Path
 import base64
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'scripts'))
+from shared_experience import embed_experience
 root=Path(__file__).resolve().parent
 html=(root/'src/page.html').read_text(encoding='utf-8')
 icon='data:image/svg+xml;base64,'+base64.b64encode((root.parent.parent/'assets/icon.svg').read_bytes()).decode('ascii')
@@ -13,6 +16,7 @@ for name in ['vendor/three.min.js','src/core.js','src/courses.js','src/engine.js
     code=(root/name).read_text(encoding='utf-8').replace('</script','<\\/script')
     scripts.append('<script>\n'+code+'\n</script>')
 html=html.replace('<!-- LAB_SCRIPTS -->','\n'.join(scripts))
+html=embed_experience(html, 'motor-lab')
 with (root/'index.html').open('w',encoding='utf-8',newline='\n') as output:
     output.write(html)
 print(f'Built index.html ({len(html.encode("utf-8")):,} bytes), all resources embedded.')

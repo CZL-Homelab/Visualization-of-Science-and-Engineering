@@ -2,6 +2,9 @@
 
 ## 未发布 / Unreleased · 2026-11-13
 
+- 全站品牌与体验：优化共享 SVG Logo 的灰白空间框架、前后轨道和 16–32px 细节。目录与四个 Lab 统一有限入场、立即跳过、顶栏回放、深链直达和减少动态效果，内嵌公共资源保持离线使用。
+- 统一首次绘制前与运行时主题控制：默认跟随系统并实时响应，持久化手动选择、跨同源页面同步、页脚恢复自动；存储禁用时仍可使用。修正手机顶栏标题/链接换行，以及下载页面重开时临时节点与按钮重复问题。
+
 以下内容位于 [PR #8](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/pull/8) 的工作分支，尚未合并或部署；当前状态见 [交接记录](docs/HANDOFF.md)。
 
 - 接入四个 Lab 的目录与构建流程；海水淡化 B/C/G 默认进入带标注和读数的 3D，保留 2D，增加暂停、镜头复位/缩放、键盘与 RO 剖切操作。
@@ -9,7 +12,7 @@
 - 补充 GPU 资源销毁、减少动态效果默认暂停和 WebGL 不可用时的 2D 回退检查；Pages 发布前检查全部路由与各 Lab 目录。
 - 将 README、指南、AGENTS.md 自身、更新记录和交接维护列为交付要求；补齐四 Lab 中英文介绍、目录树、构建/测试/发布说明和资产清单，修正海水淡化本地预览地址，新增项目专用 AGENTS 与统一交接文件。
 
-English: These changes remain on PR #8 and are not yet merged or deployed. Integrate the four-lab catalog/builds and improve Desalination B/C/G with annotated, pausable 3D, camera/keyboard/cutaway controls and a 2D alternative. Separate wound RO sheets and product collection paths, connect plant/brine piping, and correct pressure-side, equilibrium and lesson-state synchronization. Add physics/scene regressions and verify offline, fallback, reduced-motion and resource-disposal behavior. Make READMEs, guides, AGENTS itself, CHANGELOG and handoff part of delivery; correct bilingual four-lab instructions, asset inventory and preview paths, and add Desalination contributor guidance. See the handoff for current release state.
+English: Refine the shared SVG logo and small-size geometry. Unify finite subject-specific entrances, immediate skip, replay, deep links and reduced motion across catalog/all labs. Consolidate pre-paint/runtime themes with live system defaults, manual persistence, same-origin sync, automatic reset and denied-storage fallback. Keep resources inlined offline; fix compact headers and duplicate controls in reopened downloads. These changes remain on PR #8 and are not yet merged or deployed. Integrate the four-lab catalog/builds and improve Desalination B/C/G with annotated, pausable 3D, camera/keyboard/cutaway controls and a 2D alternative. Separate wound RO sheets and product collection paths, connect plant/brine piping, and correct pressure-side, equilibrium and lesson-state synchronization. Add physics/scene regressions and verify offline, fallback, reduced-motion and resource-disposal behavior. Make READMEs, guides, AGENTS itself, CHANGELOG and handoff part of delivery; correct bilingual four-lab instructions, asset inventory and preview paths, and add Desalination contributor guidance. See the handoff for current release state.
 
 ## 2026-11-12 · Fusion Lab 核聚变反应堆实验室
 

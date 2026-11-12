@@ -238,3 +238,13 @@ The project is MIT licensed and is not investment advice. Model boundaries are l
 ---
 
 *规则核对：2026-10-31 · 构建与测试记录见 CI 与发布说明。*
+
+## 入场与主题特性 / Entrance and theme features
+
+进入本 Lab 时显示简短的市场图表入场动效，约 1.6 秒自动结束。可立即跳过，顶栏可回放；鼠标/键盘操作或页面隐藏会清理入场，锚点链接直接进入目标内容。系统“减少动态效果”会跳过入场并禁用回放。共享 Logo、主题及动效在构建时内嵌，保持离线使用；下载后重开不重复生成按钮。
+
+默认跟随系统浅色/暗黑偏好，手动选择记入 `czl-lab-theme`；没有手动覆盖时跟随系统实时变化。同源页面同步主题，页脚“主题：跟随系统”恢复自动模式。不是按本地时钟强制切换。公共维护约定见 [根 AGENTS](../../AGENTS.md)，实现入口见 [资源说明](../../assets/README.md)。
+
+The short market chart entrance ends automatically in about 1.6 seconds. Skip immediately or replay from the header; pointer/keyboard interaction or hiding the page clears it, and deep links open directly. Reduced motion bypasses the entrance and disables replay. Logo/theme/entrance assets are embedded offline at build time; reopening a downloaded snapshot does not duplicate controls.
+
+Theme follows the system's light/dark setting until a manual choice is saved under czl-lab-theme. Unoverridden pages follow live system changes, same-origin pages synchronize, and the footer system-theme button restores automatic mode. There is no forced day/night clock rule. See root AGENTS and asset guidance linked above for shared maintenance.

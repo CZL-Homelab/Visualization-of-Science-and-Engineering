@@ -37,6 +37,16 @@
 - 根目录必须保留项目目录页；新项目登记在 site/projects.json。共享标识在 assets/icon.svg，调整仓库标识不代表更改组织头像。
 - 仓库说明文档使用中文与英文双语；法律许可证保留原文。
 
+## 全站体验特性：标识、入场与主题
+
+- 共享标识源为 `assets/icon.svg`；保留石墨底、灰白空间框架及少量青/蓝/铜色点缀，检查 16/24/32px 与展示尺寸的辨识度。目录相对引用，各 Lab 构建时内嵌，不在生成页另画或复制一版标识。
+- 目录与四个 Lab 都提供简短入场动效，识别图形可随学科变化，但行为一致：自动结束、可立即跳过、顶栏可回放、不锁滚动、不抢焦点、不伪装为加载进度。深链直接打开目标内容；页面隐藏或用户开始操作时及时清理。
+- `prefers-reduced-motion` 开启时跳过入场、禁用回放和内容位移；偏好在运行中改变也应立即生效。入场结束或跳过后移除临时节点；离线下载后的页面重新打开不能产生重复的动效或按钮。
+- 默认主题跟随系统，与时钟/白天黑夜时段无关；只记住用户显式选择到 `czl-lab-theme`。未手动选择时跟随系统实时变化，手动选择后保持该选择；页脚“主题：跟随系统”可恢复自动模式。存储禁用或值无效时仍跟随系统，当前会话的手动选择仍有效。
+- 主题须在首次绘制前应用，按钮名称、`aria-pressed`、`theme-color`、图表和三维引擎同步；同源页面通过 storage 事件同步。旧 `sml.theme` 只用于迁移，不再维护两套偏好。
+- 公共源码：`assets/theme.js`、`assets/entry.js`、`assets/entry.css`；由 `scripts/shared_experience.py` 将 `THEME_BOOT` 和 `SHARED_EXPERIENCE` 占位符内嵌到目录/各 Lab。各项目 `initTheme()` 只挂接公共控制器和必要的引擎回调，不重新复制主题实现。
+- 公共体验改动运行 `node scripts/check-theme.cjs`、公共 JS 语法检查、受影响项目构建与封装、站点检查；视觉检查目录及所有 Lab 的深浅主题、390px 顶栏、跳过/回放/键盘、减少动态效果和离线重开。报告实际检查范围，按影响决定是否需要重测模型交互。
+
 ## 文档与交接也是交付内容
 
 - 不以“代码已经完成”作为任务完成标准。每次修改都要检查受影响的说明和指南，并在同一任务、同一 PR 中同步更新；不能把文档留待用户提醒。
@@ -91,3 +101,13 @@ These instructions cover the entire repository. Start with the root README, CONT
 - Before delivery or interruption, update [docs/HANDOFF.md](docs/HANDOFF.md) with the date, branch and implementation commit, completed work, checks actually run and their limits, PR/deployment state, remaining work/blockers and key user decisions. Keep one current handoff instead of scattered chat transcripts; exclude credentials, personal environments and debug output.
 - Ground documentation in the source, site/projects.json, workflows and observed checks. Verify local links and command paths and keep both languages aligned. Distinguish implemented, committed, pushed, merged and deployed states. Never carry a previous commit's successful checks forward as evidence for a new commit.
 - For documentation-only changes, check relevant links/commands and git diff --check; do not repeat unrelated UI or physics tests. Leave unaffected documents alone. Material changes without corresponding documentation and handoff updates are incomplete.
+
+### Shared identity, entrance and theme features
+
+- `assets/icon.svg` is the identity source: graphite, a gray/white structural frame and restrained cyan/blue/copper accents. Check 16/24/32px and display sizes. The catalog references it relatively; labs embed it at build time instead of drawing separate copies.
+- The catalog and all labs have a short entrance with subject-specific motifs and consistent behavior: finite duration, immediate skip, header replay, no scroll locking, focus stealing or fake loading progress. Deep links open directly; clean up when hidden or when the user starts interacting.
+- Reduced motion skips the entrance, disables replay and removes content movement, including preference changes at runtime. Remove temporary nodes after dismissal and avoid duplicate entrances/controls when reopening downloaded HTML.
+- Default theme follows the system, not the clock or a day/night schedule. Persist only explicit choices under `czl-lab-theme`. Follow live system changes until overridden; the footer's system-theme button restores automatic mode. Invalid/denied storage still allows system defaults and in-memory manual choices.
+- Apply theme before first paint and synchronize accessible button state, theme-color, charts and 3D. Synchronize same-origin pages through storage events. Migrate legacy `sml.theme` rather than maintaining two preferences.
+- Shared sources are assets/theme.js, entry.js and entry.css. scripts/shared_experience.py inlines THEME_BOOT and SHARED_EXPERIENCE hooks into the catalog and labs. Project initTheme functions mount the shared controller and any necessary engine callback; do not duplicate the implementation.
+- For shared experience changes, run scripts/check-theme.cjs, shared-script syntax checks, affected builds/packaging and site checks. Visually check catalog/all labs in both themes, 390px headers, skip/replay/keyboard, reduced motion and offline reopening. Report actual coverage and retest model interaction according to impact.

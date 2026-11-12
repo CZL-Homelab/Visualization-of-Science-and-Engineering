@@ -9,6 +9,8 @@
 - 三维改动须视觉检查 Intro、a1 的反应闪光、b2 的透明线圈、b5 的截面和 c1 的人物比例及标签。检查桌面与 390px 窄屏的深浅主题、爆炸图滑块、暂停和减少动态效果；截图放临时目录，不加入发布内容。
 - 保持 `czl-lab-theme`、首次绘制前的主题初始化、返回目录入口和四个实验室目录一致。更新文档时同时提供中英文。
 
+- 入场使用根目录公共磁约束图形和跳过/回放，不替代实验台内的 Intro/开始讲解。`initTheme()` 挂接公共控制器，三维通过 `fl:theme` 更新。系统默认、手动选择和减少动态效果遵循根 AGENTS，修改时更新项目 README。
+
 ## English
 
 - Read the root `AGENTS.md` and this project's `README.md`. Edit `src/`, run `python3 build.py`, and commit the generated `index.html` with source. Do not edit the generated page directly or reformat vendored libraries.
@@ -17,3 +19,5 @@
 - Run `node tests/check-physics.cjs`, `node tests/check-build.cjs`, and `node --check` for every `src/*.js` file. From the repository root, run `python3 scripts/check_site.py` and `git diff --check`.
 - Visually review Intro, the a1 reaction flash, b2 ghost coils, b5 cross-section and c1 person/label after 3D changes. Check desktop and 390px layouts in both themes, the exploded-view slider, pause and reduced motion. Keep screenshots in temporary storage, outside deployment.
 - Preserve `czl-lab-theme`, theme initialization before first paint, catalog navigation and the four-lab directories. Keep documentation bilingual.
+
+- The shared magnetic-confinement entrance and skip/replay are separate from the stage Intro/tour controls. initTheme mounts the shared controller; the 3D world updates on fl:theme. Follow root AGENTS for system defaults, manual choices and reduced motion, updating the project README when changed.

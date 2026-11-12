@@ -26,10 +26,12 @@
 
 ## 主题与导航
 
-- 共享主题键为 `czl-lab-theme`；`src/page.html` 首次绘制前设置 `data-theme`，`src/app.js` 负责切换、`aria-pressed`、`meta[name="theme-color"]`，并调用 `engine.setTheme()` 调整网格/坐标轴。
+- 共享主题键为 `czl-lab-theme`；构建时将公共 `assets/theme.js` 内嵌到模板的 `THEME_BOOT` 占位符，首次绘制前设置 `data-theme`。`src/app.js` 的 `initTheme()` 挂接公共控制器及 `engine.setTheme()` 回调，调整网格/坐标轴；不要恢复独立主题实现。
 - 浅色覆盖分两层：`src/page.html` 内的变量与 `html[data-theme="light"]`，以及后加载的 `src/lab.css` 末尾覆盖。新增颜色必须走变量；不要只改一层，否则浅色会被另一层覆盖。
 - 顶栏保留 `Lab Projects` 返回入口，页脚前保留 `.lab-directory`；新增实验室时同步所有实验室目录与 `site/projects.json`，并检查 Pages 与本地 `file://` 链接。
 - 主题按钮是原生按钮，带可读名称和 `aria-pressed`；不得引入远程样式或字体。深浅色均需检查舞台、字幕卡、目录、焦点状态和 390px 窄屏。
+
+入场动效使用根目录公共层，不再维护旧 `.arrival` 覆盖层。跳过/回放、减少动态效果和主题默认行为按根 AGENTS；相关变更同步本项目 README。
 
 ## 检查
 
@@ -51,7 +53,7 @@ node tests/check-model.cjs
 
 ## Theme and navigation
 
-- The shared key is `czl-lab-theme`. src/page.html sets data-theme before first paint; src/app.js handles the switch, aria-pressed, meta[name="theme-color"] and engine.setTheme() for grid/axis opacity.
+- The shared key is `czl-lab-theme`. the build embeds assets/theme.js at the THEME_BOOT hook before first paint. src/app.js initTheme mounts the shared controller with an engine.setTheme callback for grid/axis opacity; do not restore a separate implementation.
 - Light overrides live in two layers: variables plus html[data-theme="light"] in src/page.html, and overrides appended to the later-loaded src/lab.css. Route new colors through variables; changing one layer only will be overridden.
 - Keep the Lab Projects back link in the header and .lab-directory above the footer. When adding a lab, update every lab directory and site/projects.json, and verify Pages and local file:// links.
 - The theme control must remain a native button with an accessible name and aria-pressed. Do not add remote styles or fonts. Verify the stage, caption cards, directory, focus states and 390px layouts in both themes.
@@ -69,3 +71,5 @@ Default entry is a running showcase followed by eight-scene tours and the motor 
 Disclose any new torque, temperature or efficiency model. Do not infer measured quantities from illustrative brightness. Run the build, all JavaScript syntax checks and node tests/check-model.cjs using the commands above. For UI changes check all six default states, lessons, pause/step, isolation, four comparison groups and narrow layouts. Director changes also require showcase-to-tour, last-scene-to-next-motor and manual takeover checks. Report speech-package, file-protocol and browser verification limits honestly.
 
 No npm installation is required. Keep the fixed Three.js UMD build and its license for standalone file:// compatibility; its deprecation notice alone is not a build failure. The shared icon is read from ../../assets/icon.svg and embedded by the build; do not replace it with a runtime request. The external directory and repository links intentionally require connectivity.
+
+Entrance now uses the root shared layer rather than a separate .arrival overlay. Follow the root rules for skip/replay, reduced motion and system/manual themes, updating the project README when behavior changes.

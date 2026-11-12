@@ -7,6 +7,8 @@ Only Python's standard library is used.
 from pathlib import Path
 import base64
 import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'scripts'))
+from shared_experience import embed_experience
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent.parent
@@ -54,6 +56,8 @@ def main() -> None:
         code = read(ROOT / name).replace("</script", "<\\/script")
         scripts.append("<script>\n" + code + "\n</script>")
     html = html.replace("<!-- LAB_SCRIPTS -->", "\n".join(scripts))
+
+    html = embed_experience(html, 'stock-market-lab')
 
     leftover = [t for t in ("<!-- SITE_ICON -->", "<!-- BRAND_ICON -->", "/* LAB_STYLES */", "<!-- LAB_SCRIPTS -->") if t in html]
     if leftover:

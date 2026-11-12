@@ -1,5 +1,6 @@
 """Build the Pages directory from an explicit project registry. Standard library only."""
 from pathlib import Path
+from shared_experience import embed_experience
 import html
 import json
 import re
@@ -28,6 +29,7 @@ for i, p in enumerate(projects, 1):
     cards.append(f'''<article class="project-card" data-search="{search}"><a class="project-art" href="{slug}/" aria-label="打开 / Open {esc(p['title'])}"><img src="{esc(p['preview'])}" alt="{esc(preview_alt)}" width="620" height="380"></a><div class="project-copy"><span class="project-index">{i:02d} / {esc(p['category'])}</span><h3><a href="{slug}/">{esc(p['title'])}</a></h3><p>{esc(p['description'])}<span class="english" lang="en">{esc(p['english'])}</span></p><div class="tags">{tags}</div><div class="project-metrics">{esc(p['metrics'])}</div><div class="project-links"><a class="button primary" href="{slug}/">打开演示 / Open ↗</a><a class="source-link" href="https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/tree/main/Projects/{slug}">项目源码 / Source ↗</a></div></div></article>''')
 template = (ROOT / 'site/index.template.html').read_text(encoding='utf-8')
 page = template.replace('{{PROJECT_CARDS}}', '\n'.join(cards)).replace('{{COUNT}}', str(len(projects)))
+page = embed_experience(page, 'catalog')
 with (OUT / 'index.html').open('w', encoding='utf-8', newline='\n') as f:
     f.write(page)
 shutil.copytree(ROOT / 'assets', OUT / 'assets', dirs_exist_ok=True)

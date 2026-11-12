@@ -5,6 +5,7 @@ from urllib.parse import unquote, urlsplit
 import subprocess
 import sys
 import json
+import base64
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -12,6 +13,7 @@ subprocess.run([sys.executable, str(ROOT / 'scripts/build_site.py')], check=True
 OUT = ROOT / '_site'
 projects = json.loads((ROOT / 'site/projects.json').read_text(encoding='utf-8'))
 slugs = {project['slug'] for project in projects}
+embedded_icon = 'data:image/svg+xml;base64,' + base64.b64encode((ROOT / 'assets/icon.svg').read_bytes()).decode('ascii')
 
 class Links(HTMLParser):
     def __init__(self):
@@ -43,7 +45,11 @@ for page in OUT.rglob('*.html'):
         assert dest.is_file(), (page, value)
     assert 'CZL-Homelab/Visualization-of-Science-and-Engineering' in text
     assert 'rel="icon"' in text
+    assert '<!-- THEME_BOOT -->' not in text and '<!-- SHARED_EXPERIENCE -->' not in text, page
+    assert 'CZLLabTheme' in text and 'czl-entry-replay' in text, page
     if page.parent.name in slugs:
+        assert embedded_icon in text, f'{page}: embedded logo is stale'
+        assert f'data-lab="{page.parent.name}"' in text, f'{page}: wrong entrance identity'
         # Every lab must list every registered lab once and mark only itself.
         destinations = [(page.parent / unquote(urlsplit(a['href']).path)).resolve()
                         for a in parser.directory]

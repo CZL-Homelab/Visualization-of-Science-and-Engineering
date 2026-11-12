@@ -26,6 +26,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify shared theme and entrance scripts
+        working-directory: .
+        run: |
+          node --check assets/theme.js
+          node --check assets/entry.js
+          node scripts/check-theme.cjs
       - name: Build and verify Motor Lab
         working-directory: Projects/motor-lab
         run: |

@@ -35,28 +35,7 @@
   };
 
   /* ---------- theme (repository-wide convention) ---------- */
-  var THEME_KEY = 'czl-lab-theme';
-  function applyTheme(theme, persist) {
-    document.documentElement.setAttribute('data-theme', theme);
-    var btn = $('themeToggle'), light = theme === 'light';
-    btn.querySelector('.theme-icon').textContent = light ? '☾' : '☀';
-    btn.querySelector('.theme-label').textContent = light ? '深色' : '浅色';
-    btn.setAttribute('aria-pressed', light ? 'false' : 'true');
-    btn.setAttribute('aria-label', light ? '当前浅色主题，切换到深色' : '当前深色主题，切换到浅色');
-    var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', light ? '#f3f1ec' : '#0d0e13');
-    if (persist !== false) { try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* storage may be blocked */ } }
-    globalThis.dispatchEvent(new Event('fl:theme'));
-  }
-  function initTheme() {
-    var saved = null;
-    try { saved = localStorage.getItem(THEME_KEY); } catch (e) { /* ignore */ }
-    var theme = saved === 'light' || saved === 'dark' ? saved : (globalThis.matchMedia && globalThis.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    applyTheme(theme, false);
-    $('themeToggle').addEventListener('click', function () {
-      applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-    });
-  }
+  function initTheme() { window.CZLLabTheme.mount(); }
 
   /* ---------- 3D world ---------- */
   function initWorld() {

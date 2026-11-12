@@ -26,6 +26,8 @@ git switch -c feat/describe-your-change origin/main
 | Desalination Lab | `node tests/check-physics.cjs`；`node tests/check-scenes.cjs`；`node tests/check-build.cjs` | [AGENTS](Projects/desalination-lab/AGENTS.md) · [README](Projects/desalination-lab/README.md) |
 | Fusion Lab | `node tests/check-physics.cjs`；`node tests/check-build.cjs` | [AGENTS](Projects/fusion-lab/AGENTS.md) · [README](Projects/fusion-lab/README.md) |
 
+共享主题/入场源码位于 `assets/theme.js`、`assets/entry.js` 与 `assets/entry.css`，通过 `scripts/shared_experience.py` 在构建时内嵌。修改公共层需运行 `node scripts/check-theme.cjs` 和两份 JS 的语法检查，重建所有受影响的 Lab，检查目录与四个 Lab 的深浅主题、390px 顶栏、跳过/回放、减少动态效果、离线下载重开；Logo 额外检查 16/24/32px 辨识度。
+
 从根目录运行 `python scripts/check_site.py`，构建目录并核对所有路由、相对资源及跨 Lab 目录；提交前运行 `git diff --check`。纯文档改动检查相关链接、路径与命令即可，不要求重跑无关模型和 UI 测试。
 
 - 主题与导航是共享约定：使用 `czl-lab-theme`，默认跟随系统，保留顶栏返回入口与页脚前实验室目录；新增 Lab 时更新所有实验室目录和 `site/projects.json`，以清单为准。
@@ -62,7 +64,7 @@ Read the root and target README/AGENTS and [current handoff](docs/HANDOFF.md). I
 
 Contributors without organization write access may use a working branch in the user-designated account's fork to open an organization PR. Keep the organization as the canonical upstream and production host. Verify the active account with `gh api user --jq .login`; honor account and manual-merge decisions without switching identities on your own.
 
-All four labs edit `Projects/<slug>/src/`, build with `python build.py` in that project, and commit generated `index.html` with source. No npm or third-party Python installation is needed. Check all source scripts with `node --check`, including module scripts where present, then run the exact project tests listed in the table above. From the repository root run `python scripts/check_site.py` for routes, relative resources and every lab directory, and `git diff --check`. Documentation-only work requires relevant link, path and command checks rather than unrelated model/UI reruns.
+All four labs edit `Projects/<slug>/src/`, build with `python build.py` in that project, and commit generated `index.html` with source. No npm or third-party Python installation is needed. Check all source scripts with `node --check`, including module scripts where present, then run the exact project tests listed in the table above. For shared theme/entrance changes, edit assets/theme.js, entry.js and entry.css (inlined by scripts/shared_experience.py), run `node scripts/check-theme.cjs` plus shared-script syntax checks, rebuild affected labs and check the catalog/all labs in both themes at desktop/390px, skip/replay, reduced motion and reopened offline downloads. Check logo legibility at 16/24/32px. From the repository root run `python scripts/check_site.py` for routes, relative resources and every lab directory, and `git diff --check`. Documentation-only work requires relevant link, path and command checks rather than unrelated model/UI reruns.
 
 Preserve offline packaging, scientific boundaries and attribution. Reference primary sources for new scientific claims. Check UI in both themes at desktop and 390px; check 3D visibility, annotations, flow direction, pause, manual control and reduced motion. Keep review screenshots outside deployment. A new project needs bilingual README/AGENTS, build/test/model/license guidance, registry and preview entries, every lab directory, relevant root documentation and CI/Pages integration. Extend packaging explicitly for additional runtime resources.
 

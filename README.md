@@ -32,9 +32,15 @@ Fusion Lab 核聚变反应堆实验室提供 7 章、41 幕讲解：氘氚反应
 
 Fusion Lab adds seven chapters and 41 scenes covering D–T fusion, confinement, ITER anatomy, pulse operation, power accounting, tritium inventories and power plants. All runtime assets are embedded; the models are educational approximations. See [the project README](Projects/fusion-lab/README.md) for build commands and limitations.
 
+## 入场体验 / Entrance experience
+
+目录与四个 Lab 都有统一的轻量入场：结构框架、电机转子、市场图表、膜分离或磁约束图形，约 1.6 秒自动结束。可点击“跳过入场”，或开始鼠标/键盘操作立即进入；顶栏主题按钮旁可回放。直接打开带锚点的链接会跳过入场，不锁定滚动、不自动播放语音，也不显示虚构加载进度。
+
+开启系统“减少动态效果”会直接显示页面、禁用入场回放；运行中改变该偏好同样有效。离线下载后重新打开会清理旧的入场节点与按钮，避免重复。Logo 保留空间框架与前后穿越的轨道，以石墨灰白为主，少量青、蓝和铜色点缀；16–32px 下减少次要细节。
+
 ## 主题与实验室导航 / Theme and lab navigation
 
-根目录页与各实验室共用同一套主题偏好。页面在首次绘制前读取 `czl-lab-theme`；没有记录时跟随系统 `prefers-color-scheme`，右上角按钮切换后写回 `localStorage`，并把 `meta[name="theme-color"]` 同步为当前背景。两套主题都内联在单文件页面中，不请求远程样式或字体，断网、直接打开 `index.html` 仍然有效。
+根目录页与各实验室共用同一套主题偏好。页面在首次绘制前读取 `czl-lab-theme`；没有记录时跟随系统 `prefers-color-scheme`，右上角按钮切换后写回 `localStorage`，并把 `meta[name="theme-color"]` 同步为当前背景。未手动选择时跟随系统实时变化，选择后保持用户偏好；页脚“主题：跟随系统”可清除手动选择。同源页面同步切换；禁用存储时仍能按系统初始化并在当前页面手动切换。这里的浅色/暗黑取决于系统偏好，不按白天/夜晚时钟强制切换。两套主题都内联在单文件页面中，不请求远程样式或字体，断网、直接打开 `index.html` 仍然有效。
 
 各实验室的顶栏左侧都有返回 `Lab Projects` 目录的入口；页脚前有“换一个实验室 / Lab projects”目录，列出全部实验室、标记当前页，并提供返回根目录的链接。目录使用相对路径，`/motor-lab/`、`/stock-market-lab/`、`/desalination-lab/`、`/fusion-lab/` 与 `_site` 的本地 `file://` 预览都能解析；单独复制某个 `index.html` 时需保留同样的站点目录结构。新增实验室时必须同时更新全部既有实验室的目录与 `site/projects.json`。
 
@@ -68,6 +74,8 @@ python -m http.server 8767 --bind 127.0.0.1 --directory _site
 | `Projects/desalination-lab/` | `node tests/check-physics.cjs`、`node tests/check-scenes.cjs`、`node tests/check-build.cjs` |
 | `Projects/fusion-lab/` | `node tests/check-physics.cjs`、`node tests/check-build.cjs` |
 
+公共标识、主题或入场改动还须运行 `node scripts/check-theme.cjs`，重新构建受影响的 Lab 并检查目录与各 Lab 的深浅主题、窄屏、跳过/回放和减少动态效果。公共资源由 `scripts/shared_experience.py` 在构建时内嵌，源码见 `assets/theme.js`、`assets/entry.js`、`assets/entry.css`。
+
 仅修改文档时核对相关链接、路径和命令，并运行 `git diff --check`；无需为说明文字重复无关的模型或 UI 测试。
 
 已有本地工程可确认并更新远程：
@@ -84,9 +92,9 @@ git fetch origin
 
 ```text
 .github/                 CI、Pages 发布、Issue 与 PR 模板
-assets/                  SVG 标识与共享插图
+assets/                  SVG 标识、共享插图、主题与入场 JS/CSS
 site/                    目录模板与项目清单
-scripts/                 目录构建及链接检查
+scripts/                 目录构建、共享资源内嵌、主题行为及链接检查
 AGENTS.md                仓库级 AI 工作约定
 CONTRIBUTING.md          开发、验证与协作流程
 CHANGELOG.md             面向使用者的更新记录，区分未发布变更
@@ -154,9 +162,13 @@ An open collection of interactive science and engineering explanations maintaine
 - This branch contains four labs: [Motor Lab](Projects/motor-lab/README.md) (six motor types), [Stock Market Lab](Projects/stock-market-lab/README.md) (ten modules), [Desalination Lab](Projects/desalination-lab/README.md) (seven modules and three annotated 3D views), and [Fusion Lab](Projects/fusion-lab/README.md) (seven chapters and 41 scenes). Production reflects merged `main` and a successful Pages deployment, not an open PR. See [CHANGELOG.md](CHANGELOG.md) for unreleased changes and [docs/HANDOFF.md](docs/HANDOFF.md) for current work and release status.
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) and the applicable [AGENTS.md](AGENTS.md) before contributing. Personal historical repositories and sites are not synchronization or deployment targets.
 
+### Entrance experience
+
+The catalog and all four labs have a short, subject-specific entrance: structural frame, rotor, market chart, membrane separation or magnetic confinement. It finishes in about 1.6 seconds; skip it immediately or begin pointer/keyboard interaction, and replay from the header. Anchored deep links open directly. There is no scroll lock, speech autoplay or fabricated loading progress. Reduced motion bypasses the entrance and disables replay, including runtime preference changes. Reopened offline downloads clean up captured entrance nodes/controls. The refined logo uses a graphite/gray-white frame, a depth-ordered orbit and restrained cyan/blue/copper accents, with fewer details at 16–32px.
+
 ### Theme and lab navigation
 
-The catalog and all labs share one theme preference. Each page reads `czl-lab-theme` before first paint, falls back to `prefers-color-scheme`, persists explicit choices in `localStorage`, and updates `meta[name="theme-color"]`. Both palettes are inlined in the standalone files; no remote styles or fonts are requested, so the pages keep working offline.
+The catalog and all labs share one theme preference. Each page reads `czl-lab-theme` before first paint, falls back to `prefers-color-scheme`, persists explicit choices in `localStorage`, and updates `meta[name="theme-color"]`. Without an explicit choice, live system changes are followed; a manual choice takes priority. The footer system-theme button restores automatic mode. Same-origin pages synchronize, and blocked storage still permits system initialization and an in-memory choice. Light/dark is not forced by a day/night clock. Both palettes are inlined in the standalone files; no remote styles or fonts are requested, so the pages keep working offline.
 
 Each lab header starts with a link back to the `Lab Projects` catalog. Before the footer, a "Lab projects" directory lists every lab, marks the current page, and links back to the catalog. Relative paths keep `/motor-lab/`, `/stock-market-lab/`, `/desalination-lab/`, `/fusion-lab/` and `file://` previews working. Labs also show a floating “top” button after scrolling. A new lab must update every lab directory and `site/projects.json`.
 
@@ -169,6 +181,8 @@ Use Git, Python 3.9+ and Node.js 22 LTS. No npm installation or third-party Pyth
 For a single lab, edit its source, run `python build.py` in that lab directory, check every source script with `node --check`, and run the tests in the table above. Motor uses `check-model.cjs`; Stock uses `check-finance.cjs` and `check-build.cjs`; Desalination uses `check-physics.cjs`, `check-scenes.cjs` and `check-build.cjs`; Fusion uses `check-physics.cjs` and `check-build.cjs`. Each test file lives under the corresponding project's `tests/`. Follow its README for full commands and model limits.
 
 Open `_site/index.html` directly for an offline preview while retaining the whole directory for cross-lab links. If serving an individual project directory, visit the server root `/`. Optional speech and external references have their own requirements; see the project README. Models are educational and disclose physical simplifications. Documentation-only changes need relevant link/path/command checks and `git diff --check`, rather than unrelated model or UI reruns.
+
+Shared identity/theme/entrance changes also run `node scripts/check-theme.cjs`, rebuild affected labs and inspect both themes, narrow layouts, skip/replay and reduced motion. `scripts/shared_experience.py` embeds assets/theme.js, entry.js and entry.css into each offline page.
 
 ### Documentation and handoff
 
