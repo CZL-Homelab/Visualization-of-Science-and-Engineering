@@ -1,5 +1,13 @@
 # 更新记录 / Changelog
 
+## 2026-11-12 · Desalination Lab 海水淡化原理实验室
+
+- 新增第三个实验室：7 个模块（含盐阶梯、渗透压、单段 RO、MSF/MED、膜与污染、能耗口径、整厂流程），25 幕自动讲解，单文件离线运行。
+- `src/core.js` 集中物理数学（van 't Hoff 渗透压、质量守恒、RO 能耗与通量、GEA 相关性、污染衰减、再矿化），`tests/check-physics.cjs` 锁定 21 项物理不变量与文献锚点（海水 π ≈ 26–28 bar、50% 回收率最小分离功 1.06 kWh/m³ 等）。
+- 口径页 `src/reference.js` 记录核对日期（2026-11-10）与来源（USGS、WHO、EPA、IDA、UF/IFAS、最小分离功论文）。
+- 登记 `site/projects.json`，更新根 README 与 Motor/Stock 两份实验室目录（“两个”→“三个”），Pages 工作流加入 Desalination Lab 构建与验证步骤，新增 `desalination-lab.yml` PR CI（Windows/Linux 双矩阵）。
+- 动效与 3D 表现力：`src/charts.js` 升级为共享 rAF 动画层（屏幕内才重绘、路径流动粒子、条形/仪表缓动过渡，遵循 `prefers-reduced-motion`）；新增 `src/three-views.js`，B/C/G 三个模块加入可拖拽旋转、滚轮缩放的 WebGL 3D 视图（渗透装置、卷式膜元件、厂区巡览），复用 Motor Lab 同源的 vendored three.js（r160，MIT），2D 剖面保留为默认视图，WebGL 不可用时自动回退。
+
 ## 2026-10-31 · 全局主题与实验室导航
 
 - 根目录页、Motor Lab 与 Stock Market Lab 共用 `czl-lab-theme` 深浅色偏好，默认跟随系统，并在首次绘制前应用。

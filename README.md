@@ -6,7 +6,7 @@
 
 - **唯一主仓库**：[CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering)
 - **网站入口**：[组织 GitHub Pages](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/)
-- **当前项目**：[Motor Lab 电机原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) · [Stock Market Lab 股票市场原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/stock-market-lab/)
+- **当前项目**：[Motor Lab 电机原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) · [Stock Market Lab 股票市场原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/stock-market-lab/) · [Desalination Lab 海水淡化原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/desalination-lab/)
 - **开始贡献**：[CONTRIBUTING.md](CONTRIBUTING.md) · **AI 工作约定**：[AGENTS.md](AGENTS.md)
 
 后续代码、Issue、PR 和部署均以组织仓库为准。个人账号下的历史仓库和旧站点不是后续同步或发布目标。
@@ -17,18 +17,21 @@
 | --- | --- | --- |
 | Motor Lab | 六类电机，精细三维分解，48 幕课程，自动运镜字幕，四组双模型对比 | [Projects/motor-lab](Projects/motor-lab) |
 | Stock Market Lab | 10 个模块、60+ 幕讲解：K 线与周期聚合、成交量与技术指标、订单簿撮合、A 股/美股制度、IPO、估值、杠杆、ETF 与 10 组同步对比 | [Projects/stock-market-lab](Projects/stock-market-lab) |
+| Desalination Lab | 7 个模块、25 幕讲解、3 个 WebGL 3D 视图：含盐阶梯、渗透压与 273 米水柱、单段 RO 质量守恒、MSF 闪蒸瀑布、膜污染曲线、能耗口径与整厂浓盐水 | [Projects/desalination-lab](Projects/desalination-lab) |
 
 Motor Lab 默认先展示运行动画，再进入逐步讲解。它支持单文件离线运行；可选系统语音及外部参考资料的联网需求见项目说明。几何、场线和工作点属于教学模型，具体边界见各项目文档。
 
 Stock Market Lab 面向没有金融基础的学习者：从一根 K 线的四个价格出发，逐层拆到订单簿、一级/二级市场资金流、IPO 摊薄、估值、杠杆强平与 ETF 分散。所有行情与收益都是标注过的模拟数据或固定种子模型；规则页记录核对日期与官方来源，不构成投资建议。
 
+Desalination Lab 面向工程与环保兴趣的学习者：从含盐阶梯到渗透压（≈27 bar、273 米水柱），再到可手调的单段 RO（质量守恒与能耗联动）、MSF 闪蒸瀑布、膜污染曲线、统一口径的能耗对比与整厂浓盐水平衡。B/C/G 三个模块提供可拖拽的 WebGL 3D 视图（渗透装置、卷式膜元件、厂区巡览），2D 剖面保留为默认视图。所有模型为教学近似并标注边界；物理不变量由 `tests/check-physics.cjs` 锁定，文献数值标注核对日期与来源。
+
 ## 主题与实验室导航 / Theme and lab navigation
 
-根目录页与两个实验室共用同一套主题偏好。页面在首次绘制前读取 `czl-lab-theme`；没有记录时跟随系统 `prefers-color-scheme`，右上角按钮切换后写回 `localStorage`，并把 `meta[name="theme-color"]` 同步为当前背景。两套主题都内联在单文件页面中，不请求远程样式或字体，断网、直接打开 `index.html` 仍然有效。
+根目录页与各实验室共用同一套主题偏好。页面在首次绘制前读取 `czl-lab-theme`；没有记录时跟随系统 `prefers-color-scheme`，右上角按钮切换后写回 `localStorage`，并把 `meta[name="theme-color"]` 同步为当前背景。两套主题都内联在单文件页面中，不请求远程样式或字体，断网、直接打开 `index.html` 仍然有效。
 
-两个实验室的顶栏左侧都有返回 `Lab Projects` 目录的入口；页脚前有“换一个实验室 / Lab projects”目录，列出全部实验室、标记当前页，并提供返回根目录的链接。目录使用相对路径，`/motor-lab/`、`/stock-market-lab/` 与 `_site` 的本地 `file://` 预览都能解析；单独复制某个 `index.html` 时需保留同样的站点目录结构。新增实验室时必须同时更新两份实验室目录与 `site/projects.json`。
+各实验室的顶栏左侧都有返回 `Lab Projects` 目录的入口；页脚前有“换一个实验室 / Lab projects”目录，列出全部实验室、标记当前页，并提供返回根目录的链接。目录使用相对路径，`/motor-lab/`、`/stock-market-lab/`、`/desalination-lab/` 与 `_site` 的本地 `file://` 预览都能解析；单独复制某个 `index.html` 时需保留同样的站点目录结构。新增实验室时必须同时更新全部既有实验室的目录与 `site/projects.json`。
 
-两个实验室在滚动后右下角提供“↑ 顶部”按钮；主题按钮是真实的 `<button>`，带有可读名称与 `aria-pressed` 状态；切换不重载页面，也不应出现主题闪烁。深色与浅色下都要检查正文对比度、图表网格、焦点环与 390px 窄屏。主题与导航的实现约定见 [AGENTS.md](AGENTS.md)，提交流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+各实验室在滚动后右下角提供“↑ 顶部”按钮；主题按钮是真实的 `<button>`，带有可读名称与 `aria-pressed` 状态；切换不重载页面，也不应出现主题闪烁。深色与浅色下都要检查正文对比度、图表网格、焦点环与 390px 窄屏。主题与导航的实现约定见 [AGENTS.md](AGENTS.md)，提交流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 快速开始
 
