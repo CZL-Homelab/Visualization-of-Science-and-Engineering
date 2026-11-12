@@ -28,7 +28,7 @@
 
 - 共享主题键为 `czl-lab-theme`；`src/page.html` 首次绘制前设置 `data-theme`，`src/app.js` 负责切换、`aria-pressed`、`meta[name="theme-color"]`，并调用 `engine.setTheme()` 调整网格/坐标轴。
 - 浅色覆盖分两层：`src/page.html` 内的变量与 `html[data-theme="light"]`，以及后加载的 `src/lab.css` 末尾覆盖。新增颜色必须走变量；不要只改一层，否则浅色会被另一层覆盖。
-- 顶栏保留 `Lab Projects` 返回入口，页脚前保留 `.lab-directory`；新增实验室时同步两份目录与 `site/projects.json`，并检查 Pages 与本地 `file://` 链接。
+- 顶栏保留 `Lab Projects` 返回入口，页脚前保留 `.lab-directory`；新增实验室时同步所有实验室目录与 `site/projects.json`，并检查 Pages 与本地 `file://` 链接。
 - 主题按钮是原生按钮，带可读名称和 `aria-pressed`；不得引入远程样式或字体。深浅色均需检查舞台、字幕卡、目录、焦点状态和 390px 窄屏。
 
 ## 检查
@@ -53,7 +53,7 @@ node tests/check-model.cjs
 
 - The shared key is `czl-lab-theme`. src/page.html sets data-theme before first paint; src/app.js handles the switch, aria-pressed, meta[name="theme-color"] and engine.setTheme() for grid/axis opacity.
 - Light overrides live in two layers: variables plus html[data-theme="light"] in src/page.html, and overrides appended to the later-loaded src/lab.css. Route new colors through variables; changing one layer only will be overridden.
-- Keep the Lab Projects back link in the header and .lab-directory above the footer. When adding a lab, update both directories and site/projects.json, and verify Pages and local file:// links.
+- Keep the Lab Projects back link in the header and .lab-directory above the footer. When adding a lab, update every lab directory and site/projects.json, and verify Pages and local file:// links.
 - The theme control must remain a native button with an accessible name and aria-pressed. Do not add remote styles or fonts. Verify the stage, caption cards, directory, focus states and 390px layouts in both themes.
 
 ## English — Motor Lab development instructions

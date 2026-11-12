@@ -15,10 +15,10 @@ for f in src/*.js src/modules/*.js; do node --check "$f"; done
 node tests/check-physics.cjs     # 物理不变量
 node tests/check-build.cjs       # 离线封装与锚点
 node tests/check-scenes.cjs      # 讲解 → 控件 → 3D 状态联动
-python -m http.server 8766 --bind 127.0.0.1   # 预览 http://127.0.0.1:8766/desalination-lab/
+python -m http.server 8766 --bind 127.0.0.1   # 在此项目目录运行时，预览 http://127.0.0.1:8766/
 ```
 
-`src/` 是源码真身；`index.html` 是生成物，随源码一起提交。
+`src/` 是源码真身；`index.html` 是生成物，随源码一起提交。维护规则见 [AGENTS.md](AGENTS.md)，当前 PR 与发布状态见 [交接记录](../../docs/HANDOFF.md)。
 
 ## 模块一览
 
@@ -52,7 +52,7 @@ python -m http.server 8766 --bind 127.0.0.1   # 预览 http://127.0.0.1:8766/des
 
 Desalination Lab is a single-file, fully offline teaching bench for seawater desalination: seven modules covering the salinity ladder, osmotic pressure, a parameter-driven single-pass RO stage (mass balance and energy in sync), MSF flash cascades, membrane fouling, energy-accounting comparisons and a whole-plant balance with remineralisation and brine disposal. All physics math lives in `src/core.js` and is pinned by 23 invariant tests; literature values carry a verification date and source links. Animations are teaching models, not engineering simulations.
 
-Build and verify: `python3 build.py`, `node --check` on all sources, `node tests/check-physics.cjs`, `node tests/check-build.cjs`. Commit the generated `index.html` with source changes.
+Read [AGENTS.md](AGENTS.md) and the [current handoff](../../docs/HANDOFF.md) before maintenance. Build and verify: `python3 build.py`, `node --check` on all sources, `node tests/check-physics.cjs`, `node tests/check-scenes.cjs`, `node tests/check-build.cjs`. Commit the generated `index.html` with source changes.
 
 ## 3D 交互 / 3D controls
 

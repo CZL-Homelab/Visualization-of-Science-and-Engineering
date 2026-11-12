@@ -67,7 +67,7 @@ no chart at all.
 - The header keeps a `Lab Projects` back link (catalog with `#projects`); the pre-footer
   `.lab-directory` lists all labs and marks the current one. Relative links must resolve under the
   Pages subpath and from `file://`.
-- When adding a lab, update this directory, the Motor Lab directory and `site/projects.json`.
+- When adding a lab, update every lab directory and `site/projects.json`; derive coverage from the registry.
 - Verify both palettes for text contrast, chart grid/axis colors, focus rings and 390px layouts.
   A passing console check is not a visual check.
 

@@ -7,11 +7,13 @@
 - **唯一主仓库**：[CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering)
 - **网站入口**：[组织 GitHub Pages](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/)
 - **当前项目**：[Motor Lab 电机原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) · [Stock Market Lab 股票市场原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/stock-market-lab/) · [Desalination Lab 海水淡化原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/desalination-lab/) · [Fusion Lab 核聚变反应堆实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/fusion-lab/)
-- **开始贡献**：[CONTRIBUTING.md](CONTRIBUTING.md) · **AI 工作约定**：[AGENTS.md](AGENTS.md)
+- **开始贡献**：[CONTRIBUTING.md](CONTRIBUTING.md) · **AI 工作约定**：[AGENTS.md](AGENTS.md) · **交接与发布状态**：[docs/HANDOFF.md](docs/HANDOFF.md)
 
 后续代码、Issue、PR 和部署均以组织仓库为准。个人账号下的历史仓库和旧站点不是后续同步或发布目标。
 
 ## 当前演示 / Current projects
+
+以下为本分支实现的四个实验室；正式站点以已合并的 `main` 和成功的 Pages 部署为准。未发布变更见 [CHANGELOG.md](CHANGELOG.md)，分支、PR 与待办见 [交接记录](docs/HANDOFF.md)。
 
 | 项目 | 内容 | 源码与说明 |
 | --- | --- | --- |
@@ -42,15 +44,31 @@ Fusion Lab adds seven chapters and 41 scenes covering D–T fusion, confinement,
 
 需要 Git、Python 3.9+ 和 Node.js 22 LTS。当前项目不需要 npm 安装或 Python 第三方包。
 
+以下命令在包含四个实验室的本分支或合并后的 `main` 上，从仓库根目录执行。新克隆默认得到 `main`；如参与尚未合并的工作，先按对应 PR 检出其分支，避免把未发布内容当作已上线版本。
+
 ```sh
 git clone https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering.git
-cd Visualization-of-Science-and-Engineering/Projects/motor-lab
-python build.py
-node tests/check-model.cjs
-python -m http.server 8766 --bind 127.0.0.1
+cd Visualization-of-Science-and-Engineering
+# 构建当前分支的四个实验室，再检查并打包整个站点
+for lab in motor-lab stock-market-lab desalination-lab fusion-lab; do
+  python "Projects/$lab/build.py" || exit 1
+done
+python scripts/check_site.py
+python -m http.server 8767 --bind 127.0.0.1 --directory _site
 ```
 
-打开 `http://127.0.0.1:8766/` 预览；停止服务使用 Ctrl+C。也可直接用支持 WebGL 的现代浏览器打开生成的 `index.html`。Linux/macOS 若没有 `python` 命令，可使用 `python3`。
+打开 `http://127.0.0.1:8767/` 查看完整目录及四条项目路由；停止服务使用 Ctrl+C。也可直接打开 `_site/index.html`，并保留目录结构以使用跨 Lab 导航。单独进入某个 `Projects/<slug>/` 启动 HTTP 服务时，访问服务器根地址 `/`。Linux/macOS 若没有 `python` 命令，可使用 `python3`；上述循环可在 Bash 或 Git Bash 中执行。
+
+修改某个实验室后，按其 README 构建、对所有源码执行 `node --check`，再运行对应检查：
+
+| 项目目录 | Node 检查（在该项目目录执行） |
+| --- | --- |
+| `Projects/motor-lab/` | `node tests/check-model.cjs` |
+| `Projects/stock-market-lab/` | `node tests/check-finance.cjs`、`node tests/check-build.cjs` |
+| `Projects/desalination-lab/` | `node tests/check-physics.cjs`、`node tests/check-scenes.cjs`、`node tests/check-build.cjs` |
+| `Projects/fusion-lab/` | `node tests/check-physics.cjs`、`node tests/check-build.cjs` |
+
+仅修改文档时核对相关链接、路径和命令，并运行 `git diff --check`；无需为说明文字重复无关的模型或 UI 测试。
 
 已有本地工程可确认并更新远程：
 
@@ -71,7 +89,8 @@ site/                    目录模板与项目清单
 scripts/                 目录构建及链接检查
 AGENTS.md                仓库级 AI 工作约定
 CONTRIBUTING.md          开发、验证与协作流程
-CHANGELOG.md             面向使用者的更新记录
+CHANGELOG.md             面向使用者的更新记录，区分未发布变更
+docs/HANDOFF.md          当前分支、验证、PR/发布状态及下一步
 Projects/
   motor-lab/
     AGENTS.md            电机模型和状态管理的专门约定
@@ -86,25 +105,43 @@ Projects/
     tests/               金融不变量与离线封装检查
     build.py             将源码组装为单文件网页
     index.html           生成的离线交付文件，随源码一起提交
+  desalination-lab/
+    AGENTS.md            渗透、RO、整厂流程与 3D 维护约定
+    src/                 物理模型、页面、图表与 7 个模块
+    vendor/              离线 Three.js 及其许可证
+    tests/               物理、场景联动与离线封装检查
+    build.py             将源码组装为单文件网页
+    index.html           生成的离线交付文件，随源码一起提交
+  fusion-lab/
+    AGENTS.md            核聚变模型、三维验证与协作约定
+    src/                 物理模型、教学内容与三维场景
+    vendor/              离线 Three.js 及其许可证
+    tests/               物理守恒、几何及离线封装检查
+    build.py             将源码组装为单文件网页
+    index.html           生成的离线交付文件，随源码一起提交
 ```
 
 请修改 `src/`，再重新生成 `index.html`。不要只编辑生成页。新增演示放在 `Projects/<slug>/`，提供独立说明、构建和检查方式，并在 `site/projects.json` 登记项目；构建器据此生成目录和对应路由。若项目需要额外资源，请同时扩展打包逻辑。
 
 ## 协作与发布
 
-日常开发使用功能分支和 PR；PR 会执行独立 CI。合并到组织仓库的 `main` 后，Pages 工作流构建、验证并部署。文档和发布配置变化也会触发发布，支持从 Actions 手动运行。
+日常开发使用功能分支和 PR；PR 会执行独立 CI。合并到组织仓库的 `main` 后，符合 `.github/workflows/pages.yml` 路径过滤的变更会触发构建、验证和部署，也支持从 Actions 手动运行。README、AGENTS、贡献指南及发布配置在当前过滤范围内；其他文档修改不一定触发发布。
 
-站点位于 `czl-homelab.github.io/Visualization-of-Science-and-Engineering/`，不是组织根域的独立首页仓库。站点根路径是可搜索的项目目录，Motor Lab 保留 `/motor-lab/`，Stock Market Lab 使用 `/stock-market-lab/`。发布仅上传生成的网页，不上传源码、备份或工作文件。
+站点位于 `czl-homelab.github.io/Visualization-of-Science-and-Engineering/`，不是组织根域的独立首页仓库。站点根路径是可搜索的项目目录，四条项目路由为 `/motor-lab/`、`/stock-market-lab/`、`/desalination-lab/`、`/fusion-lab/`。发布仅上传生成的网页，不上传源码、备份或工作文件。
 
 仓库管理员应将 **Settings → Pages → Source** 设为 **GitHub Actions**。新维护者可在 [Actions](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/actions) 查看检查和部署记录。现有流程使用仓库提供的 `GITHUB_TOKEN`，不需要在源码中保存个人令牌。
 
 MIT 许可见 [LICENSE](LICENSE)。第三方依赖保留各自许可证，例如 [Three.js MIT 许可](Projects/motor-lab/vendor/THREE-LICENSE.txt)。现有作者署名保持不变。
 
+## 文档维护与交接 / Documentation and handoff
+
+功能和维护流程变更须在同一 PR 更新相关 README、指南、AGENTS.md 和更新记录；具体要求见 [AI 协作约定](AGENTS.md) 与 [贡献指南](CONTRIBUTING.md)。[docs/HANDOFF.md](docs/HANDOFF.md) 汇总当前工作、实际验证、未发布状态和下一步，后续维护者或 AI 应先阅读并在交付时更新。
+
 ## 目录与视觉标识 / Directory and visual identity
 
 根地址是项目总目录，后续演示统一登记在 `site/projects.json`，不再用某一个演示代替首页。构建目录：先构建各演示，再在仓库根目录运行 `python scripts/check_site.py`；本地预览使用 `python -m http.server 8767 --bind 127.0.0.1 --directory _site`。
 
-SVG 标识位于 [`assets/icon.svg`](assets/icon.svg)：空间框架表示结构，轨迹表示科学观察和运动。README、目录及 Motor Lab 使用同一标识；Motor Lab 内嵌 SVG，保持离线使用。网站头部和页脚提供完整仓库入口。图标与复用说明见 [`assets/README.md`](assets/README.md)。
+SVG 标识位于 [`assets/icon.svg`](assets/icon.svg)：空间框架表示结构，轨迹表示科学观察和运动。README、目录及所有实验室使用同一标识；各实验室内嵌 SVG，保持离线使用。网站头部和页脚提供完整仓库入口。图标与复用说明见 [`assets/README.md`](assets/README.md)。
 
 ## English
 
@@ -114,32 +151,36 @@ An open collection of interactive science and engineering explanations maintaine
 
 - Canonical repository: [CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering).
 - Project directory: [GitHub Pages](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/).
-- Current demonstrations: [Motor Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) (six motor types, 48 lesson scenes, 24 comparison scenes) and [Stock Market Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/stock-market-lab/) (ten interactive labs on candlesticks, indicators, order books, market rules, IPOs, valuation, leverage and ETFs).
+- This branch contains four labs: [Motor Lab](Projects/motor-lab/README.md) (six motor types), [Stock Market Lab](Projects/stock-market-lab/README.md) (ten modules), [Desalination Lab](Projects/desalination-lab/README.md) (seven modules and three annotated 3D views), and [Fusion Lab](Projects/fusion-lab/README.md) (seven chapters and 41 scenes). Production reflects merged `main` and a successful Pages deployment, not an open PR. See [CHANGELOG.md](CHANGELOG.md) for unreleased changes and [docs/HANDOFF.md](docs/HANDOFF.md) for current work and release status.
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) and the applicable [AGENTS.md](AGENTS.md) before contributing. Personal historical repositories and sites are not synchronization or deployment targets.
 
 ### Theme and lab navigation
 
-The catalog and both labs share one theme preference. Each page reads `czl-lab-theme` before first paint, falls back to `prefers-color-scheme`, persists explicit choices in `localStorage`, and updates `meta[name="theme-color"]`. Both palettes are inlined in the standalone files; no remote styles or fonts are requested, so the pages keep working offline.
+The catalog and all labs share one theme preference. Each page reads `czl-lab-theme` before first paint, falls back to `prefers-color-scheme`, persists explicit choices in `localStorage`, and updates `meta[name="theme-color"]`. Both palettes are inlined in the standalone files; no remote styles or fonts are requested, so the pages keep working offline.
 
-Each lab header starts with a link back to the `Lab Projects` catalog. Before the footer, a "Lab projects" directory lists every lab, marks the current page, and links back to the catalog. Relative paths keep `/motor-lab/`, `/stock-market-lab/` and `file://` previews working. Both labs also show a floating “top” button after scrolling. A new lab must update both directories and `site/projects.json`.
+Each lab header starts with a link back to the `Lab Projects` catalog. Before the footer, a "Lab projects" directory lists every lab, marks the current page, and links back to the catalog. Relative paths keep `/motor-lab/`, `/stock-market-lab/`, `/desalination-lab/`, `/fusion-lab/` and `file://` previews working. Labs also show a floating “top” button after scrolling. A new lab must update every lab directory and `site/projects.json`.
 
 The theme control is a real `<button>` with an accessible name and `aria-pressed`; switching must not reload the page or flash the wrong palette. Check contrast, chart grids, focus rings and narrow layouts in both themes. See [AGENTS.md](AGENTS.md) for implementation rules and [CONTRIBUTING.md](CONTRIBUTING.md) for the review flow.
 
 ### Run and build
 
-Use Git, Python 3.9+ and Node.js 22 LTS. No npm installation or third-party Python packages are needed. Clone the organization repository, enter `Projects/motor-lab` or `Projects/stock-market-lab`, then run `python build.py` and the project's Node test (`node tests/check-model.cjs` or `node tests/check-finance.cjs`). The commands in the Chinese quick-start section are identical on all platforms; use `python3` where appropriate.
+Use Git, Python 3.9+ and Node.js 22 LTS. No npm installation or third-party Python packages are needed. The Chinese quick-start commands above build all four labs from the repository root, run `python scripts/check_site.py`, and serve `_site` at `http://127.0.0.1:8767/`. Use Bash/Git Bash for the loop and `python3` where appropriate. A fresh clone starts on `main`; check out the relevant PR branch before using unreleased features.
 
-Preview the project with `python -m http.server 8766 --bind 127.0.0.1`, or open its generated `index.html` with a WebGL-capable browser. Optional speech and external references have their own network requirements; see the project README. Models are educational and disclose physical simplifications.
+For a single lab, edit its source, run `python build.py` in that lab directory, check every source script with `node --check`, and run the tests in the table above. Motor uses `check-model.cjs`; Stock uses `check-finance.cjs` and `check-build.cjs`; Desalination uses `check-physics.cjs`, `check-scenes.cjs` and `check-build.cjs`; Fusion uses `check-physics.cjs` and `check-build.cjs`. Each test file lives under the corresponding project's `tests/`. Follow its README for full commands and model limits.
 
-To build the complete directory, build project artifacts first, then run `python scripts/check_site.py` from the repository root. Preview `_site` with `python -m http.server 8767 --bind 127.0.0.1 --directory _site`. The root page is a searchable catalog; each project has its own stable route such as `/motor-lab/`.
+Open `_site/index.html` directly for an offline preview while retaining the whole directory for cross-lab links. If serving an individual project directory, visit the server root `/`. Optional speech and external references have their own requirements; see the project README. Models are educational and disclose physical simplifications. Documentation-only changes need relevant link/path/command checks and `git diff --check`, rather than unrelated model or UI reruns.
+
+### Documentation and handoff
+
+Update affected READMEs, guides, AGENTS.md and changelog entries in the same PR as implementation or workflow changes. Read and update [docs/HANDOFF.md](docs/HANDOFF.md) for completed work, observed validation, unreleased status, decisions and next steps. The root [AGENTS.md](AGENTS.md) and [CONTRIBUTING.md](CONTRIBUTING.md) define this delivery requirement.
 
 ### Source, identity and collaboration
 
 Edit project `src/` files and regenerate `index.html`; commit both source and the documented generated deliverable. `site/` contains the directory template and project registry, `assets/` holds shared SVG identity and illustrations, and `scripts/` builds and verifies the published directory. Add new demonstrations under `Projects/<slug>/` and register them in `site/projects.json` (including `previewAlt`); extend packaging explicitly if they require extra assets.
 
-The [SVG icon](assets/icon.svg) combines a spatial frame with an orbital path, representing structure, observation and motion. It is used in this README, the directory, and the Motor Lab favicon/brand. Motor Lab embeds it to retain offline operation. Both web pages link to the complete repository name. See [asset guidance](assets/README.md).
+The [SVG icon](assets/icon.svg) combines a spatial frame with an orbital path, representing structure, observation and motion. It is used in this README, the directory, and every lab favicon/brand. Each lab embeds it to retain offline operation. The catalog and lab pages link to the complete repository name. See [asset guidance](assets/README.md).
 
-Use feature branches and pull requests. CI verifies Windows and Linux builds, JavaScript syntax, physical invariants, generated artifacts and published links. Merging to the organization's `main` triggers Pages deployment; manual dispatch is also supported. Pages Source must be **GitHub Actions**. Publishing uses `GITHUB_TOKEN`, not committed personal credentials. The root page is not the organization's separate `<owner>.github.io` repository.
+Use feature branches and pull requests. CI verifies Windows and Linux builds, JavaScript syntax, physical invariants, generated artifacts and published links. Changes merged to the organization's `main` trigger Pages deployment when they match the workflow's path filters; manual dispatch is also supported. README, AGENTS and CONTRIBUTING are currently included, but not every documentation change triggers publishing. Pages Source must be **GitHub Actions**. Publishing uses `GITHUB_TOKEN`, not committed personal credentials. The root page is not the organization's separate `<owner>.github.io` repository.
 
 Before changing the remote or synchronizing existing work, inspect the working tree, branch history and `git remote -v`. Do not overwrite collaborators' changes or force-push. See [Actions](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/actions) for actual deployment status.
 

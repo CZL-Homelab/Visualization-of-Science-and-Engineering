@@ -3,7 +3,7 @@
 主仓库：[CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering)。
 正式网站：[Motor Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/)。
 
-源码位于仓库的 `Projects/motor-lab/`。当前维护机目录为 `F:\ProjectA\Visualization-of-Science-and-Engineering\Projects\motor-lab`，其他开发者可克隆到任意路径。协作请先读根目录 [贡献指南](../../CONTRIBUTING.md) 和本目录 [AGENTS.md](AGENTS.md)。
+源码位于仓库的 `Projects/motor-lab/`。可克隆到任意本地路径。协作请先读根目录 [贡献指南](../../CONTRIBUTING.md) 和本目录 [AGENTS.md](AGENTS.md)。
 
 ## v3.1
 
@@ -125,7 +125,7 @@ PR 合并到组织仓库 main（或在明确授权下推送 main）后，`.githu
 
 ## English — Motor Lab v3.1
 
-Canonical repository: [CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering). [Open Motor Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) or return to the [project directory](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/). Source is under Projects/motor-lab; the maintainer's F-drive path is an example, not a required location. Read the root contribution guide and local AGENTS.md.
+Canonical repository: [CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering). [Open Motor Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) or return to the [project directory](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/). Source is under Projects/motor-lab; no maintainer-specific filesystem path is required. Read the root contribution guide and local AGENTS.md.
 
 ### Run and explore
 
@@ -147,7 +147,7 @@ Four comparison pairs provide six scenes each: BLDC/PMSM, synchronous/induction,
 
 The header button switches between dark and light. First visit follows `prefers-color-scheme`; an explicit choice is stored under the shared `czl-lab-theme` key and mirrored to `meta[name="theme-color"]`. Both palettes are inlined in index.html, so the file stays offline and requests no remote fonts or styles.
 
-`Lab Projects` at the top-left returns to the catalog. The "Lab projects" directory above the footer lists every lab, marks the current page and links back to the catalog. Both labs show a floating “top” button after 600px of scrolling, hidden when the page is short. Relative paths keep Pages subpaths and local file:// previews working. The theme switch also updates grid and axis opacity in the 3D engine; light mode uses a warm paper stage, dark mode keeps graphite. Check labels, grids, focus rings and narrow layouts in both themes.
+`Lab Projects` at the top-left returns to the catalog. The "Lab projects" directory above the footer lists every lab, marks the current page and links back to the catalog. This lab shows a floating “top” button after 600px of scrolling, hidden when the page is short. Relative paths keep Pages subpaths and local file:// previews working. The theme switch also updates grid and axis opacity in the 3D engine; light mode uses a warm paper stage, dark mode keeps graphite. Check labels, grids, focus rings and narrow layouts in both themes.
 
 ### Model boundaries
 
