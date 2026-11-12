@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>核聚变反应堆实验室 · Fusion Lab</title>
+<meta name="description" content="拆开 ITER：从氘氚反应、磁约束、装置解剖、一次放电，到氚燃料循环与商用聚变电站。可拖拽的三维模型与 41 幕讲解，全部离线运行。">
+<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#0d0e13"><script>(function(){try{var k='czl-lab-theme';var s=localStorage.getItem(k);var t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==='light'?'#f3f1ec':'#0d0e13';}catch(e){}})();</script>
+<!-- SITE_ICON -->
+<style>/* LAB_STYLES */</style>
+</head>
+<body>
+<a class="skip" href="#lab">跳到实验台</a>
+
+<header class="topbar">
+  <a class="backlink" href="../index.html#projects" aria-label="返回 Lab Projects 项目列表">
+    <span aria-hidden="true">←</span><span class="backlink-label">Lab Projects</span>
+  </a>
+  <a class="brand" href="#top" aria-label="回到页首">
+    <img class="brand-mark" src="<!-- BRAND_ICON -->" alt="">
+    <span class="brand-name">核聚变反应堆实验室<small>FUSION LAB</small></span>
+  </a>
+  <nav class="topnav" aria-label="页面导航">
+    <a href="#lab">实验台</a>
+    <a href="#numbers">数字口径</a>
+    <a href="#myths">常见误区</a>
+    <a href="#limits">模型边界</a>
+    <a class="ext" href="https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering" target="_blank" rel="noopener">源码 <span aria-hidden="true">↗</span></a>
+  </nav>
+  <div class="top-actions">
+    <button id="themeToggle" class="ghost theme-toggle" type="button" aria-pressed="false" aria-label="切换到浅色模式" title="切换深色 / 浅色主题"><span class="theme-icon" aria-hidden="true">☀</span><span class="theme-label">浅色</span></button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="lab" id="lab" aria-label="交互实验台">
+    <nav class="chapters" id="chapterNav" aria-label="章节"></nav>
+
+    <div class="lab-grid">
+      <div class="stage" id="stage">
+        <canvas id="view" tabindex="0" aria-label="可拖拽旋转的三维模型。方向键旋转，加减键缩放。"></canvas>
+        <div class="hud" id="hud">
+          <div class="hud-head">
+            <span class="hud-kicker" id="hudKicker">ITER · TOKAMAK</span>
+            <span class="hud-title" id="hudTitle"></span>
+          </div>
+          <div class="hud-tools" role="group" aria-label="视图控制">
+            <button type="button" id="btnMotion" aria-pressed="true" title="暂停或恢复全部动效"><span aria-hidden="true">❙❙</span><span class="t">动效</span></button>
+            <button type="button" id="btnReset" title="回到本幕的预设视角"><span aria-hidden="true">⟲</span><span class="t">视角</span></button>
+            <button type="button" id="btnZoomIn" aria-label="放大" title="放大">＋</button>
+            <button type="button" id="btnZoomOut" aria-label="缩小" title="缩小">−</button>
+          </div>
+          <div class="hud-foot">
+            <div class="legend" id="legend" aria-label="图例"></div>
+            <p class="caption" id="caption" aria-live="polite"></p>
+            <span class="model-badge" id="modelBadge">教学示意 · 非工程仿真</span>
+          </div>
+        </div>
+
+        <div class="intro" id="intro">
+          <p class="eyebrow">ITER · DEUTERIUM–TRITIUM FUSION / 7 CHAPTERS</p>
+          <h1>把一颗恒星，<br>关进磁场里。</h1>
+          <p class="lede">一台 23 000 吨的机器，要把不到一克的氢同位素加热到 1.5 亿度并托在真空里烧上几百秒。从一次氘氚反应开始，逐层拆开 ITER，再顺着燃料和能量，走到一座真正能发电的聚变电站。</p>
+          <div class="intro-actions">
+            <button class="btn primary" id="startTour" type="button">▶ 开始讲解</button>
+            <button class="btn" id="startFree" type="button">直接拆开看</button>
+          </div>
+          <ul class="intro-facts">
+            <li><b>7</b><span>章</span></li>
+            <li><b>41</b><span>幕讲解</span></li>
+            <li><b>13</b><span>台可调仪器</span></li>
+            <li><b>0</b><span>联网依赖</span></li>
+          </ul>
+        </div>
+
+        <div class="fallback" id="fallback" hidden>
+          <b>这台设备没能启动 WebGL。</b>
+          <span>三维模型无法显示，但右侧的讲解与全部仪器仍然可用。可以换一个支持 WebGL 的浏览器，或在浏览器设置里打开硬件加速。</span>
+        </div>
+      </div>
+
+      <aside class="panel" id="panel" aria-label="讲解与仪器">
+        <div class="scene-head">
+          <div class="scene-meta"><span id="sceneChapter"></span><span id="sceneCount"></span></div>
+          <h2 id="sceneTitle"></h2>
+          <div class="scene-body" id="sceneBody"></div>
+          <p class="scene-note" id="sceneNote" hidden></p>
+        </div>
+        <div class="inst" id="inst"></div>
+      </aside>
+    </div>
+
+    <div class="transport" role="group" aria-label="讲解控制">
+      <div class="tr-buttons">
+        <button id="prevScene" class="icon-btn" type="button" aria-label="上一幕" title="上一幕（←）">←</button>
+        <button id="playScenes" class="icon-btn primary" type="button" aria-pressed="false" title="自动讲解：播放 / 暂停">▶ 自动讲解</button>
+        <button id="nextScene" class="icon-btn" type="button" aria-label="下一幕" title="下一幕（→）">→</button>
+      </div>
+      <div class="scene-dots" id="sceneDots" role="tablist" aria-label="本章各幕"></div>
+      <div class="tr-progress" aria-hidden="true"><i id="directorBar"></i></div>
+      <div class="tr-meta">
+        <label class="mini"><span>节奏</span>
+          <select id="dirSpeed">
+            <option value="0.7">慢</option>
+            <option value="1" selected>正常</option>
+            <option value="1.5">快</option>
+          </select>
+        </label>
+        <span class="tr-status" id="directorStatus">手动模式</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="numbers">
+    <div class="section-head">
+      <p class="eyebrow">REFERENCE / 数字口径</p>
+      <h2>每个数字，都能追到来处。</h2>
+      <p>物理量由 <code>core.js</code> 从原子质量和公开的参数化公式算出；装置参数与计划日期取自项目方公布的资料，并注明核对日期。计划会变，引用前请回到原始来源。</p>
+    </div>
+    <div id="rulesTable" class="rules-wrap"></div>
+    <div class="source-row" id="ruleSources"></div>
+  </section>
+
+  <section class="content" id="myths">
+    <div class="section-head">
+      <p class="eyebrow">MISCONCEPTIONS / 常见误区</p>
+      <h2>八句最容易说错的话。</h2>
+      <p>每一条都对应实验台里的一幕。点开看解释，再回到模型里自己验证。</p>
+    </div>
+    <div id="mythList" class="myth-list"></div>
+  </section>
+
+  <section class="content" id="limits">
+    <div class="section-head">
+      <p class="eyebrow">BOUNDARIES / 模型边界</p>
+      <h2>哪些是真实数字，哪些只是示意。</h2>
+    </div>
+    <div class="limit-grid">
+      <article class="limit-card">
+        <h3>三维模型</h3>
+        <p>装置按 ITER 公布的总体尺寸程序化生成：大小半径、线圈数量、模块与盒体数量是对的；截面轮廓、窗口、支撑与管线是简化的教学造型，不是工程图纸。氚工厂与汽轮机岛只是示意性的设备块，位置和比例不代表真实厂区布置。</p>
+      </article>
+      <article class="limit-card">
+        <h3>动画</h3>
+        <p>粒子速度放慢约 10⁷ 倍，回旋半径放大约 20 倍；等离子体的颜色和亮度是可视化选择——真实芯部主要发 X 射线，肉眼几乎看不见。原子核被画成小球只是比喻。程序动画不是工程仿真。</p>
+      </article>
+      <article class="limit-card">
+        <h3>物理模型</h3>
+        <p>能量平衡是 0 维、平剖面模型；安全因子用圆柱近似加形状因子；氚库存是三库存常微分方程；电站账本只做功率记账。它们给出正确的趋势和量级，不能代替输运程序、平衡程序或系统程序。</p>
+      </article>
+      <article class="limit-card">
+        <h3>计划与日期</h3>
+        <p>ITER 的性能指标是尚未验证的设计目标。各装置的建成与运行时间均为项目方公布的计划，核对日期见口径表；聚变项目延期并不罕见，请勿把计划日期当作既成事实。</p>
+      </article>
+    </div>
+    <p class="fineprint">Fusion Lab · 教学模型 · 非工程仿真 · 三维引擎为随页面内嵌的 three.js r160（MIT）</p>
+  </section>
+</main>
+
+<section class="lab-directory" aria-labelledby="labDirectoryTitle">
+  <div class="dir-head">
+    <span class="dir-eyebrow">LAB PROJECTS / 全部实验</span>
+    <h2 id="labDirectoryTitle">换一个实验室</h2>
+    <p>四个可离线运行的交互式实验室。主题与导航在各页保持一致。</p>
+  </div>
+  <div class="dir-grid">
+    <a class="dir-card current" href="./index.html" aria-current="page">
+      <span class="dir-num">04</span>
+      <div class="dir-copy"><h3>核聚变反应堆实验室 <span class="dir-tag">当前 / Current</span></h3><p>ITER 三维解剖、磁约束、氘氚燃料循环与商用聚变电站。</p></div>
+    </a>
+    <a class="dir-card" href="../motor-lab/index.html">
+      <span class="dir-num">01</span>
+      <div class="dir-copy"><h3>电机原理实验室 <span class="dir-tag">Motor Lab</span></h3><p>六类电机的三维结构、磁场与连续换向过程。</p></div>
+    </a>
+    <a class="dir-card" href="../stock-market-lab/index.html">
+      <span class="dir-num">02</span>
+      <div class="dir-copy"><h3>股票市场原理实验室 <span class="dir-tag">Stock Lab</span></h3><p>K 线、订单簿、IPO、杠杆与 A 股 / 美股制度对比。</p></div>
+    </a>
+    <a class="dir-card" href="../desalination-lab/index.html">
+      <span class="dir-num">03</span>
+      <div class="dir-copy"><h3>海水淡化原理实验室 <span class="dir-tag">Desal Lab</span></h3><p>渗透压、反渗透、闪蒸与整厂物料平衡。</p></div>
+    </a>
+  </div>
+  <a class="dir-all" href="../index.html#projects">返回项目目录 / All projects <span aria-hidden="true">↗</span></a>
+</section>
+
+<footer class="site-foot">
+  <div>
+    <strong>核聚变反应堆实验室</strong>
+    <span>Fusion Lab · 一个可离线运行的聚变堆原理教学实验台</span>
+  </div>
+  <nav>
+    <a href="https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering" target="_blank" rel="noopener">仓库 / Repository</a>
+    <a href="#lab">回到实验台</a>
+  </nav>
+</footer>
+
+<noscript><p class="noscript">本实验台需要 JavaScript 才能绘制三维模型与计算。页面本身不含任何远程资源。</p></noscript>
+
+<!-- LAB_SCRIPTS -->
+</body>
+</html>

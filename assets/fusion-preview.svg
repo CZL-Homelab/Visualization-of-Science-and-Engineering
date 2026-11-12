@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="380" viewBox="0 0 620 380" role="img" aria-labelledby="title desc">
+<title id="title">Fusion Lab · 托卡马克</title><desc id="desc">Schematic tokamak coils surrounding a glowing plasma ring, with a thermal power path.</desc>
+<defs><radialGradient id="bg"><stop stop-color="#24314b"/><stop offset="1" stop-color="#0d1019"/></radialGradient></defs>
+<rect width="620" height="380" rx="16" fill="url(#bg)"/>
+<g fill="none" transform="translate(275 185)"><ellipse rx="166" ry="75" stroke="#687b97" stroke-width="34"/><ellipse rx="140" ry="60" stroke="#ff7fdc" stroke-width="13"/>
+<g stroke="#eab66d" stroke-width="10"><ellipse cx="-138" rx="22" ry="104"/><ellipse cx="-75" rx="28" ry="124"/><ellipse cx="0" rx="30" ry="132"/><ellipse cx="75" rx="28" ry="124"/><ellipse cx="138" rx="22" ry="104"/></g>
+<ellipse rx="180" ry="39" cy="-85" stroke="#78b6dc" stroke-width="8"/><ellipse rx="180" ry="39" cy="85" stroke="#78b6dc" stroke-width="8"/>
+<path d="M140 30 H225 V90 H280" stroke="#ff8a59" stroke-width="5"/><path d="m268 80 12 10-12 10" stroke="#ff8a59" stroke-width="4"/></g>
+<g fill="#e9eef7" font-family="sans-serif"><text x="30" y="38" font-size="18" letter-spacing="3">FUSION LAB</text><text x="30" y="342" font-size="16">D + T → He + n · 17.6 MeV</text><text x="480" y="314" font-size="13">HEAT → POWER</text></g></svg>
