@@ -80,7 +80,7 @@ ok('lab navigation: Lab Projects back link and a directory listing every registe
 });
 
 ok('the interactive lab anchors exist', () => {
-  ['lab', 'stageBody', 'modulePanel', 'heroColumn', 'heroChart', 'boilStrip', 'familyGrid', 'compTable', 'sysTable', 'nrtlTable', 'aspenTable', 'mythList', 'importFile', 'quizMount']
+  ['lab', 'stageBody', 'modulePanel', 'heroColumn', 'heroChart', 'boilStrip', 'familyGrid', 'compTable', 'sysTable', 'nrtlTable', 'aspenTable', 'mythList', 'importFile']
     .forEach((id) => assert.ok(html.includes('id="' + id + '"'), 'missing #' + id));
   assert.ok(html.includes('id="downloadPage"'), 'missing offline download control');
 });
@@ -97,7 +97,7 @@ ok('all ten modules are registered', () => {
     .forEach((slug) => assert.ok(html.includes("slug: '" + slug + "'"), 'missing module slug ' + slug));
 });
 
-ok('module sources each register exactly one module with scenes and a quiz', () => {
+ok('module sources each register exactly one module with scenes and no quiz', () => {
   const dir = path.join(ROOT, 'src/modules');
   const files = fs.readdirSync(dir).filter((f) => f.endsWith('.js'));
   assert.strictEqual(files.length, 10, 'expected 10 module files, found ' + files.length);
@@ -110,9 +110,13 @@ ok('module sources each register exactly one module with scenes and a quiz', () 
     assert.ok(!ids.has(m[1]), 'duplicate module id ' + m[1]);
     ids.add(m[1]);
     assert.ok(/scenes:\s*\[/.test(src), file + ' missing scenes');
-    assert.ok(/quiz:\s*\[/.test(src), file + ' missing quiz');
+    assert.ok(!/quiz/i.test(src), file + ' should not contain quiz questions (popular-science lab, no tests for readers)');
   });
   assert.deepStrictEqual([...ids].sort(), ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']);
+});
+
+ok('no quiz or self-test section reaches the page', () => {
+  ['id="quiz"', 'quizMount', 'quiz-card', '理解检验'].forEach((t) => assert.ok(!html.includes(t), 'leftover quiz markup: ' + t));
 });
 
 ok('the page is a single, substantial document', () => {

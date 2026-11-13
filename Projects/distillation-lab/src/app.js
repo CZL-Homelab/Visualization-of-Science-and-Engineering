@@ -1,5 +1,5 @@
 /* Distillation Lab — application shell: module registry, lesson director,
- * navigation, quizzes, data tables, custom x–y import and static sections.
+ * navigation, data tables, custom x–y import and static sections.
  * The director logic mirrors Stock Market Lab so both labs behave alike. */
 (function () {
   'use strict';
@@ -139,7 +139,6 @@
     renderModuleList();
     buildSceneDots();
     applyScene(Math.max(0, Math.min(sceneIndex || 0, def.scenes.length - 1)));
-    renderQuiz(def);
     $('takeoverBtn').hidden = def.scenes.length < 2;
     saveProgress();
   }
@@ -290,42 +289,6 @@
       u.rate = 1.02;
       window.speechSynthesis.speak(u);
     } catch (e) { /* speech is optional */ }
-  }
-
-  /* ------------------------------------------------------------------ */
-  /*  Quiz                                                              */
-  /* ------------------------------------------------------------------ */
-  function renderQuiz(def) {
-    var host = $('quizMount');
-    host.innerHTML = '';
-    var qs = def.quiz || [];
-    var head = ui.el('div', 'quiz-set');
-    head.innerHTML = '<span>当前模块 · ' + def.id + ' ' + def.title + '</span><span>共 ' + qs.length + ' 题 · 点击选项立即判定</span>';
-    host.appendChild(head);
-    qs.forEach(function (q, qi) {
-      var card = ui.el('div', 'quiz-card');
-      card.innerHTML = '<div class="quiz-q"><span class="tag">Q' + (qi + 1) + '</span> ' + q.q + '</div>';
-      var opts = ui.el('div', 'quiz-opts');
-      q.options.forEach(function (opt, oi) {
-        var b = ui.el('button', 'quiz-opt');
-        b.type = 'button';
-        b.innerHTML = '<span class="k">' + 'ABCDEF'[oi] + '</span><span>' + opt + '</span>';
-        b.addEventListener('click', function () {
-          if (card.dataset.answered) return;
-          card.dataset.answered = '1';
-          Array.prototype.forEach.call(opts.children, function (el, k) {
-            if (k === q.answer) el.classList.add('right');
-            else if (k === oi) el.classList.add('wrong');
-            el.disabled = true;
-          });
-          card.querySelector('.quiz-explain').classList.add('on');
-        });
-        opts.appendChild(b);
-      });
-      card.appendChild(opts);
-      card.appendChild(ui.el('div', 'quiz-explain', q.explain || ''));
-      host.appendChild(card);
-    });
   }
 
   /* ------------------------------------------------------------------ */
@@ -600,7 +563,7 @@
   function initDownload() {
     $('downloadPage').addEventListener('click', function () {
       var clone = document.documentElement.cloneNode(true);
-      ['heroColumn', 'heroChart', 'boilStrip', 'moduleList', 'stageBody', 'modulePanel', 'sceneDots', 'quizMount', 'familyGrid', 'compTable', 'sysTable', 'dataSources', 'mythList'].forEach(function (id) {
+      ['heroColumn', 'heroChart', 'boilStrip', 'moduleList', 'stageBody', 'modulePanel', 'sceneDots', 'familyGrid', 'compTable', 'sysTable', 'dataSources', 'mythList'].forEach(function (id) {
         var el = clone.querySelector('#' + id);
         if (el) el.innerHTML = '';
       });

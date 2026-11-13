@@ -477,23 +477,6 @@ input.invalid{border-color:var(--red)}
 .site-foot a:hover{color:var(--cyan)}
 .noscript{max-width:760px;margin:40px auto;padding:16px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
 
-/* ---------- quiz ---------- */
-.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:10px}
-.quiz-q{font-size:13.5px;margin-bottom:10px;color:var(--text)}
-.quiz-opts{display:flex;flex-direction:column;gap:5px}
-.quiz-opt{
-  display:flex;gap:9px;align-items:flex-start;text-align:left;border:1px solid var(--line);
-  background:var(--panel-2);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--muted);cursor:pointer;transition:.14s
-}
-.quiz-opt:hover{border-color:var(--dim);color:var(--text)}
-.quiz-opt .k{font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.9}
-.quiz-opt.right{border-color:var(--cyan);color:var(--text);background:color-mix(in srgb,var(--cyan) 8%,transparent)}
-.quiz-opt.wrong{border-color:var(--red);color:var(--text);background:color-mix(in srgb,var(--red) 7%,transparent)}
-.quiz-explain{margin-top:10px;font-size:11.5px;color:var(--muted);border-left:2px solid var(--cyan);padding:2px 0 2px 10px;line-height:1.65;display:none}
-.quiz-explain.on{display:block}
-.quiz-explain b{color:var(--text)}
-.quiz-set{display:flex;gap:14px;align-items:center;margin-bottom:14px;font-size:11px;color:var(--dim);flex-wrap:wrap}
-
 /* ---------- responsive ---------- */
 @media (max-width:1360px){
   .workspace{grid-template-columns:176px minmax(0,1fr) 330px}
@@ -1031,15 +1014,6 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
         </ul>
       </div>
     </div>
-  </section>
-
-  <section class="content" id="quiz">
-    <div class="section-head">
-      <p class="eyebrow">CHECK / 理解检验</p>
-      <h2>能算对，才算看懂。</h2>
-      <p>题目跟随当前模块。答错会给出推理过程，而不是只给一个答案。</p>
-    </div>
-    <div id="quizMount"></div>
   </section>
 
   <section class="content" id="limits">
@@ -3307,26 +3281,6 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
         guide: '找到 T–x–y 图上的最高点。', duration: 13000
       }
     ],
-    quiz: [
-      {
-        q: '理想溶液中，x = 0.5 的液体在泡点时，若轻组分饱和蒸气压是重组分的 2.5 倍，平衡气相 y 是多少？',
-        options: ['0.50', '0.625', '0.714', '0.833'],
-        answer: 2,
-        explain: '理想体系 α = p₁*/p₂* = 2.5。y = αx/(1+(α−1)x) = 1.25/1.75 ≈ <b>0.714</b>。'
-      },
-      {
-        q: '关于最低恒沸物，下列哪一项正确？',
-        options: ['它在恒沸组成下的沸点高于两个纯组分', '恒沸点处 y = x，普通精馏无法越过', '它是一种固定化学计量的化合物', '只存在于理想溶液'],
-        answer: 1,
-        explain: '恒沸点处气液组成相同（<b>y = x</b>），平衡级不再改变组成。最低恒沸物的沸点低于两纯组分；恒沸组成会随压力变化，所以不是化合物。'
-      },
-      {
-        q: '把苯–甲苯体系的总压从 101.3 kPa 降到 20 kPa，最明显的变化是？',
-        options: ['两组分沸点都显著降低', 'α 变为 1', '苯变得比甲苯难挥发', '泡点线与露点线重合'],
-        answer: 0,
-        explain: '降低总压，达到“分压之和 = 总压”所需温度降低，整张相图下移约 45–50 °C。α 反而增大（约 2.5 → 3.0），不会变为 1。'
-      }
-    ],
     mount: mount
   });
 })();
@@ -3528,7 +3482,7 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
         patch: { f: 0.3 }, guide: '图下方两段彩色线段的长度比 = 两相量的反比。', duration: 12000
       },
       {
-        title: '多汽化一些，会更纯吗？',
+        title: '多汽化一些，蒸汽反而不纯',
         body: '把 f 提高到 0.8：蒸汽量多了，但 y 降到约 0.54——更多的重组分也被一起汽化。液相 x 则降到约 0.33。<b>汽化越多，蒸汽越不纯</b>，这是单级分离的内在矛盾。',
         patch: { f: 0.8 }, guide: '右图虚线：闪蒸 y 随 f 下降。', duration: 12000
       },
@@ -3538,34 +3492,14 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
         patch: { f: 0.5 }, guide: '看右上：当前馏出组成比平均值低。', duration: 12000
       },
       {
-        title: '同样蒸出一半，谁分得更好？',
+        title: '同样蒸出一半，简单蒸馏分得更好',
         body: '同为 f = 0.5，简单蒸馏的平均馏出组成 x̄D ≈ 0.65，高于闪蒸的 y ≈ 0.61；釜残也更贫。差别来自“过程中不断与新鲜釜液平衡”。但两者的提升都有限。',
         patch: { f: 0.5 }, guide: '比较右图同一竖线上的实线与虚线。', duration: 12000
       },
       {
         title: '一个平衡级的天花板',
         body: '换成 α = 1.5 的难分离体系：无论 f 取多少，馏出物最多也只有约 0.60（f → 0 时的 y*）。<b>要把纯度推上去，就得把很多次汽化–冷凝串起来</b>，并用回流让它们逆流接触——这就是精馏塔。',
-        patch: { sys: 'alpha', alpha: 1.5, z: 0.5, f: 0.3 }, guide: '把 f 拖到最小，馏出物最多能有多纯？', duration: 13000
-      }
-    ],
-    quiz: [
-      {
-        q: '闪蒸进料 z = 0.40，平衡后 x = 0.30、y = 0.55，汽化分率 V/F 是多少？',
-        options: ['0.25', '0.40', '0.60', '0.75'],
-        answer: 1,
-        explain: '杠杆规则：V/F = (z − x)/(y − x) = (0.40 − 0.30)/(0.55 − 0.30) = <b>0.40</b>。'
-      },
-      {
-        q: '其他条件相同，蒸出相同比例时，为什么简单蒸馏的平均馏出组成通常高于闪蒸蒸汽？',
-        options: ['简单蒸馏温度更高', '简单蒸馏的蒸汽一产生就离开，每一刻都与当时更富的釜液平衡', '闪蒸没有达到平衡', '简单蒸馏有回流'],
-        answer: 1,
-        explain: '闪蒸的全部蒸汽都与<b>最终</b>（最贫）的液体平衡；简单蒸馏早期的蒸汽与较富的釜液平衡，所以平均更纯。两者都没有回流。'
-      },
-      {
-        q: '对一个单级闪蒸，提高汽化分率 f 会使气相组成 y 如何变化？',
-        options: ['升高', '降低', '不变', '先升后降'],
-        answer: 1,
-        explain: '更多的重组分被汽化，<b>y 降低</b>；同时液相 x 也降低。单级分离不能同时得到高纯度与高收率。'
+        patch: { sys: 'alpha', alpha: 1.5, z: 0.5, f: 0.3 }, guide: '把 f 拖到最小，馏出物纯度也停在约 0.60。', duration: 13000
       }
     ],
     mount: mount
@@ -3838,32 +3772,6 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
         guide: '把“塔顶 xD”滑到 0.89 以上看看会发生什么。', duration: 14000
       }
     ],
-    quiz: [
-      {
-        q: '恒定 α = 2.5，饱和液体进料 xF = 0.5，要求 xD = 0.95。最小回流比 Rmin 约为多少？',
-        options: ['0.55', '1.10', '1.90', '2.50'],
-        answer: 1,
-        explain: 'q = 1 时夹紧点在 x = 0.5：y* = 2.5×0.5/(1+1.5×0.5) = 0.714。Rmin = (xD − y*)/(y* − x*) = (0.95 − 0.714)/(0.714 − 0.5) ≈ <b>1.10</b>。'
-      },
-      {
-        q: '其他条件不变，把进料由饱和液体（q = 1）改为饱和蒸汽（q = 0），以下哪项一定增大？',
-        options: ['提馏段上升蒸汽量 V′', '最小回流比 Rmin', '塔底产品量 W', '塔顶组成 xD'],
-        answer: 1,
-        explain: '饱和蒸汽进料时 q 线水平，夹紧点下移到 y = xF，操作线需要更陡，<b>Rmin 增大</b>。V′ = V − F 反而减小；W、xD 由规格决定。'
-      },
-      {
-        q: 'McCabe–Thiele 图上，一个“台阶”的水平段代表什么？',
-        options: ['物料衡算', '一个理论级上的气液平衡', '进料的热状态', '回流液被冷却'],
-        answer: 1,
-        explain: '水平段连接同一级离开的 y 与 x，它们落在平衡线上，即<b>该级达到平衡</b>；竖直段落到操作线才是物料衡算。'
-      },
-      {
-        q: '回流比从 1.2 Rmin 提高到 2 Rmin，通常会怎样？',
-        options: ['理论级数减少，再沸器负荷增加', '理论级数增加，能耗下降', '两者都减少', '对级数没有影响'],
-        answer: 0,
-        explain: '更大的回流让操作线远离平衡线，<b>级数减少</b>；但 V = (R+1)D，冷凝与再沸负荷随之<b>增加</b>。'
-      }
-    ],
     mount: mount
   });
 })();
@@ -4088,26 +3996,6 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
         title: '难分离：所有数字一起变大',
         body: '把 α 降到 1.3：Nmin 从约 6 级涨到 20 级以上，Rmin 也大幅增加。能耗与 α−1 大致成反比，这就是为什么挥发度相近的体系（如同分异构体）分离代价极高。',
         patch: { alpha: 1.3, wE: 1, rf: 1.3 }, guide: '看 Nmin、Rmin 与 kW 同时变大。', duration: 13000
-      }
-    ],
-    quiz: [
-      {
-        q: '恒定 α = 2，xD = 0.9，xW = 0.1。Fenske 最少理论级数约为？',
-        options: ['3.2', '4.4', '6.3', '9.0'],
-        answer: 2,
-        explain: 'S = (0.9/0.1)·(0.9/0.1) = 81，Nmin = ln81/ln2 = 4.394/0.693 ≈ <b>6.3</b>。'
-      },
-      {
-        q: '能源价格上涨时，经济最优回流比通常会？',
-        options: ['向 Rmin 靠近（减小）', '向全回流靠近（增大）', '不变', '变为 Rmin 以下'],
-        answer: 0,
-        explain: '能耗费在总成本中权重增加，最优点向<b>较小的 R</b> 移动，用更多塔板换取更少蒸汽。R 不能低于 Rmin。'
-      },
-      {
-        q: 'Gilliland 关联需要哪些输入？',
-        options: ['只需要 R', 'Nmin、Rmin 和实际 R', '塔径与板间距', '每块板的温度'],
-        answer: 1,
-        explain: '它是简捷法：由 Fenske 的 <b>Nmin</b>、Underwood 的 <b>Rmin</b> 与选定的 <b>R</b> 估算理论级数。'
       }
     ],
     mount: mount
@@ -4353,29 +4241,9 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
         patch: { mode: 'constR', N: 5, R: 3, prog: 1 }, guide: '看接收器中由下到上的颜色变化。', duration: 13000
       },
       {
-        title: '什么时候选间歇？',
+        title: '间歇精馏的用武之地',
         body: '处理量小、品种多、原料组成多变，或需要用同一套设备回收多种溶剂时，间歇精馏更灵活；大规模单一产品则选连续塔，能耗与人工都更低。',
-        patch: { mode: 'constR', N: 8, R: 4, prog: 0.4 }, guide: '试着增加级数，看主馏分能延长多久。', duration: 11000
-      }
-    ],
-    quiz: [
-      {
-        q: '恒回流间歇精馏中，随着时间推移塔顶组成 xD 会怎样？',
-        options: ['保持不变', '逐渐上升', '逐渐下降', '先降后升'],
-        answer: 2,
-        explain: '釜液中的轻组分不断减少，同样的级数与回流比所能达到的塔顶组成随之<b>下降</b>。'
-      },
-      {
-        q: '要在间歇精馏中保持 xD 恒定，操作上必须？',
-        options: ['逐渐减小回流比', '逐渐加大回流比', '逐渐降低加热量', '减少理论级数'],
-        answer: 1,
-        explain: '釜液变贫后，只能靠<b>加大回流</b>让操作线更接近对角线，以维持同样的塔顶纯度；代价是采出变慢。'
-      },
-      {
-        q: '蒸发速率 V = 20 kmol/h，回流比 R = 4，采出 10 kmol 馏出物至少需要多少时间？',
-        options: ['0.5 h', '2.0 h', '2.5 h', '4.0 h'],
-        answer: 2,
-        explain: '采出速率 D = V/(R+1) = 20/5 = 4 kmol/h，10 kmol 需 <b>2.5 h</b>。'
+        patch: { mode: 'constR', N: 8, R: 4, prog: 0.4 }, guide: '增加级数，主馏分阶段会随之延长。', duration: 11000
       }
     ],
     mount: mount
@@ -4674,7 +4542,7 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
         patch: { mode: 'limit', sys: 'ew', P: 101.325, xD: 0.85 }, guide: '把“塔顶目标 xD”往 0.89 拖。', duration: 12000
       },
       {
-        title: '想越过恒沸点？',
+        title: '恒沸点是普通精馏的上限',
         body: '把 xD 定为 0.888：1.5 Rmin 下理论级数从 xD = 0.85 时的约 22 级增至约 45 级；越过 0.897 就“不可能”。这与塔高、回流比无关——是平衡本身的限制。',
         patch: { mode: 'limit', sys: 'ew', xD: 0.888 }, guide: '看卡片里理论级数的变化。', duration: 12000
       },
@@ -4707,26 +4575,6 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
         title: '不止精馏：吸附与膜',
         body: '燃料乙醇脱水在工业上大量使用<b>分子筛变压吸附</b>：先精馏到接近恒沸，再用分子筛吸走剩余的水；渗透汽化膜也是选项。选择哪种方法，取决于规模、能耗与产品要求。',
         patch: { mode: 'limit', sys: 'ew', xD: 0.86, P: 101.325 }, guide: '先用普通精馏接近恒沸，再换一种原理越过它。', duration: 12000
-      }
-    ],
-    quiz: [
-      {
-        q: '为什么普通精馏不能把乙醇–水从 x = 0.1 提浓到 x = 0.99（1 atm）？',
-        options: ['塔不够高', '回流比不够大', '在 x ≈ 0.894 处 y = x，平衡级无法再提浓', '乙醇会分解'],
-        answer: 2,
-        explain: '恒沸点处<b>气液组成相同</b>，再多的级数和回流也越不过它，必须改变相平衡（压力、溶剂、夹带剂）或换用吸附/膜。'
-      },
-      {
-        q: '变压精馏依靠的是什么？',
-        options: ['恒沸组成随压力改变', '高压下组分发生反应', '溶剂改变活度系数', '液液分层'],
-        answer: 0,
-        explain: '两座塔在不同压力下运行，利用<b>恒沸点随压力移动</b>，让同一股物流在两塔中分别处于恒沸点两侧。'
-      },
-      {
-        q: '萃取精馏所用溶剂一般应满足？',
-        options: ['沸点比原料组分都低', '与原料形成新的恒沸物', '沸点高、能选择性改变相对挥发度、便于回收', '与水完全不互溶'],
-        answer: 2,
-        explain: '萃取溶剂通常<b>高沸点</b>、从塔底随重组分离开，并能显著改变关键组分的相对挥发度，再在回收塔中分离循环。'
       }
     ],
     mount: mount
@@ -4945,26 +4793,6 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
         title: '减压 + 水蒸气',
         body: '两种方法可以叠加：在 20 kPa 下进行水蒸气蒸馏，沸腾温度降到约 60 °C；对这个物质，蒸汽中有机物的比例略有下降（耗蒸汽由约 8.5 增至约 9.9 kg/kg），温度换来了蒸汽。减压塔常向塔底通入汽提蒸汽，正是同样的原理。',
         patch: { mode: 'steam', org: 'custom', tb: 250, M: 150, P: 20 }, guide: '比较 101.3 kPa 与 20 kPa 下的读数。', duration: 12000
-      }
-    ],
-    quiz: [
-      {
-        q: '甲苯与水不互溶。101.3 kPa 下对其进行水蒸气蒸馏，沸腾温度约为？',
-        options: ['100 °C', '110.6 °C', '约 84 °C', '约 105 °C'],
-        answer: 2,
-        explain: '两者各自贡献全部蒸气压，p*<sub>水</sub> + p*<sub>甲苯</sub> = 101.3 kPa 在约 <b>84 °C</b> 成立，低于两者的沸点。'
-      },
-      {
-        q: '减压蒸馏最主要的目的通常是？',
-        options: ['让分离更快', '降低操作温度，避免热敏物分解', '减少塔板数', '提高处理量'],
-        answer: 1,
-        explain: '减压的核心是<b>降低沸腾温度</b>。它往往还要求更大的塔径（低压下蒸汽体积大），并不直接提高处理量。'
-      },
-      {
-        q: '水蒸气蒸馏中，有机物与水在馏出物中的质量比由什么决定？',
-        options: ['两者的沸点差', '(p*有机·M有机)/(p*水·M水)', '加入的水量', '冷凝器温度'],
-        answer: 1,
-        explain: '蒸汽中摩尔比 = 分压比，乘以摩尔质量比得到<b>质量比</b>。有机物蒸气压越低，带出同样质量所需蒸汽越多。'
       }
     ],
     mount: mount
@@ -5294,27 +5122,7 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
       {
         title: '填料塔：用 HETP 换算高度',
         body: '散堆或规整填料让液体以液膜形式向下流，蒸汽在空隙中上升，接触连续发生。用<b>等板高度</b> HETP 把理论级换成填料层高度；填料塔压降小，适合减压精馏。',
-        patch: { type: 'packing', vap: 65, liq: 40, HETP: 0.5 }, guide: '试着把液量降到很低，看润湿不足。', duration: 12000
-      }
-    ],
-    quiz: [
-      {
-        q: '某塔需要 12 个理论级（含再沸器），全塔效率 60%，塔内大约需要多少块实际塔板？',
-        options: ['7', '12', '19', '20'],
-        answer: 2,
-        explain: '塔内理论板 = 12 − 1 = 11（再沸器算一级），实际板 ≈ 11 / 0.6 ≈ 18.3，向上取整约 <b>19</b> 块。'
-      },
-      {
-        q: '筛板塔在气速过低时最可能出现？',
-        options: ['液泛', '雾沫夹带', '漏液', '降液管液泛'],
-        answer: 2,
-        explain: '气速不足以托住板上液层，液体从筛孔<b>漏下</b>；气速过高才会雾沫夹带与液泛。'
-      },
-      {
-        q: '填料塔中 HETP 表示？',
-        options: ['填料的比表面积', '相当于一个理论级的填料层高度', '塔的总高度', '液泛气速'],
-        answer: 1,
-        explain: 'HETP = Height Equivalent to a Theoretical Plate，<b>等板高度</b>。填料层高度 ≈ 理论级数 × HETP。'
+        patch: { type: 'packing', vap: 65, liq: 40, HETP: 0.5 }, guide: '把液量降到很低，可以看到润湿不足。', duration: 12000
       }
     ],
     mount: mount
@@ -5543,26 +5351,6 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
         title: '渣油为什么去减压塔',
         body: '常压渣油在 370 °C 以上继续加热会开始热裂解、结焦。把它送进<b>减压塔</b>，在几 kPa 下操作，沸点大幅降低，就能在不裂解的温度下再分出减压瓦斯油（模块 G）。',
         patch: { crude: 'medium', c4: 370 }, guide: '回到模块 G，试试在 1–5 kPa 下的沸点。', duration: 12000
-      }
-    ],
-    quiz: [
-      {
-        q: '某原油 TBP 曲线上，180 °C 对应 28 vol%，240 °C 对应 39 vol%。以 180/240 °C 为切割点的煤油收率约为？',
-        options: ['28%', '11%', '39%', '67%'],
-        answer: 1,
-        explain: '收率 = 39% − 28% = <b>11 vol%</b>。'
-      },
-      {
-        q: '常压塔侧线产品为什么还要进入侧线汽提塔？',
-        options: ['加热产品', '用蒸汽吹出夹带的轻组分，提高闪点', '降低产品黏度', '脱除硫'],
-        answer: 1,
-        explain: '侧线液体与上方蒸汽平衡，含有偏轻的组分。汽提蒸汽把它们<b>吹回主塔</b>，保证闪点等规格。'
-      },
-      {
-        q: '常压渣油通常送去减压塔而不是继续在常压下加热分馏，主要原因是？',
-        options: ['减压塔更便宜', '高温会导致热裂解与结焦', '常压下渣油不会沸腾', '为了回收汽提蒸汽'],
-        answer: 1,
-        explain: '要在常压下蒸出这些重组分需要很高温度，会<b>裂解、结焦</b>。减压后沸点降低，可以在安全温度下分离。'
       }
     ],
     mount: mount
@@ -5815,26 +5603,6 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
       { title: '常压 vs 减压', body: '20 kPa 下塔内温度下降约 45–50 K，α 增大，所需级数减少。', patch: { pair: 'pressure', xF: 0.45, xD: 0.95, xW: 0.05 }, guide: '对比两侧的塔顶 / 塔底温度。', duration: 11000 },
       { title: '简化模型 vs Aspen 严格模拟', body: '同一座苯–甲苯塔：左图组成分布，线是本页的恒摩尔流计算，点是 Aspen Plus V15 RadFrac。两者几乎重合；右图显示真正的差别——严格能量衡算下汽、液流率沿塔逐级变化。', patch: { pair: 'rigorous' }, guide: '看右图：点（Aspen）偏离水平线（恒摩尔流）多少。', duration: 13000 }
     ],
-    quiz: [
-      {
-        q: '在同步对比中“只改变一个变量”的目的是什么？',
-        options: ['让图更好看', '把结果的差异归因到这个变量上', '减少计算量', '保证两侧级数相同'],
-        answer: 1,
-        explain: '其余条件相同，差异才能<b>归因</b>于被改变的那个变量——这就是对照实验。'
-      },
-      {
-        q: '其他条件相同，把回流比从 1.2 Rmin 提高到 2.5 Rmin，最可能的结果是？',
-        options: ['N 减少，再沸器负荷增加', 'N 增加，再沸器负荷减少', '两者都减少', '两者都不变'],
-        answer: 0,
-        explain: '回流加大，操作线远离平衡线，<b>级数减少</b>；V = (R+1)D，<b>热负荷增加</b>。'
-      },
-      {
-        q: '苯–甲苯从 101.3 kPa 减压到 20 kPa 精馏，下列说法正确的是？',
-        options: ['α 减小，需要更多级', '温度降低且 α 增大', '温度升高', '恒沸点出现'],
-        answer: 1,
-        explain: '降压使沸腾温度下降约 45–50 K，此体系的 <b>α 随温度降低而增大</b>（约 2.5 → 3.0）。'
-      }
-    ],
     mount: mount
   });
 })();
@@ -5842,7 +5610,7 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
 </script>
 <script>
 /* Distillation Lab — application shell: module registry, lesson director,
- * navigation, quizzes, data tables, custom x–y import and static sections.
+ * navigation, data tables, custom x–y import and static sections.
  * The director logic mirrors Stock Market Lab so both labs behave alike. */
 (function () {
   'use strict';
@@ -5982,7 +5750,6 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
     renderModuleList();
     buildSceneDots();
     applyScene(Math.max(0, Math.min(sceneIndex || 0, def.scenes.length - 1)));
-    renderQuiz(def);
     $('takeoverBtn').hidden = def.scenes.length < 2;
     saveProgress();
   }
@@ -6133,42 +5900,6 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
       u.rate = 1.02;
       window.speechSynthesis.speak(u);
     } catch (e) { /* speech is optional */ }
-  }
-
-  /* ------------------------------------------------------------------ */
-  /*  Quiz                                                              */
-  /* ------------------------------------------------------------------ */
-  function renderQuiz(def) {
-    var host = $('quizMount');
-    host.innerHTML = '';
-    var qs = def.quiz || [];
-    var head = ui.el('div', 'quiz-set');
-    head.innerHTML = '<span>当前模块 · ' + def.id + ' ' + def.title + '</span><span>共 ' + qs.length + ' 题 · 点击选项立即判定</span>';
-    host.appendChild(head);
-    qs.forEach(function (q, qi) {
-      var card = ui.el('div', 'quiz-card');
-      card.innerHTML = '<div class="quiz-q"><span class="tag">Q' + (qi + 1) + '</span> ' + q.q + '</div>';
-      var opts = ui.el('div', 'quiz-opts');
-      q.options.forEach(function (opt, oi) {
-        var b = ui.el('button', 'quiz-opt');
-        b.type = 'button';
-        b.innerHTML = '<span class="k">' + 'ABCDEF'[oi] + '</span><span>' + opt + '</span>';
-        b.addEventListener('click', function () {
-          if (card.dataset.answered) return;
-          card.dataset.answered = '1';
-          Array.prototype.forEach.call(opts.children, function (el, k) {
-            if (k === q.answer) el.classList.add('right');
-            else if (k === oi) el.classList.add('wrong');
-            el.disabled = true;
-          });
-          card.querySelector('.quiz-explain').classList.add('on');
-        });
-        opts.appendChild(b);
-      });
-      card.appendChild(opts);
-      card.appendChild(ui.el('div', 'quiz-explain', q.explain || ''));
-      host.appendChild(card);
-    });
   }
 
   /* ------------------------------------------------------------------ */
@@ -6443,7 +6174,7 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
   function initDownload() {
     $('downloadPage').addEventListener('click', function () {
       var clone = document.documentElement.cloneNode(true);
-      ['heroColumn', 'heroChart', 'boilStrip', 'moduleList', 'stageBody', 'modulePanel', 'sceneDots', 'quizMount', 'familyGrid', 'compTable', 'sysTable', 'dataSources', 'mythList'].forEach(function (id) {
+      ['heroColumn', 'heroChart', 'boilStrip', 'moduleList', 'stageBody', 'modulePanel', 'sceneDots', 'familyGrid', 'compTable', 'sysTable', 'dataSources', 'mythList'].forEach(function (id) {
         var el = clone.querySelector('#' + id);
         if (el) el.innerHTML = '';
       });

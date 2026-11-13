@@ -43,7 +43,7 @@ python3 -m http.server 8766 --bind 127.0.0.1   # 或直接双击 index.html
 | **I 原油常压蒸馏** | 切换轻/中/重质原油，拖动 5 个切割点与分馏精度 | TBP 曲线、侧线抽出与汽提、收率、产品重叠、渣油去减压塔 |
 | **J 同步对比实验室** | 9 组并排实验：回流、进料热状态、α、进料位置、板效率、恒沸体系、闪蒸 vs 简单蒸馏、常压 vs 减压、简化模型 vs Aspen 严格模拟 | 同一起点只改一个变量；最后一组看恒摩尔流模型差在哪里 |
 
-每个模块有 6–9 幕自动讲解、可暂停/上一幕/下一幕/重播、中文旁白（可选）和 3–4 道理解检验题。**任何手动操作都会立即接管并暂停自动讲解**。
+每个模块有 6–9 幕自动讲解、可暂停/上一幕/下一幕/重播和中文旁白（可选）。**任何手动操作都会立即接管并暂停自动讲解**。这是纯科普项目：不设测验、提问或打分，讲解只陈述现象和原因，邀请读者动手看结果。
 
 ---
 
@@ -147,8 +147,8 @@ distillation-lab/
     plots.js            SVG 图表：通用坐标系、McCabe–Thiele、T–x–y
     column.js           Canvas 动画精馏塔（连续/间歇）
     registry.js         模块注册、事件总线、体系选择
-    modules/            A–J 十个教学模块，各含 scenes / quiz / mount
-    app.js              导航、自动导演、主题、进度、自测、物性表、误区、导入
+    modules/            A–J 十个教学模块，各含 scenes / mount
+    app.js              导航、自动导演、主题、进度、物性表、误区、导入
   tests/
     check-thermo.cjs    热力学与塔计算不变量，以及与 Aspen 数据的对照容差
     check-build.cjs     单文件离线封装、主题与导航约定、模块完整性
@@ -178,7 +178,7 @@ CI 在 `.github/workflows/distillation-lab.yml` 中执行构建、语法、不�
 
 ### Modules
 
-A — vapour–liquid equilibrium (vapour pressure, T–x–y, x–y, relative volatility, azeotropes); B — flash vs simple (Rayleigh) distillation; C — continuous column with McCabe–Thiele and an animated column linked stage-by-stage; D — reflux, energy and the Fenske–Underwood–Gilliland shortcut with an illustrative cost optimum; E — batch distillation (simple, constant reflux, constant distillate composition); F — azeotropes and pressure-swing, extractive and heterogeneous azeotropic distillation; G — vacuum and steam distillation; H — tray/packing internals, operating window, Murphree efficiency and HETP; I — crude-oil atmospheric distillation, TBP curves and cut points; J — nine synchronized comparisons, the last one setting the simplified model against an Aspen RadFrac column. Each module has 6–9 guided scenes, optional speech and 3–4 check questions; any manual input takes over from the guided tour.
+A — vapour–liquid equilibrium (vapour pressure, T–x–y, x–y, relative volatility, azeotropes); B — flash vs simple (Rayleigh) distillation; C — continuous column with McCabe–Thiele and an animated column linked stage-by-stage; D — reflux, energy and the Fenske–Underwood–Gilliland shortcut with an illustrative cost optimum; E — batch distillation (simple, constant reflux, constant distillate composition); F — azeotropes and pressure-swing, extractive and heterogeneous azeotropic distillation; G — vacuum and steam distillation; H — tray/packing internals, operating window, Murphree efficiency and HETP; I — crude-oil atmospheric distillation, TBP curves and cut points; J — nine synchronized comparisons, the last one setting the simplified model against an Aspen RadFrac column. Each module has 6–9 guided scenes and optional speech; any manual input takes over from the guided tour. This is a popular-science lab: there are no quizzes, questions or scores.
 
 ### Models and limits
 

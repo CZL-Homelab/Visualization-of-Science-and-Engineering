@@ -6,6 +6,7 @@
 - 热力学与塔计算只放在 `src/thermo.js`（Antoine、活度系数、泡点、闪蒸、Rayleigh、McCabe–Thiele、Rmin、FUG、间歇、水蒸气蒸馏、TBP、操作型计算）；模块只调用它，不在模块里重写公式。`src/plots.js`、`src/column.js` 是共享绘图层，扩展而不是复制。
 - 每个物性常数要有来源：新增组分须给出 Antoine 常数及温度范围，对照 NIST WebBook，并在 `tests/check-thermo.cjs` 中保证常压沸点与文献相差 ≤ 0.3 °C。
 - 乙醇–水与乙二醇相关二元对使用 Aspen Plus V15（APV150）导出的 NRTL 参数，原始数据在 `src/aspen.js`，`thermo.js` 中的 `NRTL` 必须与之逐位一致（有测试）。`src/aspen.js` 是维护者提供的参考数据，不修改数值；新增导出作为新键，并扩展对照测试与数据表。丙酮–氯仿使用由 1 atm 恒沸点反算的 van Laar；改 Antoine 常数后须重新拟合。
+- 本项目是纯科普：不加测验、自测题、提问或评分，讲解标题与提示用陈述句，不向读者设问（`tests/check-build.cjs` 检查模块中没有 quiz）。
 - 讲解、提示中引用的数字（级数、温度、组成、比值）必须是模型实际算出的值；改默认值或模型后重新核对。示意部分（操作窗口、成本曲线、原油 TBP、动画）在页面和 README 中标注“示意”；能与 Aspen 对照的数字，直接给出对照而不是免责声明。区分理论级与实际塔板、Murphree 与全塔效率、Rmin 与操作回流比、恒沸物与化合物。
 - 自动讲解在手动操作、页面隐藏和最后一幕时暂停，导演不得覆盖手动状态；Canvas 动画在离开视口、页面隐藏和减少动态效果时停止。检查 1440×900 与 390×844 的深浅主题。
 - 主题与入场来自仓库公共的 `assets/theme.js`、`entry.js`、`entry.css`，由 `scripts/shared_experience.py` 内嵌（配置键 `distillation-lab`，事件 `distl:theme`）；`app.js` 只调用 `CZLLabTheme.mount()`，不再自写存储或按钮逻辑。页脚前目录列出 `site/projects.json` 中的全部实验室并标记当前页，新增实验室时同步所有目录。
@@ -26,7 +27,7 @@ constant teaches the wrong thing with great confidence.
 - `src/plots.js` (SVG charts, shared McCabe–Thiele and T–x–y drawings) and `src/column.js`
   (animated column) are shared presentation helpers. Extend them instead of copying drawing code.
 - `src/modules/a-vle.js` … `j-compare.js` each register exactly one module with
-  `DL.registerModule({ id, slug, order, title, en, subtitle, hint, scenes, quiz, mount })`.
+  `DL.registerModule({ id, slug, order, title, en, subtitle, hint, scenes, mount })`.
 
 ### Scientific rules
 
@@ -39,7 +40,7 @@ constant teaches the wrong thing with great confidence.
   uses van Laar fitted to its 1 atm azeotrope with `fitVanLaar`; if you change Antoine constants, refit it.
 - `src/aspen.js` is reference data supplied by the maintainer from Aspen Plus V15. Do not edit the
   numbers; add new exports as new keys and extend the comparison tests and the data tables.
-- Any number quoted in a scene, quiz or note (stage counts, temperatures, compositions, ratios)
+- Any number quoted in a scene or note (stage counts, temperatures, compositions, ratios)
   must be what the model actually computes. Recompute after changing a default or a model.
 - Keep labels honest: illustrative parts (operating window, cost curve, crude TBP, animation) must be
   marked 示意 / qualitative in the UI and README. When a number can be compared with the Aspen data,
@@ -49,6 +50,8 @@ constant teaches the wrong thing with great confidence.
 
 ### Interaction and accessibility
 
+- This is a popular-science lab: no quizzes, self-tests, questions to the reader or scores. Scene
+  titles and guides are statements, not prompts to answer; `tests/check-build.cjs` rejects quiz data.
 - Auto-teaching pauses on any manual control, on visibility change and at the last scene. Manual
   state must never be overwritten by the director.
 - Canvas animations stop off-screen, when the page is hidden and under `prefers-reduced-motion`.

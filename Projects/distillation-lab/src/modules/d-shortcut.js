@@ -218,26 +218,6 @@
         patch: { alpha: 1.3, wE: 1, rf: 1.3 }, guide: '看 Nmin、Rmin 与 kW 同时变大。', duration: 13000
       }
     ],
-    quiz: [
-      {
-        q: '恒定 α = 2，xD = 0.9，xW = 0.1。Fenske 最少理论级数约为？',
-        options: ['3.2', '4.4', '6.3', '9.0'],
-        answer: 2,
-        explain: 'S = (0.9/0.1)·(0.9/0.1) = 81，Nmin = ln81/ln2 = 4.394/0.693 ≈ <b>6.3</b>。'
-      },
-      {
-        q: '能源价格上涨时，经济最优回流比通常会？',
-        options: ['向 Rmin 靠近（减小）', '向全回流靠近（增大）', '不变', '变为 Rmin 以下'],
-        answer: 0,
-        explain: '能耗费在总成本中权重增加，最优点向<b>较小的 R</b> 移动，用更多塔板换取更少蒸汽。R 不能低于 Rmin。'
-      },
-      {
-        q: 'Gilliland 关联需要哪些输入？',
-        options: ['只需要 R', 'Nmin、Rmin 和实际 R', '塔径与板间距', '每块板的温度'],
-        answer: 1,
-        explain: '它是简捷法：由 Fenske 的 <b>Nmin</b>、Underwood 的 <b>Rmin</b> 与选定的 <b>R</b> 估算理论级数。'
-      }
-    ],
     mount: mount
   });
 })();
