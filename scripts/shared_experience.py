@@ -8,6 +8,7 @@ CONFIG = {
     'stock-market-lab': ('#f4f2ec', '#101113', 'sm:theme'),
     'desalination-lab': ('#f4f2ec', '#101113', 'dl:theme'),
     'fusion-lab': ('#f3f1ec', '#0d0e13', 'fl:theme'),
+    'distillation-lab': ('#f4f2ec', '#101113', 'distl:theme'),
 }
 
 

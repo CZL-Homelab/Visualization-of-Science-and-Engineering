@@ -5,11 +5,22 @@
 ## 分支与发布状态 / Branch and release
 
 - 唯一正式上游：`CZL-Homelab/Visualization-of-Science-and-Engineering`。
-- [PR #8](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/pull/8) 已合并，组织 `main` 为 `5e9d7b2`，包含四个 Lab、海水淡化 3D 优化以及共享入场与主题。该提交的 [Pages 发布](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/actions/runs/43387838572) 工作流成功；本次没有实际打开线上页面核对。
-- 当前工作分支：`feat/fusion-stellarator`，基于 `main` 的 `5e9d7b2`，为 Fusion Lab 增加仿星器一幕（b6）。实现提交为 `74c954b`，已推送并开出 [PR #9](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/pull/9)；尚未合并或上线，CI 以 PR 最新 head 为准。
-- 用户决定：本轮完成后直接提交 PR；合并与发布仍由用户决定。不修改组织权限或分支保护。
+- [PR #9](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/pull/9)（仿星器）已合并，组织 `main` 为 `94f1ed7`，包含 Motor、Stock Market、Desalination、Fusion 四个 Lab 与共享入场/主题。本次没有核对该提交的 Pages 运行结果和线上页面。
+- 当前工作分支：`feat/add-distillation-lab`，基于 `main` 的 `94f1ed7`，新增第五个实验室 Distillation Lab 并接入目录、公共入场与 CI/Pages。由用户账号通过 GitHub Desktop 推送并向 `main` 开 PR；尚未合并或上线，CI 以 PR 最新 head 为准。
+- 用户决定：PR 包含精馏实验室及必要的站点接入（项目清单、其他四个 Lab 的目录卡片、公共入场图形、CI/Pages、文档）；合并与发布由维护者决定。不修改组织权限或分支保护。
 
-PR #8 is merged; organization `main` is at `5e9d7b2` with four labs, the Desalination 3D work and the shared entrance/theme. The Pages workflow for that commit succeeded, but the live pages were not opened during this check. The current working branch `feat/fusion-stellarator` is based on that commit and adds the stellarator scene (b6) to Fusion Lab; implementation commit `74c954b` is pushed as [PR #9](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/pull/9). It is neither merged nor deployed; read CI from the PR's latest head. The user asked for a PR on completion and keeps the merge and release decisions; do not change organization permissions or branch protection.
+PR #9 (stellarator) is merged; organization `main` is at `94f1ed7` with the Motor, Stock Market, Desalination and Fusion labs and the shared entrance/theme. Its Pages run and live pages were not checked here. The working branch `feat/add-distillation-lab`, based on `94f1ed7`, adds the fifth lab, Distillation Lab, and integrates it with the catalog, shared entrance and CI/Pages. It is pushed from the user's account through GitHub Desktop as a PR to `main`; it is neither merged nor deployed, and CI should be read from the PR's latest head. The user chose to include the lab plus the required site integration (registry, a fifth card in the other four labs' directories, the shared entrance motif, CI/Pages and documentation); merging and release stay with the maintainers. Do not change organization permissions or branch protection.
+
+## 精馏实验室 / Distillation Lab
+
+- `Projects/distillation-lab`：10 个模块、73 幕讲解、9 组同步对比，单文件离线。热力学集中在 `src/thermo.js`（Antoine、Raoult / NRTL / van Laar、泡点、闪蒸、Rayleigh、McCabe–Thiele、Rmin、FUG、间歇、水蒸气蒸馏、TBP、操作型逐级计算）。
+- `src/aspen.js` 收录用户用 Aspen Plus V15（中文界面，NRTL，APV150）导出的数据：10 组 NRTL 二元参数、乙醇–水 20/101.325/500/1000 kPa T–x–y（含 γ）、苯–甲苯 16 级 RadFrac 基准塔（第 8 级进料、R 1.9、D/F 0.45、IDEAL）。用户已确认 `ETHYL-01` 为乙二醇、RadFrac 使用 IDEAL。对照结果：γ 相对误差 < 1e-5，泡点 ≤ 0.21 °C，|Δy| ≤ 0.0024，恒沸组成 < 0.008；RadFrac 逐级组成 ≤ 0.025、温度 ≤ 0.6 °C，再沸蒸汽 Aspen 123.5 vs 恒摩尔流 130.5 kmol/h。
+- 已知边界：乙醇–水在约 9 kPa 以下恒沸点消失不能保证再现；萃取精馏假定萃取段溶剂分数恒定；非均相共沸只画流程；原油 TBP、成本曲线、塔板操作窗口为示意。
+- 接入：`site/projects.json` 与 `assets/distillation-preview.svg`；`scripts/shared_experience.py` 配置 `distillation-lab`（事件 `distl:theme`），`assets/entry.js` 增加精馏塔入场图形；其余四个 Lab 的目录加第五张卡片并重建；新增 `.github/workflows/distillation-lab.yml`，`pages.yml` 增加构建步骤。
+- 验证（本机，针对本分支）：五个 Lab 全部重建；`scripts/check-theme.cjs`、公共与各项目 JS 语法、Motor/Stock/Desalination/Fusion 原有检查、精馏 37 项热力学 + 11 项封装检查、`scripts/build_site.py`、`scripts/check_site.py`、`git diff --check` 通过。无头 Chrome 检查：精馏入场出现并自动结束、跳过与顶栏回放、减少动态效果下不播放且回放禁用、主题手动切换写入 `czl-lab-theme` 并同步 `theme-color`、页脚“跟随系统”清除选择；目录页与五个 Lab 在深浅主题、1440 与 390px 下目录均为 5 张卡片并标记当前页，无横向溢出、无脚本错误；精馏实验室随机操作压力测试 0 问题。其他四个 Lab 只改了目录卡片，未重测其模型交互；未在真实 GPU、其他浏览器或触屏设备上检查。
+- 用户反馈待办（本 PR 未处理）：去掉各模块的自测题；把泡点/露点、相对挥发度讲透；课程顺序改为由简单蒸馏逐步引到精馏。
+
+`Projects/distillation-lab` adds ten modules, 73 scenes and nine synchronized comparisons, all offline, with thermodynamics in `src/thermo.js`. `src/aspen.js` bundles the user's Aspen Plus V15 exports (ten NRTL sets, ethanol–water T–x–y at four pressures with γ, a 16-stage benzene–toluene RadFrac column, IDEAL); the user confirmed `ETHYL-01` is ethylene glycol and that RadFrac used IDEAL. The page matches Aspen's γ within 1e-5, bubble points within 0.21 °C, azeotropes within 0.008 and the RadFrac profile within 0.025 in x and 0.6 °C. Limits: the disappearance of the ethanol–water azeotrope below about 9 kPa is not guaranteed, extractive distillation assumes a constant solvent fraction, heterogeneous azeotropic distillation is a flowsheet only, and crude TBP, cost and tray-window curves are illustrative. Integration covers the registry, preview, shared entrance motif, a fifth directory card in the other labs, a new CI workflow and a Pages step. Local checks on this branch: all five labs rebuilt; shared theme test, script syntax, the existing Motor/Stock/Desalination/Fusion checks, 37 distillation thermodynamic checks plus 11 packaging checks, site build/check and git diff --check pass. Headless Chrome covered the distillation entrance (auto-dismiss, skip, replay, reduced motion), manual theme persistence and footer reset, five directory cards with the current page marked in the catalog and every lab in both themes at 1440 and 390 px without overflow or script errors, and a random stress run of the lab with zero issues. The other labs' runtime code is unchanged apart from the directory card and was not retested; real GPUs, other browsers and touch devices were not checked. Pending user feedback, not in this PR: remove the per-module quizzes, explain bubble/dew points and relative volatility more thoroughly, and reorder the course from simple distillation towards rectification.
 
 ## 仿星器 / Stellarator (Fusion Lab b6)
 
@@ -34,7 +45,7 @@ The user chose system defaults with remembered manual overrides, not clock-based
 
 ## 已完成 / Completed
 
-- 四个 Lab：Motor、Stock Market、Desalination、Fusion。项目清单、各 Lab 目录、路由和 CI/Pages 构建已在工作分支整合。
+- 五个 Lab：Motor、Stock Market、Desalination、Fusion，以及本分支新增的 Distillation。项目清单、各 Lab 目录、路由和 CI/Pages 构建已整合。
 - 海水淡化 B/C/G 默认 3D：卷绕膜片与独立集水管、进水/产水/浓水水路、整厂连通管线和扩散器；增加标注、读数、暂停、缩放、复位、剖切及键盘操作。
 - 修正盐水侧压力、平衡显示及自动讲解只改控件外观的问题。减少动态效果默认暂停；WebGL 不可用时可切回 2D；模块销毁释放 GPU 资源。模型为教学示意，不计算工程尺寸、排海羽流或环评。
 - 文档跟进：将代码、说明、指南、AGENTS 自身和交接同步纳入交付要求；补齐四 Lab 的中英文 README、目录树、构建/测试/发布指南和 PR 模板；补充海水淡化专用 AGENTS。

@@ -60,6 +60,13 @@ jobs:
           for script in src/*.js; do node --check "$script"; done
           node tests/check-physics.cjs
           node tests/check-build.cjs
+      - name: Build and verify Distillation Lab
+        working-directory: Projects/distillation-lab
+        run: |
+          python build.py
+          for script in src/*.js src/modules/*.js; do node --check "$script"; done
+          node tests/check-thermo.cjs
+          node tests/check-build.cjs
       - name: Prepare static pages
         run: |
           python scripts/check_site.py
