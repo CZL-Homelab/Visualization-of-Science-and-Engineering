@@ -6,10 +6,10 @@
 
 - 唯一正式上游：`CZL-Homelab/Visualization-of-Science-and-Engineering`。
 - [PR #8](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/pull/8) 已合并，组织 `main` 为 `5e9d7b2`，包含四个 Lab、海水淡化 3D 优化以及共享入场与主题。该提交的 [Pages 发布](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/actions/runs/43387838572) 工作流成功；本次没有实际打开线上页面核对。
-- 当前工作分支：`feat/fusion-stellarator`，基于 `main` 的 `5e9d7b2`，为 Fusion Lab 增加仿星器一幕（b6）。PR 编号、实现提交和 CI 状态见下方“仿星器”一节；尚未合并或上线。
+- 当前工作分支：`feat/fusion-stellarator`，基于 `main` 的 `5e9d7b2`，为 Fusion Lab 增加仿星器一幕（b6）。实现提交为 `74c954b`，已推送并开出 [PR #9](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/pull/9)；尚未合并或上线，CI 以 PR 最新 head 为准。
 - 用户决定：本轮完成后直接提交 PR；合并与发布仍由用户决定。不修改组织权限或分支保护。
 
-PR #8 is merged; organization `main` is at `5e9d7b2` with four labs, the Desalination 3D work and the shared entrance/theme. The Pages workflow for that commit succeeded, but the live pages were not opened during this check. The current working branch `feat/fusion-stellarator` is based on that commit and adds the stellarator scene (b6) to Fusion Lab; see the stellarator section below for the PR, commit and CI state. It is neither merged nor deployed. The user asked for a PR on completion and keeps the merge and release decisions; do not change organization permissions or branch protection.
+PR #8 is merged; organization `main` is at `5e9d7b2` with four labs, the Desalination 3D work and the shared entrance/theme. The Pages workflow for that commit succeeded, but the live pages were not opened during this check. The current working branch `feat/fusion-stellarator` is based on that commit and adds the stellarator scene (b6) to Fusion Lab; implementation commit `74c954b` is pushed as [PR #9](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/pull/9). It is neither merged nor deployed; read CI from the PR's latest head. The user asked for a PR on completion and keeps the merge and release decisions; do not change organization permissions or branch protection.
 
 ## 仿星器 / Stellarator (Fusion Lab b6)
 
@@ -64,9 +64,9 @@ Documentation commit f2ed31a checked 78 local links across 21 Markdown files, re
 
 ## 下一步 / Next steps
 
-1. 用户审阅仿星器 PR，确认最新 head 的 CI 通过后决定是否合并。
+1. 用户审阅 PR #9，确认最新 head 的 CI 通过后决定是否合并。
 2. 合并后检查组织 Pages 工作流，并实际打开根目录和 `fusion-lab/#b6`，确认新一幕已发布；同时补上 PR #8 合并后尚未做的线上核对（四条 Lab 路由、主题、海水淡化 3D）。不能只凭合并或推送宣布上线。
 3. 将实际合并提交、部署记录和验证结果更新到此文件，并按发布结果整理 CHANGELOG 的 Unreleased 条目。
 4. 下一位维护者开始新工作前重新核对远端、PR、账号和部署，以上状态不是实时监控。本地旧分支 `feat/fusion-lab` 已随 PR #7 合并，不要在其上继续开发。
 
-The user reviews the stellarator PR and decides on the merge once checks pass on its latest head. After merging, inspect the Pages run and open the catalog and `fusion-lab/#b6`, and also perform the live check still outstanding from PR #8 (all four lab routes, themes and the Desalination 3D views). Then record the merge commit, deployment and observed results here and tidy the Unreleased changelog entries. Recheck remote, PR, account and deployment state when resuming; this snapshot is not live monitoring. The old local branch `feat/fusion-lab` was merged with PR #7 and should not be developed further.
+The user reviews PR #9 and decides on the merge once checks pass on its latest head. After merging, inspect the Pages run and open the catalog and `fusion-lab/#b6`, and also perform the live check still outstanding from PR #8 (all four lab routes, themes and the Desalination 3D views). Then record the merge commit, deployment and observed results here and tidy the Unreleased changelog entries. Recheck remote, PR, account and deployment state when resuming; this snapshot is not live monitoring. The old local branch `feat/fusion-lab` was merged with PR #7 and should not be developed further.
