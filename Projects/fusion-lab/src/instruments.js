@@ -394,6 +394,40 @@
     return { dispose: function () { clearTimeout(pending); } };
   };
 
+  I.stellarator = function (m, app) {
+    var S = ref.W7X, st = app.stell, s = { iota: st.iota, coils: st.coilMode }, c, pending = 0;
+    title(m, '旋转变换 ι', '示意 · 非 W7-X 实测位形');
+    var apply = function (user) {
+      c[0].v.textContent = 'ι = ' + s.iota.toFixed(2);
+      c[0].s.textContent = '磁力线绕大环 1 圈，绕小截面 ' + s.iota.toFixed(2) + ' 圈';
+      c[1].v.textContent = 'q = 1/ι ≈ ' + (1 / s.iota).toFixed(2);
+      clearTimeout(pending);
+      pending = setTimeout(function () { st.setIota(s.iota); }, user ? 60 : 0);
+      if (user) app.takeover();
+    };
+    slider(m, { label: '旋转变换 ι', min: 0.7, max: 1.3, step: 0.01, value: s.iota, show: function (v) { return v.toFixed(2); } }, function (v, u) { s.iota = v; apply(u); });
+    c = cards(m, [['磁力线的扭转', '', ''], ['换算成安全因子', '', '托卡马克 ITER：q₉₅ ≈ 3，即 ι ≈ 0.33'], ['扭转来自', '线圈的三维形状', '等离子体里不需要大电流', 'ok']], 1);
+    title(m, '线圈显示');
+    seg(m, '线圈显示', [['cut', '剖开'], ['all', '全部'], ['none', '隐藏']], s.coils, function (v, u) { s.coils = v; st.setCoils(v); if (u) app.takeover(); });
+    title(m, '托卡马克与仿星器');
+    var t = h('div', 'cmp');
+    t.innerHTML = '<div><span></span><b>托卡马克</b><b>仿星器</b></div>' +
+      '<div><span>谁来拧磁力线</span><i>等离子体电流（ITER 15 MA）</i><i>外部线圈的三维形状</i></div>' +
+      '<div><span>中心螺线管</span><i>需要，感应驱动电流</i><i>不需要</i></div>' +
+      '<div><span>运行方式</span><i>感应驱动时是脉冲</i><i>原理上可以稳态</i></div>' +
+      '<div><span>大破裂</span><i>电流失稳时会发生</i><i>没有大电流，基本避免</i></div>' +
+      '<div><span>几何</span><i>轴对称，线圈是平面的</i><i>三维，线圈非平面</i></div>' +
+      '<div><span>难点</span><i>电流驱动与破裂防护</i><i>线圈制造精度、三维场里的粒子约束</i></div>';
+    m.appendChild(t);
+    title(m, 'Wendelstein 7-X', '德国 · 格赖夫斯瓦尔德');
+    cards(m, [['线圈', S.nonPlanar + ' + ' + S.planar, '非平面 + 平面，均为超导'], ['模块', S.modules + ' 个', '每个模块的线圈形状重复'],
+      ['大半径 / 小半径', S.R0 + ' m / ' + S.a + ' m', '等离子体体积 ' + S.volume + ' m³'], ['磁场', S.B + ' T', '']]);
+    note(m, '<b>已做到：</b>' + S.record + '。');
+    note(m, '<b>图上是示意几何。</b>磁面按“旋转椭圆”画出，线圈只表现“非平面”这一特征，不是 W7-X 的真实磁面与线圈；小半径放大约 ' + FL.stellarator.DRAWN_MINOR_SCALE.toFixed(1) + ' 倍。滑块的 ι 范围是示意值，真实装置靠调节各组线圈的电流来改变 ι。');
+    apply(false);
+    return { dispose: function () { clearTimeout(pending); } };
+  };
+
   I.shape = function (m, app) {
     var sh = app.tokamak.shape, vol = core.plasmaVolume(sh);
     title(m, '截面形状', '模型用 Miller 参数化');

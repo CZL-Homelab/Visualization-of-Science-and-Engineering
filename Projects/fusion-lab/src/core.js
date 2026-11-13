@@ -271,6 +271,28 @@
     return Math.abs(vol);
   }
 
+  /* ---------- stellarator: schematic "rotating ellipse" flux surface ---------- */
+  /* shape: { R0, a, elong, N, axis }. The cross-section is an ellipse with
+   * semi-axes a·elong and a/elong that turns half a revolution per field
+   * period (N periods around the torus) about a helical magnetic axis.
+   * theta is measured in the frame that rotates with the ellipse. This is a
+   * textbook cartoon of a stellarator, not a computed equilibrium. */
+  function stellaratorAxis(shape, phi) {
+    var ax = shape.axis || 0;
+    return { R: shape.R0 + ax * Math.cos(shape.N * phi), Z: -ax * Math.sin(shape.N * phi) };
+  }
+  function stellaratorSurface(shape, rho, theta, phi) {
+    var al = shape.N * phi / 2, r = shape.a * rho, c = stellaratorAxis(shape, phi);
+    var u = r / shape.elong * Math.cos(theta), v = r * shape.elong * Math.sin(theta);
+    return { R: c.R + u * Math.cos(al) - v * Math.sin(al), Z: c.Z + u * Math.sin(al) + v * Math.cos(al) };
+  }
+  /* Rotational transform ι: poloidal turns of a field line per toroidal turn. */
+  function rotationalTransform(q) { return 1 / q; }
+  /* Rotating-frame angle of a field line with mean rotational transform iota.
+   * The frame itself advances N/2 poloidal turns per toroidal turn, so the
+   * line slips backwards in it; in the laboratory it winds iota times. */
+  function stellaratorFieldAngle(shape, iota, theta0, phi) { return theta0 + (iota - shape.N / 2) * phi; }
+
   var api = {
     U_MEV: U_MEV, U_KG: U_KG, KEV_J: KEV_J, MEV_J: MEV_J, MU0: MU0, YEAR_S: YEAR_S, MASS: MASS,
     TRITIUM_HALF_LIFE: TRITIUM_HALF_LIFE, TRITIUM_LAMBDA: TRITIUM_LAMBDA, D_H_RATIO: D_H_RATIO,
@@ -285,7 +307,9 @@
     fuelCycle: fuelCycle, simulateInventory: simulateInventory,
     deuteriumGramsPerM3: deuteriumGramsPerM3, dtEnergyPerGram: dtEnergyPerGram,
     plantBalance: plantBalance, neutronWallLoad: neutronWallLoad,
-    miller: miller, plasmaVolume: plasmaVolume
+    miller: miller, plasmaVolume: plasmaVolume,
+    stellaratorAxis: stellaratorAxis, stellaratorSurface: stellaratorSurface,
+    rotationalTransform: rotationalTransform, stellaratorFieldAngle: stellaratorFieldAngle
   };
   FL.core = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

@@ -18,6 +18,7 @@
     plasma: ['等离子体', '#ff7fdc'], strike: ['打击点', '#ff8a3c'], heat: ['被加热的包层', '#ff6a3d'],
     field: ['磁力线', '#58d8ff', 1], current: ['电流', '#ffd27a', 1], nbi: ['中性束', '#8fd2ff', 1], ec: ['电子回旋波', '#7dffa0', 1], ic: ['离子回旋波', '#ffa24a', 1],
     dPipe: ['氘', '#58d8ff', 1], tPipe: ['氚', '#ffa64a', 1], dtPipe: ['氘氚混合气', '#c78bff', 1], hePipe: ['氦', '#c9e265', 1],
+    npCoil: ['非平面线圈', '#c98a4b', 1], plCoil: ['平面线圈', '#7f93b4', 1],
     hot: ['热段', '#ff6a3d', 1], cold: ['冷段 / 给水', '#4f8dff', 1], steam: ['蒸汽', '#e8f0ff', 1], power: ['电力', '#ffe45c', 1]
   };
   var ALL_LAYERS = ['cs', 'tf', 'pf', 'vessel', 'blanket', 'divertor', 'cryostat'];
@@ -31,7 +32,7 @@
 
   var app = FL.app = {
     index: -1, scene: INTRO, playing: false, elapsed: 0, speed: 1, part: null,
-    pulseT: 0, pulseManual: false, pulseAnim: null, instrument: null, started: false, seen: {}
+    world: 'machine', pulseT: 0, pulseManual: false, pulseAnim: null, instrument: null, started: false, seen: {}
   };
 
   /* ---------- theme (repository-wide convention) ---------- */
@@ -49,7 +50,8 @@
     app.effects = new FL.Effects(engine, app.tokamak);
     app.plant = new FL.Plant(engine);
     app.micro = new FL.Micro(engine);
-    engine.scene.add(app.tokamak.group, app.effects.group, app.plant.group, app.micro.group);
+    app.stell = new FL.Stellarator(engine);
+    engine.scene.add(app.tokamak.group, app.effects.group, app.plant.group, app.micro.group, app.stell.group);
     app.micro.onPhase = function () { if (app.scene.labels === 'micro') engine.setLabels(app.micro.labels()); };
     engine.addUpdater(update);
     engine.on('interact', function () { takeover(); });
@@ -61,6 +63,7 @@
     if (a[0] === 'tk') return app.tokamak.anchor(a[1], a[2], a[3], a[4]);
     if (a[0] === 'fx') return app.effects.anchors[a[1]];
     if (a[0] === 'pl') { var p = app.plant.anchors[a[1]]; return p; }
+    if (a[0] === 'st') return app.stell.anchors[a[1]];
     if (a[0] === 'torus') return FL.fx.pos3(app.tokamak.shape, a[1], a[2] * DEG, a[3] * DEG);
     return new THREE.Vector3(a[1], a[2], a[3]);
   }
@@ -95,6 +98,7 @@
     app.effects.update(time, dt, raw);
     app.plant.update(time, dt, raw);
     app.micro.update(time, dt);
+    app.stell.update(time);
     if (app.instrument && app.instrument.tick) app.instrument.tick(time);
   }
   function sceneDuration(s) {
@@ -102,11 +106,15 @@
     return Math.min(34, Math.max(15, 9 + chars * 0.085));
   }
 
+  /* three separate 3D worlds share the stage; switching between them fades through black */
+  function worldOf(s) { return s.set === 'micro' ? 'micro' : s.set === 'stellarator' ? 'stellarator' : 'machine'; }
   function applyWorld(s, instant) {
-    var micro = s.set === 'micro', wasMicro = app.micro.group.visible;
+    var world = worldOf(s), micro = world === 'micro', stell = world === 'stellarator', changed = world !== app.world;
     var swap = function () {
+      app.world = world;
       app.micro.group.visible = micro;
-      app.tokamak.group.visible = app.effects.group.visible = app.plant.group.visible = !micro;
+      app.stell.group.visible = stell;
+      app.tokamak.group.visible = app.effects.group.visible = app.plant.group.visible = world === 'machine';
       app.engine.params.bloom = micro ? 0.7 : 0.9;
       app.engine.params.vignette = micro ? 0.75 : 0.55;
       app.engine.flyTo(s.shot, 0);
@@ -116,6 +124,8 @@
       if (micro) {
         app.micro.setPlay(s.micro.play, { fuseChance: s.micro.fuseChance == null ? 1 : s.micro.fuseChance, hot: s.micro.hot, restart: true });
         if (!app.engine.clock.running) app.micro.t = 4.1;          // a paused stage still shows the outcome
+      } else if (stell) {
+        app.stell.configure(s.stell);
       } else {
         app.tokamak.setCut(s.cut || 'onion');
         app.tokamak.setLayers(s.layers || ALL_LAYERS, s.focus || null);
@@ -135,8 +145,8 @@
       app.engine.autoRotate = s.spin == null ? 0.03 : s.spin;
       app.engine.pickEnabled = !!(s.panel && s.panel.type === 'anatomy');
     };
-    if (micro !== wasMicro && !instant && app.engine.ok) { app.engine.setLabels([]); app.fadeThen = swap; app.fadeDir = -1; }
-    else if (micro !== wasMicro) swap();
+    if (changed && !instant && app.engine.ok) { app.engine.setLabels([]); app.fadeThen = swap; app.fadeDir = -1; }
+    else if (changed) swap();
     else { app.engine.flyTo(s.shot, instant ? 0 : 2.4); configure(); }
   }
 
@@ -154,7 +164,7 @@
     $('legend').innerHTML = (s.legend || []).map(function (k) {
       var L = LEGEND[k]; return '<span><i class="' + (L[2] ? 'bar' : '') + '" style="--k:' + L[1] + '"></i>' + L[0] + '</span>';
     }).join('');
-    $('modelBadge').textContent = s.set === 'micro' ? '比喻式动画 · 非物理仿真' : '教学示意 · 非工程仿真';
+    $('modelBadge').textContent = s.set === 'micro' ? '比喻式动画 · 非物理仿真' : s.set === 'stellarator' ? '示意几何 · 非真实线圈' : '教学示意 · 非工程仿真';
     if (app.instrument && app.instrument.dispose) app.instrument.dispose();
     var mount = $('inst'); mount.innerHTML = ''; mount.scrollTop = 0;
     app.part = null;

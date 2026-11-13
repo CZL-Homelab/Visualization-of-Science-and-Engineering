@@ -20,7 +20,7 @@
 | Motor Lab | 六类电机，精细三维分解，48 幕课程，自动运镜字幕，四组双模型对比 | [Projects/motor-lab](Projects/motor-lab) |
 | Stock Market Lab | 10 个模块、60+ 幕讲解：K 线与周期聚合、成交量与技术指标、订单簿撮合、A 股/美股制度、IPO、估值、杠杆、ETF 与 10 组同步对比 | [Projects/stock-market-lab](Projects/stock-market-lab) |
 | Desalination Lab | 7 个模块、25 幕讲解、3 个 WebGL 3D 视图：含盐阶梯、渗透压与 273 米水柱、单段 RO 质量守恒、MSF 闪蒸瀑布、膜污染曲线、能耗口径与整厂浓盐水 | [Projects/desalination-lab](Projects/desalination-lab) |
-| Fusion Lab | 7 章、41 幕讲解：ITER 三维解剖、磁约束、一次放电、氚燃料循环与电站功率账本 | [Projects/fusion-lab](Projects/fusion-lab) |
+| Fusion Lab | 7 章、42 幕讲解：ITER 三维解剖、磁约束（含仿星器）、一次放电、氚燃料循环与电站功率账本 | [Projects/fusion-lab](Projects/fusion-lab) |
 
 Motor Lab 默认先展示运行动画，再进入逐步讲解。它支持单文件离线运行；可选系统语音及外部参考资料的联网需求见项目说明。几何、场线和工作点属于教学模型，具体边界见各项目文档。
 
@@ -28,9 +28,9 @@ Stock Market Lab 面向没有金融基础的学习者：从一根 K 线的四个
 
 Desalination Lab 面向工程与环保兴趣的学习者：从含盐阶梯到渗透压（≈27 bar、273 米水柱），再到可手调的单段 RO（质量守恒与能耗联动）、MSF 闪蒸瀑布、膜污染曲线、统一口径的能耗对比与整厂浓盐水平衡。B/C/G 三个模块提供可拖拽的 WebGL 3D 视图（渗透装置、卷式膜元件、厂区巡览），默认进入带标注、暂停与镜头控制的 3D，保留 2D 剖面切换。所有模型为教学近似并标注边界；物理不变量由 `tests/check-physics.cjs` 锁定，文献数值标注核对日期与来源。
 
-Fusion Lab 核聚变反应堆实验室提供 7 章、41 幕讲解：氘氚反应、磁约束、ITER 三维解剖、放电脉冲、功率平衡、氚循环与电站。所有运行资源内嵌，模型为教学近似。源码、构建与验证见 [Projects/fusion-lab](Projects/fusion-lab)。
+Fusion Lab 核聚变反应堆实验室提供 7 章、42 幕讲解：氘氚反应、磁约束（含仿星器）、ITER 三维解剖、放电脉冲、功率平衡、氚循环与电站。所有运行资源内嵌，模型为教学近似。源码、构建与验证见 [Projects/fusion-lab](Projects/fusion-lab)。
 
-Fusion Lab adds seven chapters and 41 scenes covering D–T fusion, confinement, ITER anatomy, pulse operation, power accounting, tritium inventories and power plants. All runtime assets are embedded; the models are educational approximations. See [the project README](Projects/fusion-lab/README.md) for build commands and limitations.
+Fusion Lab adds seven chapters and 42 scenes covering D–T fusion, confinement (including a stellarator scene), ITER anatomy, pulse operation, power accounting, tritium inventories and power plants. All runtime assets are embedded; the models are educational approximations. See [the project README](Projects/fusion-lab/README.md) for build commands and limitations.
 
 ## 入场体验 / Entrance experience
 
