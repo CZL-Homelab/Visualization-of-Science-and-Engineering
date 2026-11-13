@@ -26,6 +26,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify shared theme and entrance scripts
+        working-directory: .
+        run: |
+          node --check assets/theme.js
+          node --check assets/entry.js
+          node scripts/check-theme.cjs
       - name: Build and verify Motor Lab
         working-directory: Projects/motor-lab
         run: |
@@ -39,9 +45,24 @@ jobs:
           for script in src/*.js src/modules/*.js; do node --check "$script"; done
           node tests/check-finance.cjs
           node tests/check-build.cjs
+      - name: Build and verify Desalination Lab
+        working-directory: Projects/desalination-lab
+        run: |
+          python build.py
+          for script in src/*.js src/modules/*.js; do node --check "$script"; done
+          node tests/check-physics.cjs
+          node tests/check-scenes.cjs
+          node tests/check-build.cjs
+      - name: Build and verify Fusion Lab
+        working-directory: Projects/fusion-lab
+        run: |
+          python build.py
+          for script in src/*.js; do node --check "$script"; done
+          node tests/check-physics.cjs
+          node tests/check-build.cjs
       - name: Prepare static pages
         run: |
-          python scripts/build_site.py
+          python scripts/check_site.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -5,8 +5,70 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>股票市场原理实验室 · Stock Market Lab</title>
 <meta name="description" content="用可操作的图表、订单簿、IPO 与杠杆实验，从零理解股票市场的运行机制。A 股与美股同步对比，全部离线运行。">
-<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#101113"><script>(function(){try{var k='czl-lab-theme',s=localStorage.getItem(k)||localStorage.getItem('sml.theme');if(s==='light'||s==='dark')localStorage.setItem(k,s);var t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==='light'?'#f4f2ec':'#101113';}catch(e){}})();</script>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiBmaWxsPSJub25lIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+Q1pMIFNjaWVuY2UgYW5kIEVuZ2luZWVyaW5nIFZpc3VhbGl6YXRpb25zPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+QSBzcGF0aWFsIGZyYW1lIGFuZCBhbiBvcmJpdGFsIHBhdGg6IHN0cnVjdHVyZSwgb2JzZXJ2YXRpb24gYW5kIG1vdGlvbi48L2Rlc2M+CiAgPHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIzMCIgZmlsbD0iIzE3MTgxYSIvPgogIDxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSIxMjYiIGhlaWdodD0iMTI2IiByeD0iMjkiIHN0cm9rZT0iIzNiM2U0MiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTY0IDIxIDk5IDQxdjQzTDY0IDEwNSAyOSA4NFY0MVoiIGZpbGw9IiMyMjI0MjciIHN0cm9rZT0iIzViYzhiZSIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTI5IDQxIDM1IDIxIDM1LTIxTTY0IDYydjQzTTY0IDIxdjQxIiBzdHJva2U9IiM1YmM4YmUiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGVsbGlwc2UgY3g9IjY0IiBjeT0iNjQiIHJ4PSI1MyIgcnk9IjIwIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzAgNjQgNjQpIiBzdHJva2U9IiM3YWEyZDgiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxwYXRoIGQ9Im0yOSA0MSAzNSAyMXY0MyIgc3Ryb2tlPSIjY2ZlOGUzIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iMTA3IiBjeT0iMzkiIHI9IjciIGZpbGw9IiNkOTlhNmIiIHN0cm9rZT0iIzE3MTgxYSIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGNpcmNsZSBjeD0iNjQiIGN5PSI2MiIgcj0iNSIgZmlsbD0iI2NmZThlMyIvPgo8L3N2Zz4K">
+<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#101113"><script data-light="#f4f2ec" data-dark="#101113" data-event="sm:theme">
+/* Shared pre-paint theme and runtime preference controller. Offline, no deps. */
+(function () {
+  'use strict';
+  var script = document.currentScript, root = document.documentElement;
+  var lightColor = script.dataset.light, darkColor = script.dataset.dark, eventName = script.dataset.event;
+  var key = 'czl-lab-theme', system = window.matchMedia('(prefers-color-scheme: light)');
+  var preference = null, callback = null, mounted = false;
+  function valid(value) { return value === 'light' || value === 'dark'; }
+  try {
+    var saved = localStorage.getItem(key), legacy = localStorage.getItem('sml.theme');
+    preference = valid(saved) ? saved : valid(legacy) ? legacy : null;
+    if (!valid(saved) && valid(legacy)) {
+      localStorage.setItem(key, legacy); localStorage.removeItem('sml.theme');
+    }
+  } catch (e) { /* System preference still works when storage is unavailable. */ }
+  function desired() { return preference || (system.matches ? 'light' : 'dark'); }
+  function apply(theme) {
+    root.dataset.theme = theme;
+    var meta = document.querySelector('meta[name="theme-color"]'), light = theme === 'light';
+    if (meta) meta.content = light ? lightColor : darkColor;
+    var btn = document.getElementById('themeToggle');
+    if (btn) {
+      var icon = btn.querySelector('.theme-icon'), label = btn.querySelector('.theme-label');
+      if (icon) icon.textContent = light ? '☾' : '☀';
+      if (label) label.textContent = light ? '深色' : '浅色';
+      btn.setAttribute('aria-pressed', String(!light));
+      btn.setAttribute('aria-label', light ? '当前浅色主题，切换到深色' : '当前深色主题，切换到浅色');
+      btn.title = (preference ? '已记住手动选择' : '跟随系统主题') + ' · 点击切换深色 / 浅色';
+    }
+    if (callback) callback(theme);
+    if (eventName) window.dispatchEvent(new Event(eventName));
+    window.dispatchEvent(new CustomEvent('czl:theme', { detail: { theme: theme, automatic: !preference } }));
+  }
+  apply(desired()); // Before first paint, independent of localStorage access.
+  system.addEventListener('change', function () { if (!preference) apply(desired()); });
+  window.addEventListener('storage', function (e) {
+    if (e.key !== key && e.key !== null) return;
+    preference = valid(e.newValue) ? e.newValue : null; apply(desired());
+  });
+  window.CZLLabTheme = {
+    isAutomatic: function () { return !preference; },
+    mount: function (onChange) {
+      callback = onChange || null;
+      var btn = document.getElementById('themeToggle');
+      if (!mounted && btn) {
+        btn.addEventListener('click', function () {
+          preference = root.dataset.theme === 'light' ? 'dark' : 'light';
+          try { localStorage.setItem(key, preference); } catch (e) { /* Keep it in memory. */ }
+          apply(preference);
+        }); mounted = true;
+      }
+      apply(desired());
+    },
+    followSystem: function () {
+      preference = null;
+      try { localStorage.removeItem(key); localStorage.removeItem('sml.theme'); } catch (e) { /* memory fallback */ }
+      apply(desired());
+    }
+  };
+})();
+
+</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiBmaWxsPSJub25lIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+Q1pMIFNjaWVuY2UgYW5kIEVuZ2luZWVyaW5nIFZpc3VhbGl6YXRpb25zPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+QW4gaXNvbWV0cmljIHN0cnVjdHVyYWwgZnJhbWUgd2l0aCBhbiBvcmJpdCBwYXNzaW5nIGJlaGluZCBhbmQgaW4gZnJvbnQsIGFuZCBhIGNvcHBlciBvYnNlcnZhdGlvbiBwb2ludC48L2Rlc2M+CiAgPHN0eWxlPkBtZWRpYShtYXgtd2lkdGg6MzJweCl7LmJhY2stb3JiaXR7ZGlzcGxheTpub25lfS5mcmFtZSwuc2VhbXtzdHJva2Utd2lkdGg6NX0ub3JiaXR7c3Ryb2tlLXdpZHRoOjV9LmZvY3Vze3I6Nn19PC9zdHlsZT4KICA8cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjI4IiBmaWxsPSIjMTgxYTFkIi8+CiAgPHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjEyNiIgaGVpZ2h0PSIxMjYiIHJ4PSIyNyIgc3Ryb2tlPSIjMzgzZDQ0IiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDxwYXRoIGNsYXNzPSJiYWNrLW9yYml0IiBkPSJNMTggOTBhNTMgMTgtMzAgMCAxIDkyLTUyIiBzdHJva2U9IiM3ZmExY2MiIHN0cm9rZS13aWR0aD0iMy41IiBvcGFjaXR5PSIuNDgiLz4KICA8cGF0aCBkPSJtNjQgMjQgMzMgMTktMzMgMjAtMzMtMjBaIiBmaWxsPSIjMjkyZTM0Ii8+CiAgPHBhdGggZD0ibTMxIDQzIDMzIDIwdjM5TDMxIDgzWiIgZmlsbD0iIzIwMjQyYSIvPgogIDxwYXRoIGQ9Im02NCA2MyAzMy0yMHY0MGwtMzMgMTlaIiBmaWxsPSIjMWExZTIzIi8+CiAgPHBhdGggY2xhc3M9ImZyYW1lIiBkPSJtNjQgMjQgMzMgMTl2NDBsLTMzIDE5LTMzLTE5VjQzWiIgc3Ryb2tlPSIjZGNlMWU4IiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBjbGFzcz0ic2VhbSIgZD0ibTMxIDQzIDMzIDIwIDMzLTIwTTY0IDYzdjM5IiBzdHJva2U9IiNhYmI2YzIiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggY2xhc3M9InNlYW0iIGQ9Im0zMSA0MyAzMyAyMCIgc3Ryb2tlPSIjNjBiZGI0IiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGNsYXNzPSJvcmJpdCIgZD0iTTExMCAzOGE1MyAxOC0zMCAwIDEtOTIgNTIiIHN0cm9rZT0iIzdmYTFjYyIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8Y2lyY2xlIGNsYXNzPSJmb2N1cyIgY3g9IjExMCIgY3k9IjM4IiByPSI1LjUiIGZpbGw9IiNkNjliNzIiIHN0cm9rZT0iIzE4MWExZCIgc3Ryb2tlLXdpZHRoPSIyLjUiLz4KPC9zdmc+Cg==">
 <style>/* Stock Market Lab — shared styles.
    Dark graphite instrument panel + paper-light alternative.
    No webfonts, no remote assets. */
@@ -614,6 +676,127 @@ input.invalid{border-color:var(--red)}
 @media (max-width:600px){.to-top{right:14px;bottom:14px;padding:9px 11px}.to-top-label{display:none}}
 @media (prefers-reduced-motion:reduce){.to-top{transition:none}}
 </style>
+<style>
+/* Shared, finite entrance. Ordinary content is visible without JavaScript. */
+.czl-entry{--entry-bg:#161719;--entry-fg:#e7e9ec;--entry-dim:#a4abb4;--entry-line:#343a43;--entry-accent:#60bdb4;position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:24px;background:var(--entry-bg);color:var(--entry-fg);pointer-events:auto;transition:opacity .22s ease}
+html[data-theme="light"] .czl-entry{--entry-bg:#f5f2ec;--entry-fg:#242a32;--entry-dim:#626b76;--entry-line:#d4d0c8;--entry-accent:#147d75}
+.czl-entry.is-leaving{opacity:0;pointer-events:none}.czl-entry.is-leaving .czl-entry-skip{pointer-events:none}
+.czl-entry-content{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;width:min(100%,480px)}
+.czl-entry-brand{display:flex;align-items:center;gap:10px;font:10px/1.5 ui-monospace,monospace;letter-spacing:.14em;color:var(--entry-dim)}
+.czl-entry-brand img{width:30px;height:30px;border-radius:7px}
+.czl-entry-graphic{width:160px;height:140px;color:var(--entry-accent);overflow:visible}
+.czl-entry-graphic .entry-stroke{stroke-dasharray:450;stroke-dashoffset:320;animation:czl-draw 1.05s cubic-bezier(.2,.65,.3,1) forwards}
+.czl-entry-graphic .entry-detail{transform-origin:center;animation:czl-detail .9s .12s ease both}
+.czl-entry-graphic .entry-dot{animation:czl-detail .7s .35s ease both}
+.czl-entry h2{margin:0;font:600 clamp(20px,4vw,27px)/1.4 system-ui,sans-serif;letter-spacing:.03em;color:var(--entry-fg)}
+.czl-entry p{margin:0;max-width:34em;font:12px/1.8 system-ui,sans-serif;color:var(--entry-dim)}
+.czl-entry-code{font:10px/1.5 ui-monospace,monospace;letter-spacing:.2em;color:var(--entry-dim)}
+.czl-entry-skip{pointer-events:auto;margin-top:10px;padding:7px 12px;border:1px solid var(--entry-line);border-radius:6px;background:transparent;color:var(--entry-dim);font:11px/1.5 system-ui,sans-serif;cursor:pointer}
+.czl-entry-skip:hover{color:var(--entry-fg);border-color:var(--entry-accent)}
+.czl-entry-skip:focus-visible{outline:2px solid var(--entry-accent);outline-offset:4px}
+.czl-entry-replay{display:inline-grid;place-items:center;flex:none;width:30px;height:30px;padding:0!important;border:1px solid var(--line,#3b4148);border-radius:7px;background:transparent;color:var(--muted,#8b939d);cursor:pointer;vertical-align:middle}
+.czl-entry-replay:hover{color:var(--cyan,var(--accent,#60bdb4));border-color:currentColor}
+.czl-entry-replay:focus-visible{outline:2px solid var(--cyan,var(--accent,#60bdb4));outline-offset:3px}
+.czl-entry-replay:disabled{opacity:.4;cursor:default}
+.czl-entry-replay svg{width:15px;height:15px}
+html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl-entering .lab-grid{animation:czl-reveal .7s .85s ease both}
+@keyframes czl-draw{from{stroke-dashoffset:320}to{stroke-dashoffset:0}}
+@keyframes czl-detail{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+@keyframes czl-reveal{from{opacity:.45;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:600px){.czl-entry-graphic{width:135px;height:120px}.czl-entry-content{gap:13px}.czl-entry-replay{width:28px;height:28px}}
+@media(prefers-reduced-motion:reduce){.czl-entry{display:none!important}html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl-entering .lab-grid{animation:none!important}}
+
+.czl-theme-system{font:11px/1.5 system-ui,sans-serif;color:var(--muted,#8b939d);border:1px solid var(--line,#3b4148);border-radius:6px;padding:6px 10px;background:transparent;cursor:pointer;align-self:center}
+.czl-theme-system[aria-pressed="true"],.czl-theme-system:hover{color:var(--cyan,var(--accent,#60bdb4));border-color:currentColor}
+.czl-theme-system:focus-visible{outline:2px solid var(--cyan,var(--accent,#60bdb4));outline-offset:3px}
+
+</style><script data-lab="stock-market-lab">
+/* A finite, skippable entrance shared by the catalog and every offline lab. */
+(function () {
+  'use strict';
+  var id = document.currentScript.dataset.lab;
+  var lines = {
+    'catalog': ['科学与工程可视化', 'SCIENCE / ENGINEERING', '看见结构，理解原理。', '<path d="m80 16 44 25v50l-44 27-44-27V41Z M36 41l44 26 44-26 M80 67v51"/>'],
+    'motor-lab': ['电机原理实验室', 'MOTOR / LAB', '从结构出发，追踪能量的运动。', '<circle cx="80" cy="68" r="45"/><path d="M80 15v20m0 66v20M27 68h20m66 0h20"/><path class="entry-detail" d="m62 48 37 20-37 20Z"/>'],
+    'stock-market-lab': ['股票市场原理实验室', 'STOCK MARKET / LAB', '看见价格，也看清资金流向。', '<path d="M27 24v90h111M43 98l24-25 22 10 36-46"/><path class="entry-detail" d="M49 42v36m-7-26h14v16H42Zm38-20v31m-7-21h14v13H73Zm38-40v29m-7-20h14v13h-14Z"/>'],
+    'desalination-lab': ['海水淡化原理实验室', 'DESALINATION / LAB', '把盐留下，把水带走。', '<path d="M30 30v77h100V30M80 24v87M35 66h38m14 0h38"/><path class="entry-detail" d="m59 58 10 8-10 8M93 87h22m-22-40h22"/><circle class="entry-dot" cx="108" cy="81" r="3"/>'],
+    'fusion-lab': ['核聚变反应堆实验室', 'FUSION / LAB', '沿着磁场，理解一座聚变装置。', '<ellipse cx="80" cy="70" rx="57" ry="34"/><ellipse cx="80" cy="70" rx="31" ry="16"/><path class="entry-detail" d="M38 45q-17 30 0 50m84-50q17 30 0 50M61 38q-12 31 0 64m38-64q12 31 0 64"/>']
+  };
+  var info = lines[id]; if (!info) return;
+  var media = window.matchMedia('(prefers-reduced-motion: reduce)'), overlay = null, leaving = null, timer = 0, removal = 0, replay, initialPending = true;
+  function close(immediate) {
+    clearTimeout(timer); clearTimeout(removal);
+    if (leaving) { leaving.remove(); leaving = null; }
+    document.documentElement.classList.remove('czl-entering');
+    if (!overlay) return;
+    var previous = overlay; overlay = null;
+    if (previous.contains(document.activeElement)) {
+      var target = replay || document.querySelector('.skip, header a'); if (target) target.focus({ preventScroll: true });
+    }
+    if (immediate) previous.remove();
+    else { leaving = previous; previous.classList.add('is-leaving'); previous.querySelector('button').disabled = true; removal = setTimeout(function () { previous.remove(); if (leaving === previous) leaving = null; }, 230); }
+  }
+  function show() {
+    close(true);
+    if (media.matches || document.hidden) return;
+    overlay = document.createElement('div'); overlay.className = 'czl-entry';
+    var content = document.createElement('div'); content.className = 'czl-entry-content'; overlay.appendChild(content);
+    var brand = document.createElement('div'); brand.className = 'czl-entry-brand';
+    var image = document.createElement('img'); image.alt = ''; image.src = document.querySelector('link[rel="icon"]').href;
+    brand.appendChild(image); brand.appendChild(document.createTextNode('CZL-HOMELAB / VISUAL LABS')); content.appendChild(brand);
+    var art = document.createElement('div'); art.setAttribute('aria-hidden', 'true');
+    art.innerHTML = '<svg class="czl-entry-graphic" viewBox="0 0 160 140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g class="entry-stroke">' + info[3] + '</g></svg>'; content.appendChild(art);
+    var name = document.createElement('h2'); name.textContent = info[0]; content.appendChild(name);
+    var code = document.createElement('div'); code.className = 'czl-entry-code'; code.textContent = info[1]; content.appendChild(code);
+    var copy = document.createElement('p'); copy.textContent = info[2]; content.appendChild(copy);
+    var skip = document.createElement('button'); skip.type = 'button'; skip.className = 'czl-entry-skip'; skip.textContent = '跳过入场';
+    skip.addEventListener('click', function () { close(true); }); content.appendChild(skip);
+    document.body.appendChild(overlay); document.documentElement.classList.add('czl-entering');
+    timer = setTimeout(function () { close(false); }, 1400);
+  }
+  function syncMotion() {
+    if (replay) { replay.disabled = media.matches; replay.title = media.matches ? '系统已开启减少动态效果，跳过入场' : '回放入场动效'; }
+    if (media.matches) close(true);
+  }
+  function init() {
+    // Downloaded pages may contain a snapshot of generated controls/entrance.
+    document.querySelectorAll('.czl-entry, .czl-entry-replay, .czl-theme-system').forEach(function (el) { el.remove(); });
+    document.documentElement.classList.remove('czl-entering');
+    var theme = document.getElementById('themeToggle');
+    replay = document.createElement('button'); replay.type = 'button'; replay.className = 'czl-entry-replay';
+    replay.setAttribute('aria-label', '回放入场动效'); replay.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 10a8 8 0 1 1 0 5M4 4v6h6"/></svg>';
+    replay.addEventListener('click', show); if (theme) theme.insertAdjacentElement('afterend', replay);
+    var footer = document.querySelector('footer');
+    if (footer) {
+      var automatic = document.createElement('button'); automatic.type = 'button'; automatic.className = 'czl-theme-system';
+      automatic.textContent = '主题：跟随系统'; automatic.title = '清除手动主题选择，恢复跟随系统';
+      function syncAutomatic() { automatic.setAttribute('aria-pressed', String(window.CZLLabTheme.isAutomatic())); }
+      automatic.addEventListener('click', function () { window.CZLLabTheme.followSystem(); });
+      window.addEventListener('czl:theme', syncAutomatic); syncAutomatic(); footer.appendChild(automatic);
+    }
+    syncMotion();
+    // Paint the real page before starting the finite presentation, including
+    // expensive WebGL initialization performed by later DOM-ready handlers.
+    if (!location.hash && !media.matches) requestAnimationFrame(function () { requestAnimationFrame(function () {
+      if (initialPending) { initialPending = false; show(); }
+    }); });
+  }
+  document.addEventListener('pointerdown', function (e) {
+    initialPending = false;
+    if (!overlay || e.target.closest('.czl-entry-skip')) return;
+    // First interaction dismisses the presentation, never activates a hidden control.
+    if (overlay.contains(e.target)) { e.preventDefault(); e.stopPropagation(); }
+    close(true);
+  }, true);
+  document.addEventListener('keydown', function (e) { initialPending = false; if (overlay) { close(true); if (e.key !== 'Tab') { e.preventDefault(); e.stopImmediatePropagation(); } } }, true);
+  document.addEventListener('wheel', function () { initialPending = false; if (overlay) close(true); }, { passive: true, capture: true });
+  document.addEventListener('visibilitychange', function () { if (document.hidden) { initialPending = false; close(true); } });
+  window.addEventListener('pagehide', function () { initialPending = false; close(true); });
+  media.addEventListener('change', syncMotion);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+</script>
 </head>
 <body>
 <a class="skip" href="#lab">跳到实验台</a>
@@ -623,7 +806,7 @@ input.invalid{border-color:var(--red)}
     <span aria-hidden="true">←</span><span class="backlink-label">Lab Projects</span>
   </a>
   <a class="brand" href="#top" aria-label="回到页首">
-    <img class="brand-mark" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiBmaWxsPSJub25lIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+Q1pMIFNjaWVuY2UgYW5kIEVuZ2luZWVyaW5nIFZpc3VhbGl6YXRpb25zPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+QSBzcGF0aWFsIGZyYW1lIGFuZCBhbiBvcmJpdGFsIHBhdGg6IHN0cnVjdHVyZSwgb2JzZXJ2YXRpb24gYW5kIG1vdGlvbi48L2Rlc2M+CiAgPHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIzMCIgZmlsbD0iIzE3MTgxYSIvPgogIDxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSIxMjYiIGhlaWdodD0iMTI2IiByeD0iMjkiIHN0cm9rZT0iIzNiM2U0MiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTY0IDIxIDk5IDQxdjQzTDY0IDEwNSAyOSA4NFY0MVoiIGZpbGw9IiMyMjI0MjciIHN0cm9rZT0iIzViYzhiZSIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTI5IDQxIDM1IDIxIDM1LTIxTTY0IDYydjQzTTY0IDIxdjQxIiBzdHJva2U9IiM1YmM4YmUiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGVsbGlwc2UgY3g9IjY0IiBjeT0iNjQiIHJ4PSI1MyIgcnk9IjIwIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzAgNjQgNjQpIiBzdHJva2U9IiM3YWEyZDgiIHN0cm9rZS13aWR0aD0iNCIvPgogIDxwYXRoIGQ9Im0yOSA0MSAzNSAyMXY0MyIgc3Ryb2tlPSIjY2ZlOGUzIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGNpcmNsZSBjeD0iMTA3IiBjeT0iMzkiIHI9IjciIGZpbGw9IiNkOTlhNmIiIHN0cm9rZT0iIzE3MTgxYSIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGNpcmNsZSBjeD0iNjQiIGN5PSI2MiIgcj0iNSIgZmlsbD0iI2NmZThlMyIvPgo8L3N2Zz4K" alt="">
+    <img class="brand-mark" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiBmaWxsPSJub25lIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+Q1pMIFNjaWVuY2UgYW5kIEVuZ2luZWVyaW5nIFZpc3VhbGl6YXRpb25zPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+QW4gaXNvbWV0cmljIHN0cnVjdHVyYWwgZnJhbWUgd2l0aCBhbiBvcmJpdCBwYXNzaW5nIGJlaGluZCBhbmQgaW4gZnJvbnQsIGFuZCBhIGNvcHBlciBvYnNlcnZhdGlvbiBwb2ludC48L2Rlc2M+CiAgPHN0eWxlPkBtZWRpYShtYXgtd2lkdGg6MzJweCl7LmJhY2stb3JiaXR7ZGlzcGxheTpub25lfS5mcmFtZSwuc2VhbXtzdHJva2Utd2lkdGg6NX0ub3JiaXR7c3Ryb2tlLXdpZHRoOjV9LmZvY3Vze3I6Nn19PC9zdHlsZT4KICA8cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjI4IiBmaWxsPSIjMTgxYTFkIi8+CiAgPHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjEyNiIgaGVpZ2h0PSIxMjYiIHJ4PSIyNyIgc3Ryb2tlPSIjMzgzZDQ0IiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDxwYXRoIGNsYXNzPSJiYWNrLW9yYml0IiBkPSJNMTggOTBhNTMgMTgtMzAgMCAxIDkyLTUyIiBzdHJva2U9IiM3ZmExY2MiIHN0cm9rZS13aWR0aD0iMy41IiBvcGFjaXR5PSIuNDgiLz4KICA8cGF0aCBkPSJtNjQgMjQgMzMgMTktMzMgMjAtMzMtMjBaIiBmaWxsPSIjMjkyZTM0Ii8+CiAgPHBhdGggZD0ibTMxIDQzIDMzIDIwdjM5TDMxIDgzWiIgZmlsbD0iIzIwMjQyYSIvPgogIDxwYXRoIGQ9Im02NCA2MyAzMy0yMHY0MGwtMzMgMTlaIiBmaWxsPSIjMWExZTIzIi8+CiAgPHBhdGggY2xhc3M9ImZyYW1lIiBkPSJtNjQgMjQgMzMgMTl2NDBsLTMzIDE5LTMzLTE5VjQzWiIgc3Ryb2tlPSIjZGNlMWU4IiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBjbGFzcz0ic2VhbSIgZD0ibTMxIDQzIDMzIDIwIDMzLTIwTTY0IDYzdjM5IiBzdHJva2U9IiNhYmI2YzIiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggY2xhc3M9InNlYW0iIGQ9Im0zMSA0MyAzMyAyMCIgc3Ryb2tlPSIjNjBiZGI0IiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGNsYXNzPSJvcmJpdCIgZD0iTTExMCAzOGE1MyAxOC0zMCAwIDEtOTIgNTIiIHN0cm9rZT0iIzdmYTFjYyIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8Y2lyY2xlIGNsYXNzPSJmb2N1cyIgY3g9IjExMCIgY3k9IjM4IiByPSI1LjUiIGZpbGw9IiNkNjliNzIiIHN0cm9rZT0iIzE4MWExZCIgc3Ryb2tlLXdpZHRoPSIyLjUiLz4KPC9zdmc+Cg==" alt="">
     <span class="brand-name">股票市场原理实验室<small>STOCK MARKET LAB</small></span>
   </a>
   <nav class="topnav" aria-label="页面导航">
@@ -826,7 +1009,7 @@ input.invalid{border-color:var(--red)}
   <div class="dir-head">
     <span class="dir-eyebrow">LAB PROJECTS / 全部实验</span>
     <h2 id="labDirectoryTitle">换一个实验室</h2>
-    <p>两个可离线运行的交互式实验室。主题与导航在各页保持一致。</p>
+    <p>四个可离线运行的交互式实验室。主题与导航在各页保持一致。</p>
   </div>
   <div class="dir-grid">
     <a class="dir-card current" href="./index.html" aria-current="page">
@@ -837,6 +1020,11 @@ input.invalid{border-color:var(--red)}
       <span class="dir-num">01</span>
       <div class="dir-copy"><h3>电机原理实验室 <span class="dir-tag">Motor Lab</span></h3><p>六类电机的三维结构、磁场与连续换向过程。</p></div>
     </a>
+    <a class="dir-card" href="../desalination-lab/index.html">
+      <span class="dir-num">03</span>
+      <div class="dir-copy"><h3>海水淡化原理实验室 <span class="dir-tag">Desal Lab</span></h3><p>渗透压、反渗透、闪蒸与整厂物料平衡。</p></div>
+    </a>
+    <a class="dir-card" href="../fusion-lab/index.html"><span class="dir-num">04</span><div class="dir-copy"><h3>核聚变反应堆实验室 <span class="dir-tag">Fusion Lab</span></h3><p>ITER 三维解剖、磁约束、氚燃料循环与聚变电站。</p></div></a>
   </div>
   <a class="dir-all" href="../index.html#projects">返回项目目录 / All projects <span aria-hidden="true">↗</span></a>
 </section>
@@ -13689,36 +13877,7 @@ input.invalid{border-color:var(--red)}
   /* ------------------------------------------------------------------ */
   /*  Theme                                                             */
   /* ------------------------------------------------------------------ */
-  var THEME_KEY = 'czl-lab-theme';
-  function applyTheme(theme, persist) {
-    document.documentElement.setAttribute('data-theme', theme);
-    var btn = $('themeToggle');
-    var light = theme === 'light';
-    if (btn) {
-      var icon = btn.querySelector('.theme-icon');
-      var label = btn.querySelector('.theme-label');
-      if (icon) icon.textContent = light ? '☾' : '☀';
-      if (label) label.textContent = light ? '深色' : '浅色';
-      btn.setAttribute('aria-pressed', light ? 'false' : 'true');
-      btn.setAttribute('aria-label', light ? '当前浅色主题，切换到深色' : '当前深色主题，切换到浅色');
-    }
-    var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', light ? '#f4f2ec' : '#101113');
-    if (persist !== false) {
-      try { localStorage.setItem(THEME_KEY, theme); localStorage.setItem('sml.theme', theme); } catch (e) { /* ignore */ }
-    }
-    window.dispatchEvent(new Event('sm:theme'));
-  }
-  function initTheme() {
-    var saved = null;
-    try { saved = localStorage.getItem(THEME_KEY) || localStorage.getItem('sml.theme'); } catch (e) { /* ignore */ }
-    try { if (saved && !localStorage.getItem(THEME_KEY)) localStorage.setItem(THEME_KEY, saved); } catch (e) { /* ignore */ }
-    var theme = saved === 'light' || saved === 'dark' ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    applyTheme(theme, false);
-    $('themeToggle').addEventListener('click', function () {
-      applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-    });
-  }
+  function initTheme() { window.CZLLabTheme.mount(); }
 
   /* ------------------------------------------------------------------ */
   /*  Hero + index strip                                                */

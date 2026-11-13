@@ -62,7 +62,7 @@ python3 -m http.server 8766 --bind 127.0.0.1
 - **K 线图**：悬停查看 OHLC 与涨跌幅；拖动平移；滚轮缩放；双击复位；聚焦后可用方向键与 `+`/`-`。
 - **恢复默认**：每个实验面板底部有“恢复默认”按钮；切换模块不会残留上一个模块的状态。
 - **深浅色**：右上角切换；首次访问跟随系统，选择写入共享键 `czl-lab-theme`，图表随主题重绘。
-- **返回与切换**：顶栏左侧 `Lab Projects` 返回项目目录；页脚前的“换一个实验室”目录可切换 Motor Lab 或返回目录；滚动后右下角出现“↑ 顶部”按钮。
+- **返回与切换**：顶栏左侧 `Lab Projects` 返回项目目录；页脚前的“换一个实验室”目录可切换到其他实验室或返回项目目录；滚动后右下角出现“↑ 顶部”按钮。
 - **导入数据**：页面下方“数据”区可粘贴或选择本地 CSV/JSON；导入后会标明来源、时间范围、时区、币种、复权与缺失情况。导入数据与模拟数据不会混在同一张图里。
 - **离线保存**：右上角“离线网页”会下载当前页面的单文件副本。
 
@@ -74,8 +74,8 @@ python3 -m http.server 8766 --bind 127.0.0.1
 
 - 顶栏左侧的 `Lab Projects` 返回组织站点首页（项目目录）；页脚前的“换一个实验室”目录列出全部实验室，当前页带 `当前 / Current` 标记，并提供返回项目目录的链接。
 - 链接使用相对路径（`../motor-lab/index.html`、`./index.html`、`../index.html`），因此 Pages 子路径与 `_site` 本地预览都能解析；若把单个 `index.html` 复制到别处，实验室目录与返回入口需要保持同样的站点目录结构。
-- 主题键 `czl-lab-theme` 与 Motor Lab、根目录页共用；页面在首次绘制前设置 `data-theme`，主题按钮通过 `aria-pressed` 暴露状态，`meta[name="theme-color"]` 同步当前背景。
-- 新增实验室时必须同时更新本页目录、Motor Lab 目录和 `site/projects.json`，并检查 390px 下两个入口不溢出。
+- 主题键 `czl-lab-theme` 与所有实验室、根目录页共用；页面在首次绘制前设置 `data-theme`，主题按钮通过 `aria-pressed` 暴露状态，`meta[name="theme-color"]` 同步当前背景。
+- 新增实验室时必须同时更新所有实验室的目录和 `site/projects.json`，并检查 390px 下两个入口不溢出。
 
 ## 数据与模型
 
@@ -231,10 +231,20 @@ node tests/check-build.cjs
 python3 -m http.server 8766
 ```
 
-Theme and navigation: the header's `Lab Projects` link returns to the catalog; the "Lab projects" directory above the footer lists every lab, marks the current page and links back to the catalog. Relative paths keep Pages subpaths, the local `_site` preview and direct file opening working. Both labs show a floating “top” button after 600px of scrolling. The shared `czl-lab-theme` key is also used by Motor Lab and the root catalog; `data-theme` is set before first paint, the theme button exposes `aria-pressed`, and `meta[name="theme-color"]` follows the background. When adding a lab, update this directory, the Motor Lab directory and `site/projects.json`, and check both entry points at 390px.
+Theme and navigation: the header's `Lab Projects` link returns to the catalog; the "Lab projects" directory above the footer lists every lab, marks the current page and links back to the catalog. Relative paths keep Pages subpaths, the local `_site` preview and direct file opening working. This lab shows a floating “top” button after 600px of scrolling. The shared `czl-lab-theme` key is used by all labs and the root catalog; `data-theme` is set before first paint, the theme button exposes `aria-pressed`, and `meta[name="theme-color"]` follows the background. When adding a lab, update every lab directory and `site/projects.json`, and check both entry points at 390px.
 
 The project is MIT licensed and is not investment advice. Model boundaries are listed in each module and in the section above.
 
 ---
 
 *规则核对：2026-10-31 · 构建与测试记录见 CI 与发布说明。*
+
+## 入场与主题特性 / Entrance and theme features
+
+进入本 Lab 时显示简短的市场图表入场动效，约 1.6 秒自动结束。可立即跳过，顶栏可回放；鼠标/键盘操作或页面隐藏会清理入场，锚点链接直接进入目标内容。系统“减少动态效果”会跳过入场并禁用回放。共享 Logo、主题及动效在构建时内嵌，保持离线使用；下载后重开不重复生成按钮。
+
+默认跟随系统浅色/暗黑偏好，手动选择记入 `czl-lab-theme`；没有手动覆盖时跟随系统实时变化。同源页面同步主题，页脚“主题：跟随系统”恢复自动模式。不是按本地时钟强制切换。公共维护约定见 [根 AGENTS](../../AGENTS.md)，实现入口见 [资源说明](../../assets/README.md)。
+
+The short market chart entrance ends automatically in about 1.6 seconds. Skip immediately or replay from the header; pointer/keyboard interaction or hiding the page clears it, and deep links open directly. Reduced motion bypasses the entrance and disables replay. Logo/theme/entrance assets are embedded offline at build time; reopening a downloaded snapshot does not duplicate controls.
+
+Theme follows the system's light/dark setting until a manual choice is saved under czl-lab-theme. Unoverridden pages follow live system changes, same-origin pages synchronize, and the footer system-theme button restores automatic mode. There is no forced day/night clock rule. See root AGENTS and asset guidance linked above for shared maintenance.

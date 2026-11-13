@@ -48,36 +48,7 @@
   /* ------------------------------------------------------------------ */
   /*  Theme                                                             */
   /* ------------------------------------------------------------------ */
-  var THEME_KEY = 'czl-lab-theme';
-  function applyTheme(theme, persist) {
-    document.documentElement.setAttribute('data-theme', theme);
-    var btn = $('themeToggle');
-    var light = theme === 'light';
-    if (btn) {
-      var icon = btn.querySelector('.theme-icon');
-      var label = btn.querySelector('.theme-label');
-      if (icon) icon.textContent = light ? '☾' : '☀';
-      if (label) label.textContent = light ? '深色' : '浅色';
-      btn.setAttribute('aria-pressed', light ? 'false' : 'true');
-      btn.setAttribute('aria-label', light ? '当前浅色主题，切换到深色' : '当前深色主题，切换到浅色');
-    }
-    var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', light ? '#f4f2ec' : '#101113');
-    if (persist !== false) {
-      try { localStorage.setItem(THEME_KEY, theme); localStorage.setItem('sml.theme', theme); } catch (e) { /* ignore */ }
-    }
-    window.dispatchEvent(new Event('sm:theme'));
-  }
-  function initTheme() {
-    var saved = null;
-    try { saved = localStorage.getItem(THEME_KEY) || localStorage.getItem('sml.theme'); } catch (e) { /* ignore */ }
-    try { if (saved && !localStorage.getItem(THEME_KEY)) localStorage.setItem(THEME_KEY, saved); } catch (e) { /* ignore */ }
-    var theme = saved === 'light' || saved === 'dark' ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    applyTheme(theme, false);
-    $('themeToggle').addEventListener('click', function () {
-      applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-    });
-  }
+  function initTheme() { window.CZLLabTheme.mount(); }
 
   /* ------------------------------------------------------------------ */
   /*  Hero + index strip                                                */

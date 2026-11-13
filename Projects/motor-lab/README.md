@@ -3,7 +3,7 @@
 主仓库：[CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering)。
 正式网站：[Motor Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/)。
 
-源码位于仓库的 `Projects/motor-lab/`。当前维护机目录为 `F:\ProjectA\Visualization-of-Science-and-Engineering\Projects\motor-lab`，其他开发者可克隆到任意路径。协作请先读根目录 [贡献指南](../../CONTRIBUTING.md) 和本目录 [AGENTS.md](AGENTS.md)。
+源码位于仓库的 `Projects/motor-lab/`。可克隆到任意本地路径。协作请先读根目录 [贡献指南](../../CONTRIBUTING.md) 和本目录 [AGENTS.md](AGENTS.md)。
 
 ## v3.1
 
@@ -12,7 +12,7 @@
 - PMSM 三相按固定 A/B/C 颜色，以明暗表示电流绝对值，符号和亮点表示方向；桥图明暗不表示瞬时 PWM 开关状态。
 - 第 3/4/5 类的原理小图具有动态电流亮点、场轴/转子标记及支路动画。
 - 四组并排双三维对比，每组六幕：结构、电流、磁场、转子、负载、能量链。
-- 科学仪器主题的入场环形动画；遵循减少动态效果偏好。
+- 公共电机转子入场动效，支持跳过/回放；遵循减少动态效果偏好。
 - `src/director.js` 管理自动导演、字幕与双模型对比。
 
 ## Git 与发布
@@ -125,7 +125,7 @@ PR 合并到组织仓库 main（或在明确授权下推送 main）后，`.githu
 
 ## English — Motor Lab v3.1
 
-Canonical repository: [CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering). [Open Motor Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) or return to the [project directory](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/). Source is under Projects/motor-lab; the maintainer's F-drive path is an example, not a required location. Read the root contribution guide and local AGENTS.md.
+Canonical repository: [CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering). [Open Motor Lab](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) or return to the [project directory](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/). Source is under Projects/motor-lab; no maintainer-specific filesystem path is required. Read the root contribution guide and local AGENTS.md.
 
 ### Run and explore
 
@@ -147,7 +147,7 @@ Four comparison pairs provide six scenes each: BLDC/PMSM, synchronous/induction,
 
 The header button switches between dark and light. First visit follows `prefers-color-scheme`; an explicit choice is stored under the shared `czl-lab-theme` key and mirrored to `meta[name="theme-color"]`. Both palettes are inlined in index.html, so the file stays offline and requests no remote fonts or styles.
 
-`Lab Projects` at the top-left returns to the catalog. The "Lab projects" directory above the footer lists every lab, marks the current page and links back to the catalog. Both labs show a floating “top” button after 600px of scrolling, hidden when the page is short. Relative paths keep Pages subpaths and local file:// previews working. The theme switch also updates grid and axis opacity in the 3D engine; light mode uses a warm paper stage, dark mode keeps graphite. Check labels, grids, focus rings and narrow layouts in both themes.
+`Lab Projects` at the top-left returns to the catalog. The "Lab projects" directory above the footer lists every lab, marks the current page and links back to the catalog. This lab shows a floating “top” button after 600px of scrolling, hidden when the page is short. Relative paths keep Pages subpaths and local file:// previews working. The theme switch also updates grid and axis opacity in the 3D engine; light mode uses a warm paper stage, dark mode keeps graphite. Check labels, grids, focus rings and narrow layouts in both themes.
 
 ### Model boundaries
 
@@ -160,3 +160,13 @@ Motion uses simplified steady-state operating points rather than startup inertia
 Edit src/ and run python build.py. Run node tests/check-model.cjs and the syntax commands in AGENTS.md; commit the generated index.html. No npm installation is needed. core.js handles the inherited lessons and operating points; courses.js contains scene content; engine.js builds the models; app.js controls interaction and diagrams; director.js directs tours and comparisons. Shared identity is embedded from ../../assets/icon.svg. vendor/three.min.js is Three.js 0.160.1 under the preserved MIT license. Historical v2 files under work/ are backups.
 
 Merging to the organization repository's main triggers Pages validation and publishing. Source, build and route guidance is in the root README. Manufacturer references above include Microchip BLDC commutation, Oriental Motor induction/PSC structure, and Nidec capacitor-run and DC back-EMF explanations. Their links are shared by both language versions.
+
+## 入场与主题特性 / Entrance and theme features
+
+进入本 Lab 时显示简短的电机转子入场动效，约 1.6 秒自动结束。可立即跳过，顶栏可回放；鼠标/键盘操作或页面隐藏会清理入场，锚点链接直接进入目标内容。系统“减少动态效果”会跳过入场并禁用回放。共享 Logo、主题及动效在构建时内嵌，保持离线使用；下载后重开不重复生成按钮。
+
+默认跟随系统浅色/暗黑偏好，手动选择记入 `czl-lab-theme`；没有手动覆盖时跟随系统实时变化。同源页面同步主题，页脚“主题：跟随系统”恢复自动模式。不是按本地时钟强制切换。公共维护约定见 [根 AGENTS](../../AGENTS.md)，实现入口见 [资源说明](../../assets/README.md)。
+
+The short rotor entrance ends automatically in about 1.6 seconds. Skip immediately or replay from the header; pointer/keyboard interaction or hiding the page clears it, and deep links open directly. Reduced motion bypasses the entrance and disables replay. Logo/theme/entrance assets are embedded offline at build time; reopening a downloaded snapshot does not duplicate controls.
+
+Theme follows the system's light/dark setting until a manual choice is saved under czl-lab-theme. Unoverridden pages follow live system changes, same-origin pages synchronize, and the footer system-theme button restores automatic mode. There is no forced day/night clock rule. See root AGENTS and asset guidance linked above for shared maintenance.
