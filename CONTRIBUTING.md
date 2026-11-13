@@ -17,7 +17,7 @@ git switch -c feat/describe-your-change origin/main
 
 ## 开发与验证
 
-四个实验室都修改 `Projects/<slug>/src/`，在对应项目目录运行 `python build.py`，并将生成的 `index.html` 与源码一起提交。无需 npm 或 Python 第三方包。用 `node --check` 检查全部 `src/*.js`，有 `src/modules/` 时也检查其中的脚本，再运行：
+各实验室都修改 `Projects/<slug>/src/`，在对应项目目录运行 `python build.py`，并将生成的 `index.html` 与源码一起提交。无需 npm 或 Python 第三方包。用 `node --check` 检查全部 `src/*.js`，有 `src/modules/` 时也检查其中的脚本，再运行：
 
 | 项目 | 在项目目录执行的检查 | 专门约定 |
 | --- | --- | --- |
@@ -25,8 +25,9 @@ git switch -c feat/describe-your-change origin/main
 | Stock Market Lab | `node tests/check-finance.cjs`；`node tests/check-build.cjs` | [AGENTS](Projects/stock-market-lab/AGENTS.md) · [README](Projects/stock-market-lab/README.md) |
 | Desalination Lab | `node tests/check-physics.cjs`；`node tests/check-scenes.cjs`；`node tests/check-build.cjs` | [AGENTS](Projects/desalination-lab/AGENTS.md) · [README](Projects/desalination-lab/README.md) |
 | Fusion Lab | `node tests/check-physics.cjs`；`node tests/check-build.cjs` | [AGENTS](Projects/fusion-lab/AGENTS.md) · [README](Projects/fusion-lab/README.md) |
+| Distillation Lab | `node tests/check-thermo.cjs`；`node tests/check-build.cjs` | [AGENTS](Projects/distillation-lab/AGENTS.md) · [README](Projects/distillation-lab/README.md) |
 
-共享主题/入场源码位于 `assets/theme.js`、`assets/entry.js` 与 `assets/entry.css`，通过 `scripts/shared_experience.py` 在构建时内嵌。修改公共层需运行 `node scripts/check-theme.cjs` 和两份 JS 的语法检查，重建所有受影响的 Lab，检查目录与四个 Lab 的深浅主题、390px 顶栏、跳过/回放、减少动态效果、离线下载重开；Logo 额外检查 16/24/32px 辨识度。
+共享主题/入场源码位于 `assets/theme.js`、`assets/entry.js` 与 `assets/entry.css`，通过 `scripts/shared_experience.py` 在构建时内嵌。修改公共层需运行 `node scripts/check-theme.cjs` 和两份 JS 的语法检查，重建所有受影响的 Lab，检查目录与所有 Lab 的深浅主题、390px 顶栏、跳过/回放、减少动态效果、离线下载重开；Logo 额外检查 16/24/32px 辨识度。
 
 从根目录运行 `python scripts/check_site.py`，构建目录并核对所有路由、相对资源及跨 Lab 目录；提交前运行 `git diff --check`。纯文档改动检查相关链接、路径与命令即可，不要求重跑无关模型和 UI 测试。
 
@@ -50,9 +51,9 @@ git switch -c feat/describe-your-change origin/main
 
 提交聚焦具体问题。PR 说明结果、改动范围、相关文档、验证与限制；涉及科学内容时说明模型假设。使用 [PR 模板](.github/pull_request_template.md)，不提交凭据、临时文件或无关变更。
 
-当前四个 Lab 各有 Windows/Linux PR 检查工作流，检查构建、脚本语法、对应模型/封装、生成文件一致性及站点链接。审阅通过后按用户授权由维护者合并到目标分支。PR 约定不代表仓库必然启用了强制评审；实际保护规则由管理员管理。
+当前每个 Lab 各有 Windows/Linux PR 检查工作流，检查构建、脚本语法、对应模型/封装、生成文件一致性及站点链接。审阅通过后按用户授权由维护者合并到目标分支。PR 约定不代表仓库必然启用了强制评审；实际保护规则由管理员管理。
 
-只有组织 `main` 上符合路径条件的推送或手动运行才触发 [Pages 工作流](.github/workflows/pages.yml)。它构建四个 Lab、运行检查、打包并部署。文档文件是否触发发布取决于该工作流的路径过滤，不能假定任意文档修改都会发布。
+只有组织 `main` 上符合路径条件的推送或手动运行才触发 [Pages 工作流](.github/workflows/pages.yml)。它构建 `site/projects.json` 中登记的所有 Lab、运行检查、打包并部署。文档文件是否触发发布取决于该工作流的路径过滤，不能假定任意文档修改都会发布。
 
 正式站点根路径是项目目录；项目路由见 [根 README](README.md)。Pages Source 为 GitHub Actions，发布使用 `GITHUB_TOKEN`，不在源码保存个人令牌。合并后核对 Actions 及线上内容，并更新交接中的实际结果。提交、推送、合并和上线是不同状态；未获授权时不自行合并或发布。
 
@@ -64,7 +65,7 @@ Read the root and target README/AGENTS and [current handoff](docs/HANDOFF.md). I
 
 Contributors without organization write access may use a working branch in the user-designated account's fork to open an organization PR. Keep the organization as the canonical upstream and production host. Verify the active account with `gh api user --jq .login`; honor account and manual-merge decisions without switching identities on your own.
 
-All four labs edit `Projects/<slug>/src/`, build with `python build.py` in that project, and commit generated `index.html` with source. No npm or third-party Python installation is needed. Check all source scripts with `node --check`, including module scripts where present, then run the exact project tests listed in the table above. For shared theme/entrance changes, edit assets/theme.js, entry.js and entry.css (inlined by scripts/shared_experience.py), run `node scripts/check-theme.cjs` plus shared-script syntax checks, rebuild affected labs and check the catalog/all labs in both themes at desktop/390px, skip/replay, reduced motion and reopened offline downloads. Check logo legibility at 16/24/32px. From the repository root run `python scripts/check_site.py` for routes, relative resources and every lab directory, and `git diff --check`. Documentation-only work requires relevant link, path and command checks rather than unrelated model/UI reruns.
+Every lab edits `Projects/<slug>/src/`, build with `python build.py` in that project, and commit generated `index.html` with source. No npm or third-party Python installation is needed. Check all source scripts with `node --check`, including module scripts where present, then run the exact project tests listed in the table above. For shared theme/entrance changes, edit assets/theme.js, entry.js and entry.css (inlined by scripts/shared_experience.py), run `node scripts/check-theme.cjs` plus shared-script syntax checks, rebuild affected labs and check the catalog/all labs in both themes at desktop/390px, skip/replay, reduced motion and reopened offline downloads. Check logo legibility at 16/24/32px. From the repository root run `python scripts/check_site.py` for routes, relative resources and every lab directory, and `git diff --check`. Documentation-only work requires relevant link, path and command checks rather than unrelated model/UI reruns.
 
 Preserve offline packaging, scientific boundaries and attribution. Reference primary sources for new scientific claims. Check UI in both themes at desktop and 390px; check 3D visibility, annotations, flow direction, pause, manual control and reduced motion. Keep review screenshots outside deployment. A new project needs bilingual README/AGENTS, build/test/model/license guidance, registry and preview entries, every lab directory, relevant root documentation and CI/Pages integration. Extend packaging explicitly for additional runtime resources.
 
@@ -82,4 +83,4 @@ Use focused commits and the [PR template](.github/pull_request_template.md). Exp
 
 Each lab has Windows/Linux PR checks covering builds, syntax, applicable models/packaging, generated output and site links. Maintainers merge to the target branch within user authorization. Review conventions do not assert that branch protection is enforced; administrators manage those settings.
 
-The organization Pages workflow runs on matching `main` pushes or manual dispatch. It builds and verifies all four labs, packages and deploys the site. Documentation triggers depend on its actual path filters; not every Markdown change triggers deployment. Use GitHub Actions as Pages Source and the workflow's GITHUB_TOKEN rather than committed personal tokens. After merge, inspect Actions and live content, then update the handoff with the observed result. Committed, pushed, merged and deployed are distinct states; do not merge or publish without authorization.
+The organization Pages workflow runs on matching `main` pushes or manual dispatch. It builds and verifies every lab registered in `site/projects.json`, packages and deploys the site. Documentation triggers depend on its actual path filters; not every Markdown change triggers deployment. Use GitHub Actions as Pages Source and the workflow's GITHUB_TOKEN rather than committed personal tokens. After merge, inspect Actions and live content, then update the handoff with the observed result. Committed, pushed, merged and deployed are distinct states; do not merge or publish without authorization.

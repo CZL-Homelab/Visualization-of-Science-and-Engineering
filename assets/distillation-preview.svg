@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="380" viewBox="0 0 620 380" role="img" aria-labelledby="t d">
+<title id="t">Distillation Lab preview</title>
+<desc id="d">A tray column with condenser and reboiler on the left; a McCabe–Thiele diagram for benzene and toluene on the right.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b1e23"/><stop offset="1" stop-color="#121417"/></linearGradient>
+  <style>
+    text{font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif}
+    .eyebrow{fill:#e0955a;font-size:9px;letter-spacing:2.2px;font-weight:600}
+    .title{fill:#eceef1;font-size:17px;font-weight:700}
+    .sub{fill:#9aa1a9;font-size:9px;letter-spacing:0.6px}
+    .ax{fill:#5f666d;font-size:7px;font-variant-numeric:tabular-nums}
+    .lbl{fill:#9aa1a9;font-size:8px}
+  </style>
+</defs>
+<rect width="620" height="380" rx="10" fill="url(#bg)"/>
+<rect x="0.5" y="0.5" width="619" height="379" rx="10" fill="none" stroke="#2d3238"/>
+<text x="40" y="30" class="eyebrow">DISTILLATION LAB / 10 MODULES</text>
+<text x="40" y="52" class="title">一块塔板，看懂各种精馏</text>
+<text x="40" y="68" class="sub">相平衡 · McCabe–Thiele · 共沸 · 减压 · 原油</text>
+<rect x="112" y="74" width="64" height="16" rx="8" fill="#23272d" stroke="#2d3238"/><path d="M118 82 q4 -5 8 0 q4 5 8 0 q4 -5 8 0 q4 5 8 0 q4 -5 8 0 q4 5 8 0" fill="none" stroke="#7aa2d8" stroke-width="1.3"/>
+<path d="M133 92 V90" stroke="#e0955a" stroke-width="2"/>
+<rect x="90" y="92" width="86" height="214" rx="10" fill="#1e2126" stroke="#3a4048" stroke-width="1.4"/>
+<rect x="92" y="103.6" width="68" height="5" rx="1" fill="rgb(101,196,183)" opacity=".85"/><line x1="92" y1="108.6" x2="160" y2="108.6" stroke="#9aa1a9" stroke-width="1.2"/><rect x="106" y="119.2" width="68" height="5" rx="1" fill="rgb(110,193,176)" opacity=".85"/><line x1="106" y1="124.2" x2="174" y2="124.2" stroke="#9aa1a9" stroke-width="1.2"/><rect x="92" y="134.9" width="68" height="5" rx="1" fill="rgb(121,188,167)" opacity=".85"/><line x1="92" y1="139.9" x2="160" y2="139.9" stroke="#9aa1a9" stroke-width="1.2"/><rect x="106" y="150.6" width="68" height="5" rx="1" fill="rgb(135,183,157)" opacity=".85"/><line x1="106" y1="155.6" x2="174" y2="155.6" stroke="#9aa1a9" stroke-width="1.2"/><rect x="92" y="166.3" width="68" height="5" rx="1" fill="rgb(148,178,147)" opacity=".85"/><line x1="92" y1="171.3" x2="160" y2="171.3" stroke="#9aa1a9" stroke-width="1.2"/><rect x="106" y="182.0" width="68" height="5" rx="1" fill="rgb(160,174,138)" opacity=".85"/><line x1="106" y1="187.0" x2="174" y2="187.0" stroke="#9aa1a9" stroke-width="1.2"/><rect x="92" y="197.7" width="68" height="5" rx="1" fill="rgb(168,171,132)" opacity=".85"/><line x1="92" y1="202.7" x2="160" y2="202.7" stroke="#9aa1a9" stroke-width="1.2"/><rect x="106" y="213.4" width="68" height="5" rx="1" fill="rgb(176,167,126)" opacity=".85"/><line x1="106" y1="218.4" x2="174" y2="218.4" stroke="#9aa1a9" stroke-width="1.2"/><rect x="92" y="229.1" width="68" height="5" rx="1" fill="rgb(186,164,119)" opacity=".85"/><line x1="92" y1="234.1" x2="160" y2="234.1" stroke="#9aa1a9" stroke-width="1.2"/><rect x="106" y="244.8" width="68" height="5" rx="1" fill="rgb(196,160,111)" opacity=".85"/><line x1="106" y1="249.8" x2="174" y2="249.8" stroke="#9aa1a9" stroke-width="1.2"/><rect x="92" y="260.5" width="68" height="5" rx="1" fill="rgb(205,156,104)" opacity=".85"/><line x1="92" y1="265.5" x2="160" y2="265.5" stroke="#9aa1a9" stroke-width="1.2"/><rect x="106" y="276.2" width="68" height="5" rx="1" fill="rgb(212,154,99)" opacity=".85"/><line x1="106" y1="281.2" x2="174" y2="281.2" stroke="#9aa1a9" stroke-width="1.2"/><rect x="92" y="291.9" width="68" height="5" rx="1" fill="rgb(217,152,95)" opacity=".85"/><line x1="92" y1="296.9" x2="160" y2="296.9" stroke="#9aa1a9" stroke-width="1.2"/>
+<path d="M44 198.0 H90" stroke="#d9c069" stroke-width="2.2"/><text x="44" y="193.0" class="lbl" style="fill:#d9c069">F</text>
+<rect x="104" y="314" width="62" height="18" rx="9" fill="#c98a55" opacity=".85"/><path d="M112 340 q3 -6 6 0 q3 6 6 0 M132 340 q3 -6 6 0 q3 6 6 0 M152 340 q3 -6 6 0 q3 6 6 0" fill="none" stroke="#e05a5f" stroke-width="1.3"/>
+<path d="M176 82 H214" stroke="#5bc8be" stroke-width="2"/><text x="218" y="85" class="lbl" style="fill:#5bc8be">D  xD 0.97</text>
+<path d="M166 323 H214" stroke="#e0955a" stroke-width="2"/><text x="218" y="326" class="lbl" style="fill:#e0955a">W  xW 0.03</text>
+<rect x="330" y="80" width="250" height="250" fill="none" stroke="#2d3238"/>
+<g stroke="#262b31" stroke-dasharray="2 5"><line x1="392.5" y1="80" x2="392.5" y2="330"/><line x1="330" y1="267.5" x2="580" y2="267.5"/><line x1="455.0" y1="80" x2="455.0" y2="330"/><line x1="330" y1="205.0" x2="580" y2="205.0"/><line x1="517.5" y1="80" x2="517.5" y2="330"/><line x1="330" y1="142.5" x2="580" y2="142.5"/></g>
+<line x1="330" y1="330" x2="580" y2="80" stroke="#6e757d" stroke-dasharray="3 4"/>
+<polyline points="330.0,330.0 336.3,315.8 342.5,302.3 348.8,289.7 355.0,277.7 361.3,266.4 367.5,255.7 373.8,245.6 380.0,236.0 386.3,226.9 392.5,218.2 398.8,210.0 405.0,202.2 411.3,194.8 417.5,187.7 423.8,181.0 430.0,174.5 436.3,168.4 442.5,162.5 448.8,156.9 455.0,151.6 461.3,146.5 467.5,141.6 473.8,136.9 480.0,132.4 486.3,128.0 492.5,123.9 498.8,119.9 505.0,116.1 511.3,112.4 517.5,108.9 523.8,105.5 530.0,102.2 536.3,99.1 542.5,96.1 548.8,93.1 555.0,90.3 561.3,87.6 567.5,85.0 573.8,82.4 580.0,80.0" fill="none" stroke="#5bc8be" stroke-width="2.2"/>
+<line x1="572.5" y1="87.5" x2="442.5" y2="174.9" stroke="#b07cd8" stroke-width="1.8"/>
+<line x1="442.5" y1="174.9" x2="337.5" y2="322.5" stroke="#e0955a" stroke-width="1.8"/>
+<line x1="442.5" y1="217.5" x2="442.5" y2="162.5" stroke="#d9c069" stroke-dasharray="4 3" stroke-width="1.4"/>
+<path d="M572.5 87.5 L561.5 87.5 L561.5 94.9 L544.9 94.9 L544.9 106.0 L522.8 106.0 L522.8 120.9 L497.2 120.9 L497.2 138.1 L472.1 138.1 L472.1 155.0 L451.0 155.0 L451.0 169.1 L435.5 169.1 L435.5 184.7 L420.3 184.7 L420.3 206.1 L401.8 206.1 L401.8 232.0 L382.7 232.0 L382.7 259.0 L365.5 259.0 L365.5 283.1 L352.1 283.1 L352.1 301.9 L342.7 301.9 L342.7 315.2 L336.5 315.2 L336.5 322.5" fill="none" stroke="#eceef1" stroke-width="1.1" opacity=".9"/>
+<text x="330" y="344" class="ax">0</text><text x="576" y="344" class="ax">1</text><text x="435" y="346" class="lbl">液相 x（苯）</text>
+<text x="338" y="94" class="lbl">N = 13.8 级 · R = 1.5 Rmin</text>
+</svg>

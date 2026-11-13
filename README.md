@@ -6,14 +6,14 @@
 
 - **唯一主仓库**：[CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering)
 - **网站入口**：[组织 GitHub Pages](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/)
-- **当前项目**：[Motor Lab 电机原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) · [Stock Market Lab 股票市场原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/stock-market-lab/) · [Desalination Lab 海水淡化原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/desalination-lab/) · [Fusion Lab 核聚变反应堆实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/fusion-lab/)
+- **当前项目**：[Motor Lab 电机原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/motor-lab/) · [Stock Market Lab 股票市场原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/stock-market-lab/) · [Desalination Lab 海水淡化原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/desalination-lab/) · [Fusion Lab 核聚变反应堆实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/fusion-lab/) · [Distillation Lab 精馏原理实验室](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/distillation-lab/)（合并并部署后可访问）
 - **开始贡献**：[CONTRIBUTING.md](CONTRIBUTING.md) · **AI 工作约定**：[AGENTS.md](AGENTS.md) · **交接与发布状态**：[docs/HANDOFF.md](docs/HANDOFF.md)
 
 后续代码、Issue、PR 和部署均以组织仓库为准。个人账号下的历史仓库和旧站点不是后续同步或发布目标。
 
 ## 当前演示 / Current projects
 
-以下为本分支实现的四个实验室；正式站点以已合并的 `main` 和成功的 Pages 部署为准。未发布变更见 [CHANGELOG.md](CHANGELOG.md)，分支、PR 与待办见 [交接记录](docs/HANDOFF.md)。
+以下为本分支实现的五个实验室；正式站点以已合并的 `main` 和成功的 Pages 部署为准。未发布变更见 [CHANGELOG.md](CHANGELOG.md)，分支、PR 与待办见 [交接记录](docs/HANDOFF.md)。
 
 | 项目 | 内容 | 源码与说明 |
 | --- | --- | --- |
@@ -21,6 +21,7 @@
 | Stock Market Lab | 10 个模块、60+ 幕讲解：K 线与周期聚合、成交量与技术指标、订单簿撮合、A 股/美股制度、IPO、估值、杠杆、ETF 与 10 组同步对比 | [Projects/stock-market-lab](Projects/stock-market-lab) |
 | Desalination Lab | 7 个模块、25 幕讲解、3 个 WebGL 3D 视图：含盐阶梯、渗透压与 273 米水柱、单段 RO 质量守恒、MSF 闪蒸瀑布、膜污染曲线、能耗口径与整厂浓盐水 | [Projects/desalination-lab](Projects/desalination-lab) |
 | Fusion Lab | 7 章、42 幕讲解：ITER 三维解剖、磁约束（含仿星器）、一次放电、氚燃料循环与电站功率账本 | [Projects/fusion-lab](Projects/fusion-lab) |
+| Distillation Lab | 10 个模块、79 幕讲解：气液平衡、闪蒸与简单蒸馏、McCabe–Thiele 连续精馏、回流与能耗（FUG 简捷法）、间歇精馏、共沸/变压/萃取精馏、减压与水蒸气蒸馏、塔板与填料效率、原油常压蒸馏与 9 组同步对比 | [Projects/distillation-lab](Projects/distillation-lab) |
 
 Motor Lab 默认先展示运行动画，再进入逐步讲解。它支持单文件离线运行；可选系统语音及外部参考资料的联网需求见项目说明。几何、场线和工作点属于教学模型，具体边界见各项目文档。
 
@@ -32,9 +33,13 @@ Fusion Lab 核聚变反应堆实验室提供 7 章、42 幕讲解：氘氚反应
 
 Fusion Lab adds seven chapters and 42 scenes covering D–T fusion, confinement (including a stellarator scene), ITER anatomy, pulse operation, power accounting, tritium inventories and power plants. All runtime assets are embedded; the models are educational approximations. See [the project README](Projects/fusion-lab/README.md) for build commands and limitations.
 
+Distillation Lab 精馏原理实验室从两种液体的蒸气压出发，经闪蒸、简单蒸馏走到多级逆流精馏，再到共沸、萃取、变压、减压、水蒸气蒸馏与原油常压塔。温度与组成由 Antoine 常数、Raoult / NRTL / van Laar 模型和恒摩尔流假设现算；乙醇–水相平衡、乙二醇萃取精馏与一座 RadFrac 基准塔与 Aspen Plus V15 逐项对照，模型边界写在页面与项目文档中，不作为工程设计工具。详见 [Projects/distillation-lab](Projects/distillation-lab)。
+
+Distillation Lab starts from the vapour pressures of two liquids and moves through flash and simple distillation to multistage columns, then azeotropic, extractive, pressure-swing, vacuum, steam and crude distillation. Temperatures and compositions are computed live from Antoine constants, Raoult/NRTL/van Laar models and constant molar overflow; ethanol–water equilibrium, ethylene-glycol extractive distillation and a RadFrac benchmark column are compared against Aspen Plus V15. It is a teaching tool, not a design tool. See [the project README](Projects/distillation-lab/README.md).
+
 ## 入场体验 / Entrance experience
 
-目录与四个 Lab 都有统一的轻量入场：结构框架、电机转子、市场图表、膜分离或磁约束图形，约 1.6 秒自动结束。可点击“跳过入场”，或开始鼠标/键盘操作立即进入；顶栏主题按钮旁可回放。直接打开带锚点的链接会跳过入场，不锁定滚动、不自动播放语音，也不显示虚构加载进度。
+目录与各 Lab 都有统一的轻量入场：结构框架、电机转子、市场图表、膜分离、磁约束或精馏塔图形，约 1.6 秒自动结束。可点击“跳过入场”，或开始鼠标/键盘操作立即进入；顶栏主题按钮旁可回放。直接打开带锚点的链接会跳过入场，不锁定滚动、不自动播放语音，也不显示虚构加载进度。
 
 开启系统“减少动态效果”会直接显示页面、禁用入场回放；运行中改变该偏好同样有效。离线下载后重新打开会清理旧的入场节点与按钮，避免重复。Logo 保留空间框架与前后穿越的轨道，以石墨灰白为主，少量青、蓝和铜色点缀；16–32px 下减少次要细节。
 
@@ -42,7 +47,7 @@ Fusion Lab adds seven chapters and 42 scenes covering D–T fusion, confinement 
 
 根目录页与各实验室共用同一套主题偏好。页面在首次绘制前读取 `czl-lab-theme`；没有记录时跟随系统 `prefers-color-scheme`，右上角按钮切换后写回 `localStorage`，并把 `meta[name="theme-color"]` 同步为当前背景。未手动选择时跟随系统实时变化，选择后保持用户偏好；页脚“主题：跟随系统”可清除手动选择。同源页面同步切换；禁用存储时仍能按系统初始化并在当前页面手动切换。这里的浅色/暗黑取决于系统偏好，不按白天/夜晚时钟强制切换。两套主题都内联在单文件页面中，不请求远程样式或字体，断网、直接打开 `index.html` 仍然有效。
 
-各实验室的顶栏左侧都有返回 `Lab Projects` 目录的入口；页脚前有“换一个实验室 / Lab projects”目录，列出全部实验室、标记当前页，并提供返回根目录的链接。目录使用相对路径，`/motor-lab/`、`/stock-market-lab/`、`/desalination-lab/`、`/fusion-lab/` 与 `_site` 的本地 `file://` 预览都能解析；单独复制某个 `index.html` 时需保留同样的站点目录结构。新增实验室时必须同时更新全部既有实验室的目录与 `site/projects.json`。
+各实验室的顶栏左侧都有返回 `Lab Projects` 目录的入口；页脚前有“换一个实验室 / Lab projects”目录，列出全部实验室、标记当前页，并提供返回根目录的链接。目录使用相对路径，`/motor-lab/`、`/stock-market-lab/`、`/desalination-lab/`、`/fusion-lab/`、`/distillation-lab/` 与 `_site` 的本地 `file://` 预览都能解析；单独复制某个 `index.html` 时需保留同样的站点目录结构。新增实验室时必须同时更新全部既有实验室的目录与 `site/projects.json`。
 
 各实验室在滚动后右下角提供“↑ 顶部”按钮；主题按钮是真实的 `<button>`，带有可读名称与 `aria-pressed` 状态；切换不重载页面，也不应出现主题闪烁。深色与浅色下都要检查正文对比度、图表网格、焦点环与 390px 窄屏。主题与导航的实现约定见 [AGENTS.md](AGENTS.md)，提交流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
@@ -50,20 +55,20 @@ Fusion Lab adds seven chapters and 42 scenes covering D–T fusion, confinement 
 
 需要 Git、Python 3.9+ 和 Node.js 22 LTS。当前项目不需要 npm 安装或 Python 第三方包。
 
-以下命令在包含四个实验室的本分支或合并后的 `main` 上，从仓库根目录执行。新克隆默认得到 `main`；如参与尚未合并的工作，先按对应 PR 检出其分支，避免把未发布内容当作已上线版本。
+以下命令在包含五个实验室的本分支或合并后的 `main` 上，从仓库根目录执行。新克隆默认得到 `main`；如参与尚未合并的工作，先按对应 PR 检出其分支，避免把未发布内容当作已上线版本。
 
 ```sh
 git clone https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering.git
 cd Visualization-of-Science-and-Engineering
-# 构建当前分支的四个实验室，再检查并打包整个站点
-for lab in motor-lab stock-market-lab desalination-lab fusion-lab; do
+# 构建当前分支的五个实验室，再检查并打包整个站点
+for lab in motor-lab stock-market-lab desalination-lab fusion-lab distillation-lab; do
   python "Projects/$lab/build.py" || exit 1
 done
 python scripts/check_site.py
 python -m http.server 8767 --bind 127.0.0.1 --directory _site
 ```
 
-打开 `http://127.0.0.1:8767/` 查看完整目录及四条项目路由；停止服务使用 Ctrl+C。也可直接打开 `_site/index.html`，并保留目录结构以使用跨 Lab 导航。单独进入某个 `Projects/<slug>/` 启动 HTTP 服务时，访问服务器根地址 `/`。Linux/macOS 若没有 `python` 命令，可使用 `python3`；上述循环可在 Bash 或 Git Bash 中执行。
+打开 `http://127.0.0.1:8767/` 查看完整目录及五条项目路由；停止服务使用 Ctrl+C。也可直接打开 `_site/index.html`，并保留目录结构以使用跨 Lab 导航。单独进入某个 `Projects/<slug>/` 启动 HTTP 服务时，访问服务器根地址 `/`。Linux/macOS 若没有 `python` 命令，可使用 `python3`；上述循环可在 Bash 或 Git Bash 中执行。
 
 修改某个实验室后，按其 README 构建、对所有源码执行 `node --check`，再运行对应检查：
 
@@ -73,6 +78,7 @@ python -m http.server 8767 --bind 127.0.0.1 --directory _site
 | `Projects/stock-market-lab/` | `node tests/check-finance.cjs`、`node tests/check-build.cjs` |
 | `Projects/desalination-lab/` | `node tests/check-physics.cjs`、`node tests/check-scenes.cjs`、`node tests/check-build.cjs` |
 | `Projects/fusion-lab/` | `node tests/check-physics.cjs`、`node tests/check-build.cjs` |
+| `Projects/distillation-lab/` | `node tests/check-thermo.cjs`、`node tests/check-build.cjs` |
 
 公共标识、主题或入场改动还须运行 `node scripts/check-theme.cjs`，重新构建受影响的 Lab 并检查目录与各 Lab 的深浅主题、窄屏、跳过/回放和减少动态效果。公共资源由 `scripts/shared_experience.py` 在构建时内嵌，源码见 `assets/theme.js`、`assets/entry.js`、`assets/entry.css`。
 
@@ -127,6 +133,12 @@ Projects/
     tests/               物理守恒、几何及离线封装检查
     build.py             将源码组装为单文件网页
     index.html           生成的离线交付文件，随源码一起提交
+  distillation-lab/
+    AGENTS.md            热力学模型、Aspen 对照数据与讲解维护约定
+    src/                 热力学引擎、Aspen 导出数据、页面与 10 个模块
+    tests/               热力学与塔计算不变量、Aspen 对照及离线封装检查
+    build.py             将源码组装为单文件网页
+    index.html           生成的离线交付文件，随源码一起提交
 ```
 
 请修改 `src/`，再重新生成 `index.html`。不要只编辑生成页。新增演示放在 `Projects/<slug>/`，提供独立说明、构建和检查方式，并在 `site/projects.json` 登记项目；构建器据此生成目录和对应路由。若项目需要额外资源，请同时扩展打包逻辑。
@@ -135,7 +147,7 @@ Projects/
 
 日常开发使用功能分支和 PR；PR 会执行独立 CI。合并到组织仓库的 `main` 后，符合 `.github/workflows/pages.yml` 路径过滤的变更会触发构建、验证和部署，也支持从 Actions 手动运行。README、AGENTS、贡献指南及发布配置在当前过滤范围内；其他文档修改不一定触发发布。
 
-站点位于 `czl-homelab.github.io/Visualization-of-Science-and-Engineering/`，不是组织根域的独立首页仓库。站点根路径是可搜索的项目目录，四条项目路由为 `/motor-lab/`、`/stock-market-lab/`、`/desalination-lab/`、`/fusion-lab/`。发布仅上传生成的网页，不上传源码、备份或工作文件。
+站点位于 `czl-homelab.github.io/Visualization-of-Science-and-Engineering/`，不是组织根域的独立首页仓库。站点根路径是可搜索的项目目录，五条项目路由为 `/motor-lab/`、`/stock-market-lab/`、`/desalination-lab/`、`/fusion-lab/`、`/distillation-lab/`。发布仅上传生成的网页，不上传源码、备份或工作文件。
 
 仓库管理员应将 **Settings → Pages → Source** 设为 **GitHub Actions**。新维护者可在 [Actions](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering/actions) 查看检查和部署记录。现有流程使用仓库提供的 `GITHUB_TOKEN`，不需要在源码中保存个人令牌。
 
@@ -159,26 +171,26 @@ An open collection of interactive science and engineering explanations maintaine
 
 - Canonical repository: [CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering).
 - Project directory: [GitHub Pages](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/).
-- This branch contains four labs: [Motor Lab](Projects/motor-lab/README.md) (six motor types), [Stock Market Lab](Projects/stock-market-lab/README.md) (ten modules), [Desalination Lab](Projects/desalination-lab/README.md) (seven modules and three annotated 3D views), and [Fusion Lab](Projects/fusion-lab/README.md) (seven chapters and 41 scenes). Production reflects merged `main` and a successful Pages deployment, not an open PR. See [CHANGELOG.md](CHANGELOG.md) for unreleased changes and [docs/HANDOFF.md](docs/HANDOFF.md) for current work and release status.
+- This branch contains five labs: [Motor Lab](Projects/motor-lab/README.md) (six motor types), [Stock Market Lab](Projects/stock-market-lab/README.md) (ten modules), [Desalination Lab](Projects/desalination-lab/README.md) (seven modules and three annotated 3D views), [Fusion Lab](Projects/fusion-lab/README.md) (seven chapters and 42 scenes) and [Distillation Lab](Projects/distillation-lab/README.md) (ten modules and 79 scenes, checked against Aspen Plus V15). Production reflects merged `main` and a successful Pages deployment, not an open PR. See [CHANGELOG.md](CHANGELOG.md) for unreleased changes and [docs/HANDOFF.md](docs/HANDOFF.md) for current work and release status.
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) and the applicable [AGENTS.md](AGENTS.md) before contributing. Personal historical repositories and sites are not synchronization or deployment targets.
 
 ### Entrance experience
 
-The catalog and all four labs have a short, subject-specific entrance: structural frame, rotor, market chart, membrane separation or magnetic confinement. It finishes in about 1.6 seconds; skip it immediately or begin pointer/keyboard interaction, and replay from the header. Anchored deep links open directly. There is no scroll lock, speech autoplay or fabricated loading progress. Reduced motion bypasses the entrance and disables replay, including runtime preference changes. Reopened offline downloads clean up captured entrance nodes/controls. The refined logo uses a graphite/gray-white frame, a depth-ordered orbit and restrained cyan/blue/copper accents, with fewer details at 16–32px.
+The catalog and every lab have a short, subject-specific entrance: structural frame, rotor, market chart, membrane separation, magnetic confinement or a tray column. It finishes in about 1.6 seconds; skip it immediately or begin pointer/keyboard interaction, and replay from the header. Anchored deep links open directly. There is no scroll lock, speech autoplay or fabricated loading progress. Reduced motion bypasses the entrance and disables replay, including runtime preference changes. Reopened offline downloads clean up captured entrance nodes/controls. The refined logo uses a graphite/gray-white frame, a depth-ordered orbit and restrained cyan/blue/copper accents, with fewer details at 16–32px.
 
 ### Theme and lab navigation
 
 The catalog and all labs share one theme preference. Each page reads `czl-lab-theme` before first paint, falls back to `prefers-color-scheme`, persists explicit choices in `localStorage`, and updates `meta[name="theme-color"]`. Without an explicit choice, live system changes are followed; a manual choice takes priority. The footer system-theme button restores automatic mode. Same-origin pages synchronize, and blocked storage still permits system initialization and an in-memory choice. Light/dark is not forced by a day/night clock. Both palettes are inlined in the standalone files; no remote styles or fonts are requested, so the pages keep working offline.
 
-Each lab header starts with a link back to the `Lab Projects` catalog. Before the footer, a "Lab projects" directory lists every lab, marks the current page, and links back to the catalog. Relative paths keep `/motor-lab/`, `/stock-market-lab/`, `/desalination-lab/`, `/fusion-lab/` and `file://` previews working. Labs also show a floating “top” button after scrolling. A new lab must update every lab directory and `site/projects.json`.
+Each lab header starts with a link back to the `Lab Projects` catalog. Before the footer, a "Lab projects" directory lists every lab, marks the current page, and links back to the catalog. Relative paths keep `/motor-lab/`, `/stock-market-lab/`, `/desalination-lab/`, `/fusion-lab/`, `/distillation-lab/` and `file://` previews working. Labs also show a floating “top” button after scrolling. A new lab must update every lab directory and `site/projects.json`.
 
 The theme control is a real `<button>` with an accessible name and `aria-pressed`; switching must not reload the page or flash the wrong palette. Check contrast, chart grids, focus rings and narrow layouts in both themes. See [AGENTS.md](AGENTS.md) for implementation rules and [CONTRIBUTING.md](CONTRIBUTING.md) for the review flow.
 
 ### Run and build
 
-Use Git, Python 3.9+ and Node.js 22 LTS. No npm installation or third-party Python packages are needed. The Chinese quick-start commands above build all four labs from the repository root, run `python scripts/check_site.py`, and serve `_site` at `http://127.0.0.1:8767/`. Use Bash/Git Bash for the loop and `python3` where appropriate. A fresh clone starts on `main`; check out the relevant PR branch before using unreleased features.
+Use Git, Python 3.9+ and Node.js 22 LTS. No npm installation or third-party Python packages are needed. The Chinese quick-start commands above build all five labs from the repository root, run `python scripts/check_site.py`, and serve `_site` at `http://127.0.0.1:8767/`. Use Bash/Git Bash for the loop and `python3` where appropriate. A fresh clone starts on `main`; check out the relevant PR branch before using unreleased features.
 
-For a single lab, edit its source, run `python build.py` in that lab directory, check every source script with `node --check`, and run the tests in the table above. Motor uses `check-model.cjs`; Stock uses `check-finance.cjs` and `check-build.cjs`; Desalination uses `check-physics.cjs`, `check-scenes.cjs` and `check-build.cjs`; Fusion uses `check-physics.cjs` and `check-build.cjs`. Each test file lives under the corresponding project's `tests/`. Follow its README for full commands and model limits.
+For a single lab, edit its source, run `python build.py` in that lab directory, check every source script with `node --check`, and run the tests in the table above. Motor uses `check-model.cjs`; Stock uses `check-finance.cjs` and `check-build.cjs`; Desalination uses `check-physics.cjs`, `check-scenes.cjs` and `check-build.cjs`; Fusion uses `check-physics.cjs` and `check-build.cjs`; Distillation uses `check-thermo.cjs` and `check-build.cjs`. Each test file lives under the corresponding project's `tests/`. Follow its README for full commands and model limits.
 
 Open `_site/index.html` directly for an offline preview while retaining the whole directory for cross-lab links. If serving an individual project directory, visit the server root `/`. Optional speech and external references have their own requirements; see the project README. Models are educational and disclose physical simplifications. Documentation-only changes need relevant link/path/command checks and `git diff --check`, rather than unrelated model or UI reruns.
 

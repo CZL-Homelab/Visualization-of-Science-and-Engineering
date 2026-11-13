@@ -7,7 +7,8 @@
     'motor-lab': ['电机原理实验室', 'MOTOR / LAB', '从结构出发，追踪能量的运动。', '<circle cx="80" cy="68" r="45"/><path d="M80 15v20m0 66v20M27 68h20m66 0h20"/><path class="entry-detail" d="m62 48 37 20-37 20Z"/>'],
     'stock-market-lab': ['股票市场原理实验室', 'STOCK MARKET / LAB', '看见价格，也看清资金流向。', '<path d="M27 24v90h111M43 98l24-25 22 10 36-46"/><path class="entry-detail" d="M49 42v36m-7-26h14v16H42Zm38-20v31m-7-21h14v13H73Zm38-40v29m-7-20h14v13h-14Z"/>'],
     'desalination-lab': ['海水淡化原理实验室', 'DESALINATION / LAB', '把盐留下，把水带走。', '<path d="M30 30v77h100V30M80 24v87M35 66h38m14 0h38"/><path class="entry-detail" d="m59 58 10 8-10 8M93 87h22m-22-40h22"/><circle class="entry-dot" cx="108" cy="81" r="3"/>'],
-    'fusion-lab': ['核聚变反应堆实验室', 'FUSION / LAB', '沿着磁场，理解一座聚变装置。', '<ellipse cx="80" cy="70" rx="57" ry="34"/><ellipse cx="80" cy="70" rx="31" ry="16"/><path class="entry-detail" d="M38 45q-17 30 0 50m84-50q17 30 0 50M61 38q-12 31 0 64m38-64q12 31 0 64"/>']
+    'fusion-lab': ['核聚变反应堆实验室', 'FUSION / LAB', '沿着磁场，理解一座聚变装置。', '<ellipse cx="80" cy="70" rx="57" ry="34"/><ellipse cx="80" cy="70" rx="31" ry="16"/><path class="entry-detail" d="M38 45q-17 30 0 50m84-50q17 30 0 50M61 38q-12 31 0 64m38-64q12 31 0 64"/>'],
+    'distillation-lab': ['精馏原理实验室', 'DISTILLATION / LAB', '从蒸气压出发，一级一级把混合物分开。', '<rect x="62" y="22" width="36" height="96" rx="9"/><path d="M80 22V11h36v17M122 34h16M80 118v11h36M34 70h28m-8-5 8 5-8 5"/><circle cx="116" cy="34" r="6"/><path class="entry-detail" d="M62 44h24M74 58h24M62 72h24M74 86h24M62 100h24"/><circle class="entry-dot" cx="71" cy="65" r="2.5"/><circle class="entry-dot" cx="89" cy="79" r="2.5"/>']
   };
   var info = lines[id]; if (!info) return;
   var media = window.matchMedia('(prefers-reduced-motion: reduce)'), overlay = null, leaving = null, timer = 0, removal = 0, replay, initialPending = true;
