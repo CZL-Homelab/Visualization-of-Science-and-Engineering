@@ -12,7 +12,7 @@ const context = {FL: {}};
 vm.createContext(context);
 for (const file of ['core', 'reference', 'content']) vm.runInContext(fs.readFileSync(path.join(root, `src/${file}.js`), 'utf8'), context);
 const {SCENES, CHAPTERS} = context.FL.content;
-assert.equal(SCENES.length, 41);
+assert.equal(SCENES.length, 42);
 assert.equal(CHAPTERS.length, 7);
 assert.equal(new Set(SCENES.map(s => s.id)).size, SCENES.length);
 for (const m of context.FL.ref.MYTHS) assert.ok(SCENES.some(s => s.id === m.go), m.go);

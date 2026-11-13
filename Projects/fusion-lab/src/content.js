@@ -1,4 +1,4 @@
-/* Fusion Lab — the lesson: 7 chapters, 41 scenes.
+/* Fusion Lab — the lesson: 7 chapters, 42 scenes.
  *
  * Each scene is plain data: narration, a camera shot, which parts of the 3D
  * world are on, and which instrument sits in the side panel. app.js applies
@@ -7,7 +7,8 @@
  * Shot: t = look-at target (m), az/pol in degrees (az 0 looks into the
  * cutaway from +Z), d = distance (m).
  * Label anchors: ['tk', layer, R, Z, φ°] on the machine, ['fx', name],
- * ['pl', name] on the plant, ['torus', ρ, θ°, φ°] on a flux surface.
+ * ['pl', name] on the plant, ['torus', ρ, θ°, φ°] on a flux surface,
+ * ['st', name] on the stellarator.
  */
 (function () {
   'use strict';
@@ -134,6 +135,17 @@
       fx: { plasma: 0.28, heat: 0.15, strike: 0.35, pfGlow: 0.3, particles: 0.15 }, shot: { t: [-3, -0.5, 0], az: 2, pol: 78, d: 36 }, spin: 0,
       labels: [{ id: 'xp', text: 'X 点', at: ['p', -5.42, -3.05, 0.02], tone: 'plasma', side: 'l' }, { id: 'sp', text: '打击点', sub: '热流最集中处', at: ['p', -6.55, -4.3, 0.02], tone: 'warn' }, { id: 'pf', text: '极向场线圈', at: ['tk', 'pf', 12.2, 3.25, 180] }],
       legend: ['plasma', 'strike'], panel: { type: 'shape' }
+    },
+
+    {
+      id: 'b6', title: '另一种拧法：仿星器', cap: '不靠等离子体电流，靠线圈自己的三维形状把磁力线拧成螺旋',
+      body: ['托卡马克靠等离子体里的大电流来拧磁力线，麻烦也出在这股电流上：靠感应驱动只能脉冲运行，电流失稳还会破裂。<b>仿星器</b>换了一种拧法：把线圈做成扭曲的三维形状，让磁面的截面沿着大环一边前进一边旋转，磁力线不需要等离子体里的大电流，也会绕着小截面转。',
+        '拧了多少用<b>旋转变换 ι</b> 表示，它就是安全因子的倒数（ι = 1/q）。没有大电流，就不需要中心螺线管，原理上可以稳态运行，也基本避开了大破裂。代价全在线圈上：德国的 Wendelstein 7-X 用了 50 个非平面超导线圈和 20 个平面线圈，形状要靠计算机优化，否则粒子会顺着三维磁场的起伏漏出去。'],
+      note: '示意几何：磁面按“旋转椭圆”画出，线圈只表现“非平面”的特征，不是 W7-X 的真实线圈；小半径放大约 1.7 倍，正面的线圈被剖开。',
+      set: 'stellarator', stell: { coils: 'cut', iota: 0.9 }, shot: { t: [0, -0.3, 0.6], az: 14, pol: 52, d: 27 }, spin: 0.02,
+      labels: [{ id: 'np', text: '非平面线圈', sub: '50 个', at: ['st', 'nonplanar'], side: 'l' }, { id: 'pc', text: '平面线圈', sub: '20 个', at: ['st', 'planar'] },
+        { id: 'ms', text: '磁面', sub: '截面边走边转', at: ['st', 'surface'], tone: 'plasma', side: 'l' }, { id: 'fl', text: '磁力线', at: ['st', 'line'], tone: 'field' }],
+      legend: ['field', 'plasma', 'npCoil', 'plCoil'], panel: { type: 'stellarator' }
     },
 
     /* ================= C · anatomy ================= */
@@ -364,7 +376,7 @@
     {
       id: 'g5', title: '路线图：谁在做什么', cap: '大而稳的国际路线，与小而强场的新路线并行',
       body: ['<b>ITER 之后</b>，各方规划了各自的示范堆（DEMO）：欧盟的 EU-DEMO、中国的 CFETR、日本的 JA-DEMO、韩国的 K-DEMO，目标都是在本世纪中叶前后实现氚自持并向电网送电。',
-        '另一条路是<b>高温超导强磁场</b>：磁场从 5 T 提到 12 T 以上，同样的性能可以用小得多的装置实现。美国 CFS 的 SPARC、中国合肥的 BEST 都在建造燃烧等离子体实验装置；英国的 STEP 走球形托卡马克路线。右边把这些装置的截面画在同一把尺子上。'],
+        '另一条路是<b>高温超导强磁场</b>：磁场从 5 T 提到 12 T 以上，同样的性能可以用小得多的装置实现。美国 CFS 的 SPARC、中国合肥的 BEST 都在建造燃烧等离子体实验装置；英国的 STEP 走球形托卡马克路线。<b>仿星器</b>是托卡马克之外的另一条磁约束路线，德国的 Wendelstein 7-X 正在验证不靠等离子体电流的长脉冲约束。右边把这些装置的截面画在同一把尺子上。'],
       note: '计划日期均为各项目公布的目标，不是已发生的事实；核对日期见下方口径表。',
       set: 'machine', layers: ALL, cut: 'onion', fx: GLOW, shot: SHOT.wide, spin: 0.05,
       labels: [L.person], panel: { type: 'roadmap' }

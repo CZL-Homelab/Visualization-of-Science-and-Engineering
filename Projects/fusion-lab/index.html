@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>核聚变反应堆实验室 · Fusion Lab</title>
-<meta name="description" content="拆开 ITER：从氘氚反应、磁约束、装置解剖、一次放电，到氚燃料循环与商用聚变电站。可拖拽的三维模型与 41 幕讲解，全部离线运行。">
+<meta name="description" content="拆开 ITER：从氘氚反应、磁约束、装置解剖、一次放电，到氚燃料循环与商用聚变电站。可拖拽的三维模型与 42 幕讲解，全部离线运行。">
 <meta name="color-scheme" content="dark light"><meta name="theme-color" content="#0d0e13"><script data-light="#f3f1ec" data-dark="#0d0e13" data-event="fl:theme">
 /* Shared pre-paint theme and runtime preference controller. Offline, no deps. */
 (function () {
@@ -738,7 +738,7 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
           </div>
           <ul class="intro-facts">
             <li><b>7</b><span>章</span></li>
-            <li><b>41</b><span>幕讲解</span></li>
+            <li><b>42</b><span>幕讲解</span></li>
             <li><b>13</b><span>台可调仪器</span></li>
             <li><b>0</b><span>联网依赖</span></li>
           </ul>
@@ -809,7 +809,7 @@ html.czl-entering main>section:first-child,html.czl-entering .workspace,html.czl
     <div class="limit-grid">
       <article class="limit-card">
         <h3>三维模型</h3>
-        <p>装置按 ITER 公布的总体尺寸程序化生成：大小半径、线圈数量、模块与盒体数量是对的；截面轮廓、窗口、支撑与管线是简化的教学造型，不是工程图纸。氚工厂与汽轮机岛只是示意性的设备块，位置和比例不代表真实厂区布置。</p>
+        <p>装置按 ITER 公布的总体尺寸程序化生成：大小半径、线圈数量、模块与盒体数量是对的；截面轮廓、窗口、支撑与管线是简化的教学造型，不是工程图纸。氚工厂与汽轮机岛只是示意性的设备块，位置和比例不代表真实厂区布置。仿星器一幕只借用了 Wendelstein 7-X 的线圈与模块数量：磁面是“旋转椭圆”示意，线圈形状是手工设定的，小半径放大约 1.7 倍，不是真实位形。</p>
       </article>
       <article class="limit-card">
         <h3>动画</h3>
@@ -1152,6 +1152,28 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     return Math.abs(vol);
   }
 
+  /* ---------- stellarator: schematic "rotating ellipse" flux surface ---------- */
+  /* shape: { R0, a, elong, N, axis }. The cross-section is an ellipse with
+   * semi-axes a·elong and a/elong that turns half a revolution per field
+   * period (N periods around the torus) about a helical magnetic axis.
+   * theta is measured in the frame that rotates with the ellipse. This is a
+   * textbook cartoon of a stellarator, not a computed equilibrium. */
+  function stellaratorAxis(shape, phi) {
+    var ax = shape.axis || 0;
+    return { R: shape.R0 + ax * Math.cos(shape.N * phi), Z: -ax * Math.sin(shape.N * phi) };
+  }
+  function stellaratorSurface(shape, rho, theta, phi) {
+    var al = shape.N * phi / 2, r = shape.a * rho, c = stellaratorAxis(shape, phi);
+    var u = r / shape.elong * Math.cos(theta), v = r * shape.elong * Math.sin(theta);
+    return { R: c.R + u * Math.cos(al) - v * Math.sin(al), Z: c.Z + u * Math.sin(al) + v * Math.cos(al) };
+  }
+  /* Rotational transform ι: poloidal turns of a field line per toroidal turn. */
+  function rotationalTransform(q) { return 1 / q; }
+  /* Rotating-frame angle of a field line with mean rotational transform iota.
+   * The frame itself advances N/2 poloidal turns per toroidal turn, so the
+   * line slips backwards in it; in the laboratory it winds iota times. */
+  function stellaratorFieldAngle(shape, iota, theta0, phi) { return theta0 + (iota - shape.N / 2) * phi; }
+
   var api = {
     U_MEV: U_MEV, U_KG: U_KG, KEV_J: KEV_J, MEV_J: MEV_J, MU0: MU0, YEAR_S: YEAR_S, MASS: MASS,
     TRITIUM_HALF_LIFE: TRITIUM_HALF_LIFE, TRITIUM_LAMBDA: TRITIUM_LAMBDA, D_H_RATIO: D_H_RATIO,
@@ -1166,7 +1188,9 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     fuelCycle: fuelCycle, simulateInventory: simulateInventory,
     deuteriumGramsPerM3: deuteriumGramsPerM3, dtEnergyPerGram: dtEnergyPerGram,
     plantBalance: plantBalance, neutronWallLoad: neutronWallLoad,
-    miller: miller, plasmaVolume: plasmaVolume
+    miller: miller, plasmaVolume: plasmaVolume,
+    stellaratorAxis: stellaratorAxis, stellaratorSurface: stellaratorSurface,
+    rotationalTransform: rotationalTransform, stellaratorFieldAngle: stellaratorFieldAngle
   };
   FL.core = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
@@ -1200,7 +1224,10 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     cfetr: { label: 'Zhuang et al., Nucl. Fusion 59 (2019) 112010', url: 'https://doi.org/10.1088/1741-4326/ab0e27' },
     best: { label: '中国科学院 · BEST 研究计划（2025）', url: 'https://www.cas.cn/cm/202511/t20251125_5089788.shtml' },
     cfs: { label: 'CFS · SPARC programme', url: 'https://www.cfs.energy/technology/sparc/' },
-    step: { label: 'UKAEA · STEP programme', url: 'https://step.ukaea.uk/' }
+    step: { label: 'UKAEA · STEP programme', url: 'https://step.ukaea.uk/' },
+    w7x: { label: 'Max-Planck-IPP · Wendelstein 7-X', url: 'https://www.ipp.mpg.de/w7x' },
+    w7xData: { label: 'Max-Planck-IPP · W7-X technical data', url: 'https://www.ipp.mpg.de/16931/einfuehrung' },
+    w7xRecord: { label: 'Max-Planck-IPP · W7-X performance records (2025)', url: 'https://www.ipp.mpg.de/5532945/w7x' }
   };
 
   /* Published overall figures for ITER. `model` flags what the 3D model
@@ -1254,6 +1281,13 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     }
   };
 
+  /* Wendelstein 7-X, the stellarator quoted in scene b6. Published values;
+   * the 3D model borrows only the coil and module counts. */
+  var W7X = {
+    nonPlanar: 50, planar: 20, modules: 5, R0: 5.5, a: 0.53, volume: 30, B: 3,
+    record: '2025 年 5 月的实验中，一次 360 秒的放电能量周转 1.8 GJ；另一次把三重积的高值维持了 43 秒'
+  };
+
   /* Devices compared in chapter G. R, a in metres, B on axis in tesla.
    * `status` is the state on CHECKED; planned dates are targets, not facts. */
   var MACHINES = [
@@ -1289,6 +1323,8 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     { item: '增殖反应', value: 'n + ⁶Li → T + ⁴He + 4.78 MeV；n + ⁷Li → T + ⁴He + n − 2.47 MeV', basis: '由 AME2020 原子质量差计算', src: ['ame'] },
     { item: '氚增殖比要求', value: '工程目标 TBR ≈ 1.05–1.15', basis: '需覆盖衰变、滞留与为下一座堆备料；取值随燃料循环设计变化', src: ['abdou', 'federici'] },
     { item: '海水中的氘', value: '约 33 g/m³（D/H ≈ 156 ppm）', basis: 'VSMOW 同位素比；淡水按 35 g/m³ 计', src: ['wesson'] },
+    { item: 'Wendelstein 7-X', value: '50 个非平面 + 20 个平面超导线圈 · 5 个模块 · R 5.5 m · a 0.53 m · 30 m³ · 3 T', basis: 'IPP 公布的装置参数；三维模型只借用线圈与模块数量，形状是示意', src: ['w7x', 'w7xData'] },
+    { item: 'W7-X 长脉冲纪录', value: '1.8 GJ / 360 s；三重积高值维持 43 s', basis: '2025 年 OP 2.3 实验阶段，IPP 2025 年 6 月公布；此后的结果未核对', src: ['w7xRecord'] },
     { item: 'EU-DEMO 量级', value: '约 2 GW 聚变 · 约 500 MW 净电 · R ≈ 9 m', basis: '2018 年前后的概念设计基线，持续修订', src: ['federici', 'eurofusion'] }
   ];
 
@@ -1303,7 +1339,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     { q: '“激光聚变已经点火，磁约束没必要了。”', a: 'NIF 2022 年的靶增益 > 1 是相对于打到靶上的激光能量；相对于整个装置的耗电仍差两个数量级，重复频率也远不够电站要求。两条路线面对的工程问题不同，都还没走完。', go: 'g5' }
   ];
 
-  FL.ref = { CHECKED: CHECKED, SOURCES: SOURCES, ITER: ITER, MACHINES: MACHINES, ROADMAP: ROADMAP, RULES: RULES, MYTHS: MYTHS };
+  FL.ref = { CHECKED: CHECKED, SOURCES: SOURCES, ITER: ITER, W7X: W7X, MACHINES: MACHINES, ROADMAP: ROADMAP, RULES: RULES, MYTHS: MYTHS };
   if (typeof module !== 'undefined' && module.exports) module.exports = FL.ref;
 })();
 
@@ -2752,6 +2788,195 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 
 </script>
 <script>
+/* Fusion Lab — a schematic stellarator (scene b6).
+ *
+ * Nested "rotating ellipse" flux surfaces, field lines with a chosen
+ * rotational transform, 50 non-planar and 20 planar coils in five modules.
+ * The counts follow Wendelstein 7-X; the shapes do not. The surface is the
+ * textbook cartoon from core.js, the coils are closed loops on an offset
+ * surface with a hand-picked toroidal wobble, and the minor radius is drawn
+ * about 1.7× too large so the twist stays readable. Nothing here is a
+ * computed equilibrium or a real coil set.
+ */
+(function () {
+  'use strict';
+  var FL = globalThis.FL = globalThis.FL || {};
+  var THREE = globalThis.THREE;
+  var geo = FL.geo, core = FL.core, fx = FL.fx;
+  var TAU = Math.PI * 2, DEG = Math.PI / 180;
+
+  var SHAPE = { R0: 5.5, a: 0.9, elong: 1.45, N: 5, axis: 0.28 };
+  var GAP = 0.55;                     // plasma edge to coil centreline, m
+  var CUT = [26, 154];                // toroidal sector (deg) opened towards the default camera
+  var IOTA = 0.9;
+
+  /* coil winding surface: the plasma ellipse pushed out by GAP on both semi-axes */
+  var LONG = SHAPE.a * SHAPE.elong + GAP, SHORT = SHAPE.a / SHAPE.elong + GAP;
+  var COIL_SHAPE = { R0: SHAPE.R0, a: Math.sqrt(LONG * SHORT), elong: Math.sqrt(LONG / SHORT), N: SHAPE.N, axis: SHAPE.axis };
+
+  function at(shape, rho, th, ph) {
+    var p = core.stellaratorSurface(shape, rho, th, ph);
+    return new THREE.Vector3(p.R * Math.cos(ph), p.Z, p.R * Math.sin(ph));
+  }
+  function inCut(deg) { return deg > CUT[0] && deg < CUT[1]; }
+
+  function Stellarator(engine) {
+    var self = this;
+    this.engine = engine;
+    this.shape = SHAPE;
+    this.group = new THREE.Group(); this.group.name = 'stellarator'; this.group.visible = false;
+    this.iota = IOTA; this.iotaBuilt = null; this.coilMode = 'cut';
+    this.flows = [];
+
+    /* ----- nested flux surfaces ----- */
+    var vert = 'varying vec2 vUv; varying vec3 vN; varying vec3 vV; void main(){ vUv = uv; vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalMatrix * normal; vV = -mv.xyz; gl_Position = projectionMatrix * mv; }';
+    var frag = [
+      'uniform float uTime; uniform float uIntensity; uniform float uRim; uniform float uFill; uniform float uPow; uniform vec3 uEdge; uniform vec3 uCore;',
+      'varying vec2 vUv; varying vec3 vN; varying vec3 vV;',
+      'void main(){',
+      '  float n = abs(dot(normalize(vN), normalize(vV)));',
+      '  float rim = pow(1.0 - n, uPow);',
+      /* even poloidal mode numbers: the mesh seam is half a poloidal turn out of step */
+      '  float a = 6.28318 * (vUv.y * 12.0 + vUv.x * 20.0);',
+      '  float b = 6.28318 * (vUv.y * 8.0 + vUv.x * 15.0);',
+      '  float fil = 0.5 + 0.28 * sin(a + uTime * 1.7) + 0.22 * sin(b - uTime * 1.1 + 1.3);',
+      '  vec3 col = mix(uCore, uEdge, clamp(rim * 1.25, 0.0, 1.0));',
+      '  gl_FragColor = vec4(col * (uFill + uRim * rim) * (0.72 + 0.56 * fil) * uIntensity, 1.0); }'
+    ].join('\n');
+    this.shells = [
+      { rho: 1.0, rim: 0.85, fill: 0.03, pow: 2.4, edge: 0xff4fd0, core: 0xb060ff, gain: 0.5 },
+      { rho: 0.68, rim: 0.34, fill: 0.03, pow: 2.0, edge: 0xc070ff, core: 0x8f9bff, gain: 0.3 },
+      { rho: 0.36, rim: 0.2, fill: 0.07, pow: 1.5, edge: 0xa9b8ff, core: 0xf2f6ff, gain: 0.22 }
+    ].map(function (s, i) {
+      var SP = 300, ST = 56, pos = [], nor = [], uv = [], idx = [];
+      for (var a = 0; a <= SP; a++) for (var b = 0; b <= ST; b++) {
+        var ph = TAU * a / SP, th = TAU * b / ST;
+        var p = at(SHAPE, s.rho, th, ph), p2 = at(SHAPE, s.rho, th + 0.01, ph), p3 = at(SHAPE, s.rho, th, ph + 0.004);
+        var n = p2.sub(p).cross(p3.sub(p)).normalize();
+        pos.push(p.x, p.y, p.z); nor.push(n.x, n.y, n.z); uv.push(a / SP, b / ST);
+        if (a < SP && b < ST) { var o = a * (ST + 1) + b, o2 = o + ST + 1; idx.push(o, o2, o + 1, o2, o2 + 1, o + 1); }
+      }
+      var g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
+      g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+      g.setIndex(idx);
+      var mat = fx.additive({
+        uTime: { value: 0 }, uIntensity: { value: s.gain }, uRim: { value: s.rim }, uFill: { value: s.fill }, uPow: { value: s.pow },
+        uEdge: { value: new THREE.Color(s.edge) }, uCore: { value: new THREE.Color(s.core) }
+      }, vert, frag, { side: THREE.DoubleSide });
+      var mesh = new THREE.Mesh(g, mat);
+      mesh.renderOrder = 10 + i; mesh.frustumCulled = false;
+      self.group.add(mesh);
+      return mat;
+    });
+
+    /* the helical magnetic axis, faint, so the eye can follow the excursion */
+    var axisPts = [];
+    for (var k = 0; k < 400; k++) axisPts.push(at(SHAPE, 0, 0, TAU * k / 400));
+    var axisMesh = new THREE.Mesh(geo.tube(axisPts, 0.03, 5, true), new THREE.MeshBasicMaterial({ color: fx.hdr(0xcfd8ff, 0.9), transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false }));
+    axisMesh.renderOrder = 13; this.group.add(axisMesh);
+
+    /* ----- field lines (rebuilt when ι changes) ----- */
+    this.fieldMat = fx.flowMaterial(fx.hdr(0x58d8ff, 1.5), { dashes: 14, speed: 0.55, base: 0.3, intensity: 1 });
+    this.fieldMesh = new THREE.Mesh(new THREE.BufferGeometry(), this.fieldMat);
+    this.fieldMesh.renderOrder = 14; this.fieldMesh.frustumCulled = false;
+    this.group.add(this.fieldMesh); this.flows.push(this.fieldMat);
+
+    /* ----- coils ----- */
+    var copper = new THREE.MeshStandardMaterial({ color: 0xc98a4b, roughness: 0.38, metalness: 0.9, envMapIntensity: 1.0 });
+    var steel = new THREE.MeshStandardMaterial({ color: 0x7f93b4, roughness: 0.45, metalness: 0.85, envMapIntensity: 1.0 });
+    var sets = { npFront: [], npBack: [], plFront: [], plBack: [] };
+    var NP = 50, PL = 20, j, deg;
+    for (k = 0; k < NP; k++) {
+      var ph0 = TAU * (k + 0.5) / NP, loop = [];
+      for (j = 0; j < 96; j++) {
+        var th = TAU * j / 96;
+        /* the toroidal wobble that makes the coil non-planar; its phase follows the field period */
+        var w = 0.05 * Math.sin(th + SHAPE.N * ph0) + 0.022 * Math.sin(2 * th - SHAPE.N * ph0);
+        loop.push(at(COIL_SHAPE, 1, th, ph0 + w));
+      }
+      deg = ph0 / DEG;
+      sets[inCut(deg) ? 'npFront' : 'npBack'].push(geo.tube(loop, 0.105, 8, true));
+    }
+    for (k = 0; k < PL; k++) {
+      var php = TAU * (k + 0.5) / PL, c = core.stellaratorAxis(SHAPE, php), tilt = (k % 2 ? -1 : 1) * 16 * DEG, ring = [];
+      var eR = new THREE.Vector3(Math.cos(php), 0, Math.sin(php)), eP = new THREE.Vector3(-Math.sin(php), 0, Math.cos(php));
+      var eT = eR.clone().multiplyScalar(Math.cos(tilt)).addScaledVector(eP, Math.sin(tilt));
+      var centre = eR.clone().multiplyScalar(c.R + 0.15); centre.y = c.Z;
+      for (j = 0; j < 80; j++) {
+        var t = TAU * j / 80;
+        ring.push(centre.clone().addScaledVector(eT, 2.55 * Math.cos(t)).add(new THREE.Vector3(0, 2.45 * Math.sin(t), 0)));
+      }
+      deg = php / DEG;
+      sets[inCut(deg) ? 'plFront' : 'plBack'].push(geo.tube(ring, 0.085, 8, true));
+    }
+    this.coils = {};
+    Object.keys(sets).forEach(function (name) {
+      var mesh = new THREE.Mesh(fx.mergeIndexed(sets[name]), name[0] === 'n' ? copper : steel);
+      mesh.frustumCulled = false;
+      self.group.add(mesh); self.coils[name] = mesh;
+    });
+
+    /* ----- label anchors ----- */
+    var topOf = function (deg, r) { var o = core.stellaratorAxis(SHAPE, deg * DEG); return new THREE.Vector3(o.R * Math.cos(deg * DEG), o.Z + r, o.R * Math.sin(deg * DEG)); };
+    var npAt = at(COIL_SHAPE, 1, 80 * DEG, TAU * 22.5 / NP), plAt = topOf(9, 2.45);
+    var whenCoils = function (p) { return function () { return self.coilMode === 'none' ? null : p; }; };
+    this.anchors = {
+      nonplanar: whenCoils(npAt),          // coil labels vanish with the coils
+      planar: whenCoils(plAt),
+      surface: at(SHAPE, 1, 20 * DEG, 100 * DEG),
+      line: at(SHAPE, 1.03, 200 * DEG, 62 * DEG),
+      axis: at(SHAPE, 0, 0, 90 * DEG)
+    };
+
+    this.setCoils('cut');
+    this.rebuildField();
+  }
+
+  Stellarator.prototype.rebuildField = function () {
+    var key = this.iota.toFixed(3);
+    if (this.iotaBuilt === key) return;
+    this.iotaBuilt = key;
+    var iota = this.iota, tubes = [];
+    [{ rho: 1.03, n: 8, r: 0.028 }, { rho: 0.55, n: 4, r: 0.022 }].forEach(function (s) {
+      for (var i = 0; i < s.n; i++) {
+        var pts = [], th0 = TAU * i / s.n, STEPS = 420;
+        for (var k = 0; k <= STEPS; k++) {
+          var ph = TAU * k / STEPS;
+          pts.push(at(SHAPE, s.rho, core.stellaratorFieldAngle(SHAPE, iota, th0, ph), ph));
+        }
+        tubes.push(geo.tube(pts, s.r, 5, false));
+      }
+    });
+    this.fieldMesh.geometry.dispose();
+    this.fieldMesh.geometry = fx.mergeIndexed(tubes);
+  };
+  Stellarator.prototype.setIota = function (iota) { this.iota = iota; this.rebuildField(); };
+  /* mode: 'cut' (front sector open) | 'all' | 'none' */
+  Stellarator.prototype.setCoils = function (mode) {
+    this.coilMode = mode;
+    var C = this.coils;
+    C.npBack.visible = C.plBack.visible = mode !== 'none';
+    C.npFront.visible = C.plFront.visible = mode === 'all';
+  };
+  Stellarator.prototype.configure = function (o) {
+    o = o || {};
+    this.setCoils(o.coils || 'cut');
+    this.setIota(o.iota || IOTA);
+  };
+  Stellarator.prototype.update = function (time) {
+    if (!this.group.visible) return;
+    for (var i = 0; i < this.shells.length; i++) this.shells[i].uniforms.uTime.value = time;
+    for (i = 0; i < this.flows.length; i++) this.flows[i].uniforms.uTime.value = time;
+  };
+
+  FL.Stellarator = Stellarator;
+  FL.stellarator = { SHAPE: SHAPE, IOTA: IOTA, DRAWN_MINOR_SCALE: SHAPE.a / 0.53 };
+})();
+
+</script>
+<script>
 /* Fusion Lab — the plant around the machine.
  *
  * Two stylised equipment sets on a common floor: the tritium plant (inner and
@@ -3240,7 +3465,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 
 </script>
 <script>
-/* Fusion Lab — the lesson: 7 chapters, 41 scenes.
+/* Fusion Lab — the lesson: 7 chapters, 42 scenes.
  *
  * Each scene is plain data: narration, a camera shot, which parts of the 3D
  * world are on, and which instrument sits in the side panel. app.js applies
@@ -3249,7 +3474,8 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
  * Shot: t = look-at target (m), az/pol in degrees (az 0 looks into the
  * cutaway from +Z), d = distance (m).
  * Label anchors: ['tk', layer, R, Z, φ°] on the machine, ['fx', name],
- * ['pl', name] on the plant, ['torus', ρ, θ°, φ°] on a flux surface.
+ * ['pl', name] on the plant, ['torus', ρ, θ°, φ°] on a flux surface,
+ * ['st', name] on the stellarator.
  */
 (function () {
   'use strict';
@@ -3376,6 +3602,17 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
       fx: { plasma: 0.28, heat: 0.15, strike: 0.35, pfGlow: 0.3, particles: 0.15 }, shot: { t: [-3, -0.5, 0], az: 2, pol: 78, d: 36 }, spin: 0,
       labels: [{ id: 'xp', text: 'X 点', at: ['p', -5.42, -3.05, 0.02], tone: 'plasma', side: 'l' }, { id: 'sp', text: '打击点', sub: '热流最集中处', at: ['p', -6.55, -4.3, 0.02], tone: 'warn' }, { id: 'pf', text: '极向场线圈', at: ['tk', 'pf', 12.2, 3.25, 180] }],
       legend: ['plasma', 'strike'], panel: { type: 'shape' }
+    },
+
+    {
+      id: 'b6', title: '另一种拧法：仿星器', cap: '不靠等离子体电流，靠线圈自己的三维形状把磁力线拧成螺旋',
+      body: ['托卡马克靠等离子体里的大电流来拧磁力线，麻烦也出在这股电流上：靠感应驱动只能脉冲运行，电流失稳还会破裂。<b>仿星器</b>换了一种拧法：把线圈做成扭曲的三维形状，让磁面的截面沿着大环一边前进一边旋转，磁力线不需要等离子体里的大电流，也会绕着小截面转。',
+        '拧了多少用<b>旋转变换 ι</b> 表示，它就是安全因子的倒数（ι = 1/q）。没有大电流，就不需要中心螺线管，原理上可以稳态运行，也基本避开了大破裂。代价全在线圈上：德国的 Wendelstein 7-X 用了 50 个非平面超导线圈和 20 个平面线圈，形状要靠计算机优化，否则粒子会顺着三维磁场的起伏漏出去。'],
+      note: '示意几何：磁面按“旋转椭圆”画出，线圈只表现“非平面”的特征，不是 W7-X 的真实线圈；小半径放大约 1.7 倍，正面的线圈被剖开。',
+      set: 'stellarator', stell: { coils: 'cut', iota: 0.9 }, shot: { t: [0, -0.3, 0.6], az: 14, pol: 52, d: 27 }, spin: 0.02,
+      labels: [{ id: 'np', text: '非平面线圈', sub: '50 个', at: ['st', 'nonplanar'], side: 'l' }, { id: 'pc', text: '平面线圈', sub: '20 个', at: ['st', 'planar'] },
+        { id: 'ms', text: '磁面', sub: '截面边走边转', at: ['st', 'surface'], tone: 'plasma', side: 'l' }, { id: 'fl', text: '磁力线', at: ['st', 'line'], tone: 'field' }],
+      legend: ['field', 'plasma', 'npCoil', 'plCoil'], panel: { type: 'stellarator' }
     },
 
     /* ================= C · anatomy ================= */
@@ -3606,7 +3843,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     {
       id: 'g5', title: '路线图：谁在做什么', cap: '大而稳的国际路线，与小而强场的新路线并行',
       body: ['<b>ITER 之后</b>，各方规划了各自的示范堆（DEMO）：欧盟的 EU-DEMO、中国的 CFETR、日本的 JA-DEMO、韩国的 K-DEMO，目标都是在本世纪中叶前后实现氚自持并向电网送电。',
-        '另一条路是<b>高温超导强磁场</b>：磁场从 5 T 提到 12 T 以上，同样的性能可以用小得多的装置实现。美国 CFS 的 SPARC、中国合肥的 BEST 都在建造燃烧等离子体实验装置；英国的 STEP 走球形托卡马克路线。右边把这些装置的截面画在同一把尺子上。'],
+        '另一条路是<b>高温超导强磁场</b>：磁场从 5 T 提到 12 T 以上，同样的性能可以用小得多的装置实现。美国 CFS 的 SPARC、中国合肥的 BEST 都在建造燃烧等离子体实验装置；英国的 STEP 走球形托卡马克路线。<b>仿星器</b>是托卡马克之外的另一条磁约束路线，德国的 Wendelstein 7-X 正在验证不靠等离子体电流的长脉冲约束。右边把这些装置的截面画在同一把尺子上。'],
       note: '计划日期均为各项目公布的目标，不是已发生的事实；核对日期见下方口径表。',
       set: 'machine', layers: ALL, cut: 'onion', fx: GLOW, shot: SHOT.wide, spin: 0.05,
       labels: [L.person], panel: { type: 'roadmap' }
@@ -4066,6 +4303,40 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     return { dispose: function () { clearTimeout(pending); } };
   };
 
+  I.stellarator = function (m, app) {
+    var S = ref.W7X, st = app.stell, s = { iota: st.iota, coils: st.coilMode }, c, pending = 0;
+    title(m, '旋转变换 ι', '示意 · 非 W7-X 实测位形');
+    var apply = function (user) {
+      c[0].v.textContent = 'ι = ' + s.iota.toFixed(2);
+      c[0].s.textContent = '磁力线绕大环 1 圈，绕小截面 ' + s.iota.toFixed(2) + ' 圈';
+      c[1].v.textContent = 'q = 1/ι ≈ ' + (1 / s.iota).toFixed(2);
+      clearTimeout(pending);
+      pending = setTimeout(function () { st.setIota(s.iota); }, user ? 60 : 0);
+      if (user) app.takeover();
+    };
+    slider(m, { label: '旋转变换 ι', min: 0.7, max: 1.3, step: 0.01, value: s.iota, show: function (v) { return v.toFixed(2); } }, function (v, u) { s.iota = v; apply(u); });
+    c = cards(m, [['磁力线的扭转', '', ''], ['换算成安全因子', '', '托卡马克 ITER：q₉₅ ≈ 3，即 ι ≈ 0.33'], ['扭转来自', '线圈的三维形状', '等离子体里不需要大电流', 'ok']], 1);
+    title(m, '线圈显示');
+    seg(m, '线圈显示', [['cut', '剖开'], ['all', '全部'], ['none', '隐藏']], s.coils, function (v, u) { s.coils = v; st.setCoils(v); if (u) app.takeover(); });
+    title(m, '托卡马克与仿星器');
+    var t = h('div', 'cmp');
+    t.innerHTML = '<div><span></span><b>托卡马克</b><b>仿星器</b></div>' +
+      '<div><span>谁来拧磁力线</span><i>等离子体电流（ITER 15 MA）</i><i>外部线圈的三维形状</i></div>' +
+      '<div><span>中心螺线管</span><i>需要，感应驱动电流</i><i>不需要</i></div>' +
+      '<div><span>运行方式</span><i>感应驱动时是脉冲</i><i>原理上可以稳态</i></div>' +
+      '<div><span>大破裂</span><i>电流失稳时会发生</i><i>没有大电流，基本避免</i></div>' +
+      '<div><span>几何</span><i>轴对称，线圈是平面的</i><i>三维，线圈非平面</i></div>' +
+      '<div><span>难点</span><i>电流驱动与破裂防护</i><i>线圈制造精度、三维场里的粒子约束</i></div>';
+    m.appendChild(t);
+    title(m, 'Wendelstein 7-X', '德国 · 格赖夫斯瓦尔德');
+    cards(m, [['线圈', S.nonPlanar + ' + ' + S.planar, '非平面 + 平面，均为超导'], ['模块', S.modules + ' 个', '每个模块的线圈形状重复'],
+      ['大半径 / 小半径', S.R0 + ' m / ' + S.a + ' m', '等离子体体积 ' + S.volume + ' m³'], ['磁场', S.B + ' T', '']]);
+    note(m, '<b>已做到：</b>' + S.record + '。');
+    note(m, '<b>图上是示意几何。</b>磁面按“旋转椭圆”画出，线圈只表现“非平面”这一特征，不是 W7-X 的真实磁面与线圈；小半径放大约 ' + FL.stellarator.DRAWN_MINOR_SCALE.toFixed(1) + ' 倍。滑块的 ι 范围是示意值，真实装置靠调节各组线圈的电流来改变 ι。');
+    apply(false);
+    return { dispose: function () { clearTimeout(pending); } };
+  };
+
   I.shape = function (m, app) {
     var sh = app.tokamak.shape, vol = core.plasmaVolume(sh);
     title(m, '截面形状', '模型用 Miller 参数化');
@@ -4505,6 +4776,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     plasma: ['等离子体', '#ff7fdc'], strike: ['打击点', '#ff8a3c'], heat: ['被加热的包层', '#ff6a3d'],
     field: ['磁力线', '#58d8ff', 1], current: ['电流', '#ffd27a', 1], nbi: ['中性束', '#8fd2ff', 1], ec: ['电子回旋波', '#7dffa0', 1], ic: ['离子回旋波', '#ffa24a', 1],
     dPipe: ['氘', '#58d8ff', 1], tPipe: ['氚', '#ffa64a', 1], dtPipe: ['氘氚混合气', '#c78bff', 1], hePipe: ['氦', '#c9e265', 1],
+    npCoil: ['非平面线圈', '#c98a4b', 1], plCoil: ['平面线圈', '#7f93b4', 1],
     hot: ['热段', '#ff6a3d', 1], cold: ['冷段 / 给水', '#4f8dff', 1], steam: ['蒸汽', '#e8f0ff', 1], power: ['电力', '#ffe45c', 1]
   };
   var ALL_LAYERS = ['cs', 'tf', 'pf', 'vessel', 'blanket', 'divertor', 'cryostat'];
@@ -4518,7 +4790,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 
   var app = FL.app = {
     index: -1, scene: INTRO, playing: false, elapsed: 0, speed: 1, part: null,
-    pulseT: 0, pulseManual: false, pulseAnim: null, instrument: null, started: false, seen: {}
+    world: 'machine', pulseT: 0, pulseManual: false, pulseAnim: null, instrument: null, started: false, seen: {}
   };
 
   /* ---------- theme (repository-wide convention) ---------- */
@@ -4536,7 +4808,8 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     app.effects = new FL.Effects(engine, app.tokamak);
     app.plant = new FL.Plant(engine);
     app.micro = new FL.Micro(engine);
-    engine.scene.add(app.tokamak.group, app.effects.group, app.plant.group, app.micro.group);
+    app.stell = new FL.Stellarator(engine);
+    engine.scene.add(app.tokamak.group, app.effects.group, app.plant.group, app.micro.group, app.stell.group);
     app.micro.onPhase = function () { if (app.scene.labels === 'micro') engine.setLabels(app.micro.labels()); };
     engine.addUpdater(update);
     engine.on('interact', function () { takeover(); });
@@ -4548,6 +4821,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     if (a[0] === 'tk') return app.tokamak.anchor(a[1], a[2], a[3], a[4]);
     if (a[0] === 'fx') return app.effects.anchors[a[1]];
     if (a[0] === 'pl') { var p = app.plant.anchors[a[1]]; return p; }
+    if (a[0] === 'st') return app.stell.anchors[a[1]];
     if (a[0] === 'torus') return FL.fx.pos3(app.tokamak.shape, a[1], a[2] * DEG, a[3] * DEG);
     return new THREE.Vector3(a[1], a[2], a[3]);
   }
@@ -4582,6 +4856,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     app.effects.update(time, dt, raw);
     app.plant.update(time, dt, raw);
     app.micro.update(time, dt);
+    app.stell.update(time);
     if (app.instrument && app.instrument.tick) app.instrument.tick(time);
   }
   function sceneDuration(s) {
@@ -4589,11 +4864,15 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     return Math.min(34, Math.max(15, 9 + chars * 0.085));
   }
 
+  /* three separate 3D worlds share the stage; switching between them fades through black */
+  function worldOf(s) { return s.set === 'micro' ? 'micro' : s.set === 'stellarator' ? 'stellarator' : 'machine'; }
   function applyWorld(s, instant) {
-    var micro = s.set === 'micro', wasMicro = app.micro.group.visible;
+    var world = worldOf(s), micro = world === 'micro', stell = world === 'stellarator', changed = world !== app.world;
     var swap = function () {
+      app.world = world;
       app.micro.group.visible = micro;
-      app.tokamak.group.visible = app.effects.group.visible = app.plant.group.visible = !micro;
+      app.stell.group.visible = stell;
+      app.tokamak.group.visible = app.effects.group.visible = app.plant.group.visible = world === 'machine';
       app.engine.params.bloom = micro ? 0.7 : 0.9;
       app.engine.params.vignette = micro ? 0.75 : 0.55;
       app.engine.flyTo(s.shot, 0);
@@ -4603,6 +4882,8 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
       if (micro) {
         app.micro.setPlay(s.micro.play, { fuseChance: s.micro.fuseChance == null ? 1 : s.micro.fuseChance, hot: s.micro.hot, restart: true });
         if (!app.engine.clock.running) app.micro.t = 4.1;          // a paused stage still shows the outcome
+      } else if (stell) {
+        app.stell.configure(s.stell);
       } else {
         app.tokamak.setCut(s.cut || 'onion');
         app.tokamak.setLayers(s.layers || ALL_LAYERS, s.focus || null);
@@ -4622,8 +4903,8 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
       app.engine.autoRotate = s.spin == null ? 0.03 : s.spin;
       app.engine.pickEnabled = !!(s.panel && s.panel.type === 'anatomy');
     };
-    if (micro !== wasMicro && !instant && app.engine.ok) { app.engine.setLabels([]); app.fadeThen = swap; app.fadeDir = -1; }
-    else if (micro !== wasMicro) swap();
+    if (changed && !instant && app.engine.ok) { app.engine.setLabels([]); app.fadeThen = swap; app.fadeDir = -1; }
+    else if (changed) swap();
     else { app.engine.flyTo(s.shot, instant ? 0 : 2.4); configure(); }
   }
 
@@ -4641,7 +4922,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     $('legend').innerHTML = (s.legend || []).map(function (k) {
       var L = LEGEND[k]; return '<span><i class="' + (L[2] ? 'bar' : '') + '" style="--k:' + L[1] + '"></i>' + L[0] + '</span>';
     }).join('');
-    $('modelBadge').textContent = s.set === 'micro' ? '比喻式动画 · 非物理仿真' : '教学示意 · 非工程仿真';
+    $('modelBadge').textContent = s.set === 'micro' ? '比喻式动画 · 非物理仿真' : s.set === 'stellarator' ? '示意几何 · 非真实线圈' : '教学示意 · 非工程仿真';
     if (app.instrument && app.instrument.dispose) app.instrument.dispose();
     var mount = $('inst'); mount.innerHTML = ''; mount.scrollTop = 0;
     app.part = null;

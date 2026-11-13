@@ -36,4 +36,26 @@ for (const tbr of [0.95, 1.1, 1.3]) {
   near(r.final, o.startKg + r.bred - r.burned - r.decayed, 1e-8);
   assert.ok([...r.storage, ...r.loop, ...r.blanket].every(v => Number.isFinite(v) && v >= 0));
 }
-console.log(`PASS: ${checks} fusion, energy, geometry and tritium conservation checks.`);
+/* stellarator cartoon: field periodicity, stellarator symmetry and the winding of a field line */
+const st = {R0: 5.5, a: 0.9, elong: 1.45, N: 5, axis: 0.28};
+for (const [th, ph] of [[0.3, 0.2], [2.1, 1.7], [4.4, 5.9]]) {
+  const p = c.stellaratorSurface(st, 1, th, ph);
+  const next = c.stellaratorSurface(st, 1, th + Math.PI, ph + 2 * Math.PI / st.N);
+  near(next.R, p.R); near(next.Z, p.Z);
+  const mirror = c.stellaratorSurface(st, 1, -th, -ph);
+  near(mirror.R, p.R); near(mirror.Z, -p.Z);
+}
+near(c.rotationalTransform(3), 1 / 3);
+for (const iota of [5 / 6, 1, 5 / 4]) {
+  const turns = 60, steps = turns * 720;
+  let wound = 0, prev = null;
+  for (let k = 0; k <= steps; k++) {
+    const ph = 2 * Math.PI * turns * k / steps;
+    const p = c.stellaratorSurface(st, 1, c.stellaratorFieldAngle(st, iota, 0.4, ph), ph), o = c.stellaratorAxis(st, ph);
+    const ang = Math.atan2(p.Z - o.Z, p.R - o.R);
+    if (prev != null) wound += Math.atan2(Math.sin(ang - prev), Math.cos(ang - prev));
+    prev = ang;
+  }
+  near(wound / (2 * Math.PI * turns), iota, 0.01);
+}
+console.log(`PASS: ${checks} fusion, energy, geometry, stellarator and tritium conservation checks.`);

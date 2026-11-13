@@ -21,6 +21,7 @@ SCRIPTS = [
     "src/engine.js",
     "src/tokamak.js",
     "src/effects.js",
+    "src/stellarator.js",
     "src/plant.js",
     "src/micro.js",
     "src/content.js",

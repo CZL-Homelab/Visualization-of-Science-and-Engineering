@@ -1,6 +1,6 @@
 # 核聚变反应堆实验室 · Fusion Lab
 
-7 章、41 幕交互讲解：氘氚反应、磁约束、ITER 装置解剖、一次放电、能量平衡、氚燃料循环与聚变电站。三维模型支持旋转、缩放、剖切与零件选择；讲解与动效可以暂停，默认尊重减少动态效果偏好。不默认播放语音。
+7 章、42 幕交互讲解：氘氚反应、磁约束（托卡马克与仿星器）、ITER 装置解剖、一次放电、能量平衡、氚燃料循环与聚变电站。三维模型支持旋转、缩放、剖切与零件选择；讲解与动效可以暂停，默认尊重减少动态效果偏好。不默认播放语音。
 
 ## 构建与验证 / Build and verify
 
@@ -16,13 +16,13 @@ node tests/check-build.cjs
 
 ## 模型与来源 / Models and sources
 
-`src/core.js` 集中管理反应质量亏损、Bosch–Hale 热反应率、零维能量平衡、回旋运动、圆柱安全因子近似、氚三库存模型与电站功率记账。图形中的粒子、磁力线、脉冲与设备布局都是教学示意，不是工程仿真。温度与密度剖面、输运、磁流体稳定性、材料损伤与完整工厂经济性未求解。ITER 不发电；其设计目标与电站净电输出必须区分。路线图日期是引用来源的计划，不是已实现的结果。
+`src/core.js` 集中管理反应质量亏损、Bosch–Hale 热反应率、零维能量平衡、回旋运动、圆柱安全因子近似、氚三库存模型与电站功率记账。图形中的粒子、磁力线、脉冲与设备布局都是教学示意，不是工程仿真。温度与密度剖面、输运、磁流体稳定性、材料损伤与完整工厂经济性未求解。仿星器一幕（b6）的磁面是“旋转椭圆”示意，线圈只借用 Wendelstein 7-X 的数量（50 个非平面 + 20 个平面、5 个模块），形状与小半径比例都不是真实位形；`core.js` 只保证场周期性、仿星器对称性与磁力线平均旋转变换 ι。ITER 不发电；其设计目标与电站净电输出必须区分。路线图日期是引用来源的计划，不是已实现的结果。
 
 页面“数字口径”列出来源、核对日期及简化边界；外部参考链接需要联网，实验台运行不需要。保留仓库 MIT 许可与 `vendor/THREE-LICENSE.txt` 中的 Three.js 署名。
 
 ## English
 
-Seven chapters and 41 scenes explain D–T fusion, confinement, ITER anatomy, pulse operation, power balance, tritium inventories and power plants. Rotate and inspect the 3D machine, adjust instruments, or use the pausable guided tour. Reduced motion is respected by default; speech does not autoplay.
+Seven chapters and 42 scenes explain D–T fusion, confinement (tokamak and stellarator), ITER anatomy, pulse operation, power balance, tritium inventories and power plants. Rotate and inspect the 3D machine, adjust instruments, or use the pausable guided tour. Reduced motion is respected by default; speech does not autoplay.
 
 Run the commands above with Python 3.9+ and Node.js 22+. No package installation is required. Edit `src/`, rebuild, and commit the generated `index.html` together with source. All runtime assets are embedded for offline `file://` use; retain the complete site layout for cross-lab navigation.
 

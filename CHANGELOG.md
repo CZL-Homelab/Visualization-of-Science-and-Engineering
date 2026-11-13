@@ -1,5 +1,13 @@
 # 更新记录 / Changelog
 
+## 未发布 / Unreleased · 2026-11-13 · Fusion Lab 增加仿星器一幕
+
+- 第 02 章“磁约束”新增 b6「另一种拧法：仿星器」，全课变为 42 幕：旋转椭圆磁面、可调旋转变换 ι 的磁力线、50 个非平面与 20 个平面线圈（剖开 / 全部 / 隐藏），以及托卡马克与仿星器对照表。
+- `core.js` 新增示意磁面与磁力线角度函数；物理检查增至 44 项，覆盖场周期性、仿星器对称性和磁力线平均旋转变换。
+- Wendelstein 7-X 的参数与 2025 年长脉冲纪录按 IPP 官方页面核对并写入数字口径；页面、README 与模型边界写明磁面和线圈是示意几何，不是真实位形。
+
+English: Add scene b6, a stellarator, to the confinement chapter (42 scenes in total): rotating-ellipse flux surfaces, field lines with an adjustable rotational transform, 50 non-planar and 20 planar coils with cut / all / hidden views, and a tokamak–stellarator comparison. `core.js` gains the schematic surface functions and the physics checks grow to 44, covering field periodicity, stellarator symmetry and the mean winding of a field line. Wendelstein 7-X figures and its 2025 long-pulse records are sourced from IPP; the page and documentation state that the surfaces and coils are schematic, not the real configuration.
+
 ## 未发布 / Unreleased · 2026-11-13
 
 - 全站品牌与体验：优化共享 SVG Logo 的灰白空间框架、前后轨道和 16–32px 细节。目录与四个 Lab 统一有限入场、立即跳过、顶栏回放、深链直达和减少动态效果，内嵌公共资源保持离线使用。

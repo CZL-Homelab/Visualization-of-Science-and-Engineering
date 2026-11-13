@@ -24,7 +24,10 @@
     cfetr: { label: 'Zhuang et al., Nucl. Fusion 59 (2019) 112010', url: 'https://doi.org/10.1088/1741-4326/ab0e27' },
     best: { label: '中国科学院 · BEST 研究计划（2025）', url: 'https://www.cas.cn/cm/202511/t20251125_5089788.shtml' },
     cfs: { label: 'CFS · SPARC programme', url: 'https://www.cfs.energy/technology/sparc/' },
-    step: { label: 'UKAEA · STEP programme', url: 'https://step.ukaea.uk/' }
+    step: { label: 'UKAEA · STEP programme', url: 'https://step.ukaea.uk/' },
+    w7x: { label: 'Max-Planck-IPP · Wendelstein 7-X', url: 'https://www.ipp.mpg.de/w7x' },
+    w7xData: { label: 'Max-Planck-IPP · W7-X technical data', url: 'https://www.ipp.mpg.de/16931/einfuehrung' },
+    w7xRecord: { label: 'Max-Planck-IPP · W7-X performance records (2025)', url: 'https://www.ipp.mpg.de/5532945/w7x' }
   };
 
   /* Published overall figures for ITER. `model` flags what the 3D model
@@ -78,6 +81,13 @@
     }
   };
 
+  /* Wendelstein 7-X, the stellarator quoted in scene b6. Published values;
+   * the 3D model borrows only the coil and module counts. */
+  var W7X = {
+    nonPlanar: 50, planar: 20, modules: 5, R0: 5.5, a: 0.53, volume: 30, B: 3,
+    record: '2025 年 5 月的实验中，一次 360 秒的放电能量周转 1.8 GJ；另一次把三重积的高值维持了 43 秒'
+  };
+
   /* Devices compared in chapter G. R, a in metres, B on axis in tesla.
    * `status` is the state on CHECKED; planned dates are targets, not facts. */
   var MACHINES = [
@@ -113,6 +123,8 @@
     { item: '增殖反应', value: 'n + ⁶Li → T + ⁴He + 4.78 MeV；n + ⁷Li → T + ⁴He + n − 2.47 MeV', basis: '由 AME2020 原子质量差计算', src: ['ame'] },
     { item: '氚增殖比要求', value: '工程目标 TBR ≈ 1.05–1.15', basis: '需覆盖衰变、滞留与为下一座堆备料；取值随燃料循环设计变化', src: ['abdou', 'federici'] },
     { item: '海水中的氘', value: '约 33 g/m³（D/H ≈ 156 ppm）', basis: 'VSMOW 同位素比；淡水按 35 g/m³ 计', src: ['wesson'] },
+    { item: 'Wendelstein 7-X', value: '50 个非平面 + 20 个平面超导线圈 · 5 个模块 · R 5.5 m · a 0.53 m · 30 m³ · 3 T', basis: 'IPP 公布的装置参数；三维模型只借用线圈与模块数量，形状是示意', src: ['w7x', 'w7xData'] },
+    { item: 'W7-X 长脉冲纪录', value: '1.8 GJ / 360 s；三重积高值维持 43 s', basis: '2025 年 OP 2.3 实验阶段，IPP 2025 年 6 月公布；此后的结果未核对', src: ['w7xRecord'] },
     { item: 'EU-DEMO 量级', value: '约 2 GW 聚变 · 约 500 MW 净电 · R ≈ 9 m', basis: '2018 年前后的概念设计基线，持续修订', src: ['federici', 'eurofusion'] }
   ];
 
@@ -127,6 +139,6 @@
     { q: '“激光聚变已经点火，磁约束没必要了。”', a: 'NIF 2022 年的靶增益 > 1 是相对于打到靶上的激光能量；相对于整个装置的耗电仍差两个数量级，重复频率也远不够电站要求。两条路线面对的工程问题不同，都还没走完。', go: 'g5' }
   ];
 
-  FL.ref = { CHECKED: CHECKED, SOURCES: SOURCES, ITER: ITER, MACHINES: MACHINES, ROADMAP: ROADMAP, RULES: RULES, MYTHS: MYTHS };
+  FL.ref = { CHECKED: CHECKED, SOURCES: SOURCES, ITER: ITER, W7X: W7X, MACHINES: MACHINES, ROADMAP: ROADMAP, RULES: RULES, MYTHS: MYTHS };
   if (typeof module !== 'undefined' && module.exports) module.exports = FL.ref;
 })();
