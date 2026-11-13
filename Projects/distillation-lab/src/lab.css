@@ -183,13 +183,6 @@ html[data-theme="light"] .btn.primary{color:#f6fffd}
 }
 .mod-title{font-size:12.5px;line-height:1.35;color:var(--text);display:block;font-weight:530}
 .mod-sub{font-size:10px;color:var(--dim);display:block;margin-top:1px;font-family:var(--mono);letter-spacing:.02em}
-.mod.done .mod-title::after{content:"·";color:var(--cyan);margin-left:4px}
-.side-progress{margin-top:auto;border-top:1px solid var(--line-soft);padding:12px 8px 0}
-.sp-head{display:flex;justify-content:space-between;font-size:10.5px;color:var(--dim);margin-bottom:6px}
-.sp-head b{font-family:var(--mono);color:var(--muted)}
-.sp-bar{height:3px;background:var(--panel-3);border-radius:3px;overflow:hidden}
-.sp-bar i{display:block;height:100%;width:0;background:var(--cyan);transition:width .4s}
-.sp-note{font-size:9.5px;color:var(--dim);margin-top:8px;line-height:1.45}
 
 /* stage */
 .stage{
@@ -438,7 +431,6 @@ input.invalid{border-color:var(--red)}
   .scene-panel{grid-row:4}
   .sidebar{border-right:0;border-bottom:1px solid var(--line);padding:12px}
   .sidebar .side-label{padding:0 2px}
-  .side-progress{display:none}
   .mod{padding:6px}
   .mod-sub{display:none}
   .stage{min-height:480px;padding:12px 12px 8px}

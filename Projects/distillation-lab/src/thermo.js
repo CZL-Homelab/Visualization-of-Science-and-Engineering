@@ -526,6 +526,23 @@
   /* ------------------------------------------------------------------ */
   /*  Shortcut methods                                                   */
   /* ------------------------------------------------------------------ */
+  // Two-phase state of a binary with overall light-component fraction z at
+  // temperature Tc on eq's isobar: liquid x on the bubble line, vapour
+  // y = y*(x) at the other end of the tie line, and V/F from the lever rule.
+  // Returns null outside the two-phase region.
+  function tieLine(eq, Tc, z) {
+    var cand = null;
+    for (var i = 0; i < eq.xs.length - 1; i++) {
+      var a = eq.Ts[i] - Tc, b = eq.Ts[i + 1] - Tc;
+      if (!isFinite(a) || !isFinite(b) || a * b > 0 || a === b) continue;
+      var f = a / (a - b), x = eq.xs[i] + f * (eq.xs[i + 1] - eq.xs[i]), y = eq.y(x);
+      if (z >= Math.min(x, y) - 1e-9 && z <= Math.max(x, y) + 1e-9) { cand = { x: x, y: y }; break; }
+    }
+    if (!cand || Math.abs(cand.y - cand.x) < 1e-9) return null;
+    cand.VF = clamp((z - cand.x) / (cand.y - cand.x), 0, 1);
+    return cand;
+  }
+
   function fenske(xD, xW, alpha) {
     return Math.log((xD / (1 - xD)) * ((1 - xW) / xW)) / Math.log(alpha);
   }
@@ -659,7 +676,7 @@
     NRTL: NRTL, nrtlGamma: nrtlGamma, bubbleMulti: bubbleMulti, extractive: extractive, rateColumn: rateColumn,
     flash: flash, rayleigh: rayleigh,
     qLineY: qLineY, opIntersect: opIntersect, qPinch: qPinch, rmin: rmin, mccabe: mccabe, nmin: nmin,
-    fenske: fenske, underwood: underwood, gilliland: gilliland,
+    tieLine: tieLine, fenske: fenske, underwood: underwood, gilliland: gilliland,
     stepDown: stepDown, batch: batch, steam: steam, tbpT: tbpT, tbpV: tbpV
   };
 });

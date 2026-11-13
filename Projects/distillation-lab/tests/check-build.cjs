@@ -115,8 +115,8 @@ ok('module sources each register exactly one module with scenes and no quiz', ()
   assert.deepStrictEqual([...ids].sort(), ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']);
 });
 
-ok('no quiz or self-test section reaches the page', () => {
-  ['id="quiz"', 'quizMount', 'quiz-card', '理解检验'].forEach((t) => assert.ok(!html.includes(t), 'leftover quiz markup: ' + t));
+ok('no quiz, self-test or learning-progress tracker reaches the page', () => {
+  ['id="quiz"', 'quizMount', 'quiz-card', '理解检验', '学习进度', 'progressText', 'dl.progress'].forEach((t) => assert.ok(!html.includes(t), 'leftover quiz/progress markup: ' + t));
 });
 
 ok('the page is a single, substantial document', () => {

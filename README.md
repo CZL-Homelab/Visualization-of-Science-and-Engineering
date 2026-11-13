@@ -21,7 +21,7 @@
 | Stock Market Lab | 10 个模块、60+ 幕讲解：K 线与周期聚合、成交量与技术指标、订单簿撮合、A 股/美股制度、IPO、估值、杠杆、ETF 与 10 组同步对比 | [Projects/stock-market-lab](Projects/stock-market-lab) |
 | Desalination Lab | 7 个模块、25 幕讲解、3 个 WebGL 3D 视图：含盐阶梯、渗透压与 273 米水柱、单段 RO 质量守恒、MSF 闪蒸瀑布、膜污染曲线、能耗口径与整厂浓盐水 | [Projects/desalination-lab](Projects/desalination-lab) |
 | Fusion Lab | 7 章、42 幕讲解：ITER 三维解剖、磁约束（含仿星器）、一次放电、氚燃料循环与电站功率账本 | [Projects/fusion-lab](Projects/fusion-lab) |
-| Distillation Lab | 10 个模块、73 幕讲解：气液平衡、闪蒸与简单蒸馏、McCabe–Thiele 连续精馏、回流与能耗（FUG 简捷法）、间歇精馏、共沸/变压/萃取精馏、减压与水蒸气蒸馏、塔板与填料效率、原油常压蒸馏与 9 组同步对比 | [Projects/distillation-lab](Projects/distillation-lab) |
+| Distillation Lab | 10 个模块、79 幕讲解：气液平衡、闪蒸与简单蒸馏、McCabe–Thiele 连续精馏、回流与能耗（FUG 简捷法）、间歇精馏、共沸/变压/萃取精馏、减压与水蒸气蒸馏、塔板与填料效率、原油常压蒸馏与 9 组同步对比 | [Projects/distillation-lab](Projects/distillation-lab) |
 
 Motor Lab 默认先展示运行动画，再进入逐步讲解。它支持单文件离线运行；可选系统语音及外部参考资料的联网需求见项目说明。几何、场线和工作点属于教学模型，具体边界见各项目文档。
 
@@ -171,7 +171,7 @@ An open collection of interactive science and engineering explanations maintaine
 
 - Canonical repository: [CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering).
 - Project directory: [GitHub Pages](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/).
-- This branch contains five labs: [Motor Lab](Projects/motor-lab/README.md) (six motor types), [Stock Market Lab](Projects/stock-market-lab/README.md) (ten modules), [Desalination Lab](Projects/desalination-lab/README.md) (seven modules and three annotated 3D views), [Fusion Lab](Projects/fusion-lab/README.md) (seven chapters and 42 scenes) and [Distillation Lab](Projects/distillation-lab/README.md) (ten modules and 73 scenes, checked against Aspen Plus V15). Production reflects merged `main` and a successful Pages deployment, not an open PR. See [CHANGELOG.md](CHANGELOG.md) for unreleased changes and [docs/HANDOFF.md](docs/HANDOFF.md) for current work and release status.
+- This branch contains five labs: [Motor Lab](Projects/motor-lab/README.md) (six motor types), [Stock Market Lab](Projects/stock-market-lab/README.md) (ten modules), [Desalination Lab](Projects/desalination-lab/README.md) (seven modules and three annotated 3D views), [Fusion Lab](Projects/fusion-lab/README.md) (seven chapters and 42 scenes) and [Distillation Lab](Projects/distillation-lab/README.md) (ten modules and 79 scenes, checked against Aspen Plus V15). Production reflects merged `main` and a successful Pages deployment, not an open PR. See [CHANGELOG.md](CHANGELOG.md) for unreleased changes and [docs/HANDOFF.md](docs/HANDOFF.md) for current work and release status.
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) and the applicable [AGENTS.md](AGENTS.md) before contributing. Personal historical repositories and sites are not synchronization or deployment targets.
 
 ### Entrance experience

@@ -265,6 +265,48 @@ ok('synthetic TBP curves are monotone and tbpV inverts tbpT', () => {
   assert.ok(T.tbpV('heavy', 370) < T.tbpV('medium', 370) && T.tbpV('medium', 370) < T.tbpV('light', 370), 'heavier crude → less distills below 370 °C');
 });
 
+ok('bubble and dew points satisfy their defining conditions (benzene–toluene, z = 0.40)', () => {
+  const eq = T.makeEq('bt'), z = 0.4, Tb = eq.T(z), Td = eq.Tdew(z), P = T.kPa(T.ATM);
+  const p1b = T.kPa(T.psat('benzene', Tb)), p2b = T.kPa(T.psat('toluene', Tb));
+  near(z * p1b + (1 - z) * p2b, P, 0.05, 'bubble: Σ x p* = P');
+  const p1d = T.kPa(T.psat('benzene', Td)), p2d = T.kPa(T.psat('toluene', Td));
+  near(z * P / p1d + (1 - z) * P / p2d, 1, 5e-4, 'dew: Σ y P / p* = 1');
+  assert.ok(Td > Tb, 'dew point above bubble point for a mixture');
+  near(Tb, 95.14, 0.05); near(Td, 101.48, 0.05);
+  near(eq.y(z), 0.622, 0.001, 'first bubble'); near(eq.x(z), 0.216, 0.001, 'first drop');
+  near(eq.T(0), eq.Tdew(0), 0.01, 'pure heavy: bubble = dew'); near(eq.T(1), eq.Tdew(1), 0.01, 'pure light: bubble = dew');
+});
+
+ok('tie line and lever rule: x and y at the same T, mass balance closes, V/F rises 0 → 1', () => {
+  const eq = T.makeEq('bt'), z = 0.4, Tb = eq.T(z), Td = eq.Tdew(z);
+  let prev = -1;
+  for (let k = 1; k < 20; k++) {
+    const Tc = Tb + (Td - Tb) * k / 20, t = T.tieLine(eq, Tc, z);
+    assert.ok(t, 'two-phase at ' + Tc.toFixed(2));
+    near(eq.T(t.x), Tc, 0.02, 'liquid on the bubble line');
+    near(eq.Tdew(t.y), Tc, 0.05, 'vapour on the dew line');
+    near(t.VF * t.y + (1 - t.VF) * t.x, z, 1e-9, 'component balance');
+    assert.ok(t.VF > prev, 'V/F increases with temperature'); prev = t.VF;
+  }
+  assert.strictEqual(T.tieLine(eq, Tb - 2, z), null, 'below the bubble point: liquid only');
+  assert.strictEqual(T.tieLine(eq, Td + 2, z), null, 'above the dew point: vapour only');
+  const mid = T.tieLine(eq, (Tb + Td) / 2, z);
+  near(mid.x, 0.304, 0.002); near(mid.y, 0.516, 0.002); near(mid.VF, 0.452, 0.003);
+});
+
+ok('relative volatility: α = K₁/K₂, equals p₁*/p₂* for ideal solutions, crosses 1 at azeotropes', () => {
+  const bt = T.makeEq('bt'), z = 0.4, y = bt.y(z), Tb = bt.T(z);
+  near(bt.alpha(z), (y / z) / ((1 - y) / (1 - z)), 1e-9);
+  near(bt.alpha(z), T.psat('benzene', Tb) / T.psat('toluene', Tb), 0.003, 'ideal: α = p1*/p2*');
+  assert.ok(bt.alpha(0.999) > bt.alpha(0.5) && bt.alpha(0.5) > bt.alpha(0.001), 'α grows towards the light end (lower T)');
+  const ew = T.makeEq('ew'), az = ew.azeotrope.x;
+  assert.ok(ew.alpha(az - 0.05) > 1 && ew.alpha(az + 0.05) < 1, 'ethanol–water α crosses 1 at the azeotrope');
+  near(ew.T(az), ew.Tdew(az), 0.02, 'bubble = dew at the azeotrope');
+  const ac = T.makeEq('ac');
+  assert.ok(ac.alpha(0.1) < 1 && ac.alpha(0.9) > 1, 'acetone–chloroform α < 1 below its azeotrope');
+  near(T.fenske(0.95, 0.05, 2.5), 6.43, 0.01); near(T.fenske(0.95, 0.05, 1.2), 32.3, 0.05); near(T.fenske(0.95, 0.05, 1.05), 120.7, 0.1);
+});
+
 /* ---------- Aspen Plus V15 validation ---------- */
 function aspenAzeotrope(d) {
   for (let i = 1; i < d.length; i++) {

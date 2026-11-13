@@ -12,19 +12,6 @@
     modId: null, scene: 0, playing: false, speed: 1, voice: false,
     inst: null, def: null, timer: 0, offset: 0, startedAt: 0
   };
-  var progress = loadProgress();
-
-  function loadProgress() {
-    try {
-      var raw = localStorage.getItem('dl.progress.v1');
-      var parsed = raw ? JSON.parse(raw) : null;
-      if (parsed && parsed.scenes && parsed.done) return parsed;
-    } catch (e) { /* storage may be unavailable */ }
-    return { scenes: {}, done: {} };
-  }
-  function saveProgress() {
-    try { localStorage.setItem('dl.progress.v1', JSON.stringify(progress)); } catch (e) { /* ignore */ }
-  }
   function toast(msg) {
     var el = ui.el('div', 'toast', msg);
     document.body.appendChild(el);
@@ -88,7 +75,7 @@
     var host = $('moduleList');
     host.innerHTML = '';
     sortedModules().forEach(function (def) {
-      var btn = ui.el('button', 'mod' + (progress.done[def.id] ? ' done' : ''));
+      var btn = ui.el('button', 'mod');
       btn.type = 'button';
       btn.setAttribute('aria-current', def.id === state.modId ? 'true' : 'false');
       btn.dataset.mod = def.id;
@@ -98,9 +85,6 @@
       btn.addEventListener('click', function () { openModule(def.id, 0); });
       host.appendChild(btn);
     });
-    var done = sortedModules().filter(function (d) { return progress.done[d.id]; }).length;
-    $('progressText').textContent = done + ' / ' + sortedModules().length;
-    $('progressBar').style.width = (done / Math.max(1, sortedModules().length) * 100) + '%';
   }
 
   function openModule(id, sceneIndex) {
@@ -140,7 +124,6 @@
     buildSceneDots();
     applyScene(Math.max(0, Math.min(sceneIndex || 0, def.scenes.length - 1)));
     $('takeoverBtn').hidden = def.scenes.length < 2;
-    saveProgress();
   }
 
   /* ------------------------------------------------------------------ */
@@ -196,10 +179,6 @@
         console.error('场景应用失败：' + def.id + '/' + (i + 1), err);
       }
     }
-    var seen = progress.scenes[def.id] = progress.scenes[def.id] || [];
-    if (seen.indexOf(i) < 0) seen.push(i);
-    if (i === def.scenes.length - 1) progress.done[def.id] = true;
-    saveProgress();
     renderModuleList();
     resetDirectorProgress();
     if (state.playing) startTimer();
@@ -261,10 +240,7 @@
       return;
     }
     pause();
-    setStatus('本模块完成', 'live');
-    progress.done[state.def.id] = true;
-    saveProgress();
-    renderModuleList();
+    setStatus('讲解结束', 'live');
     if (auto) toast('「' + state.def.title + '」讲解结束，可继续选择下一模块');
   }
   function prevScene() {

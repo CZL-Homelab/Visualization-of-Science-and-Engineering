@@ -17,7 +17,7 @@ Distillation Lab 是 [科学与工程可视化](https://czl-homelab.github.io/Vi
 ```sh
 cd Projects/distillation-lab
 python3 build.py                  # 生成单文件离线网页 index.html
-node tests/check-thermo.cjs       # 37 条热力学、塔计算与 Aspen 对照不变量
+node tests/check-thermo.cjs       # 40 条热力学、塔计算与 Aspen 对照不变量
 node tests/check-build.cjs        # 离线封装、主题与导航约定、10 个模块、Aspen 数据
 python3 -m http.server 8766 --bind 127.0.0.1   # 或直接双击 index.html
 ```
@@ -32,7 +32,7 @@ python3 -m http.server 8766 --bind 127.0.0.1   # 或直接双击 index.html
 
 | 模块 | 你会亲手做什么 | 核心概念 |
 | --- | --- | --- |
-| **A 气液平衡** | 切换体系、改总压与液相组成；在蒸气压曲线、T–x–y、x–y 图上看同一个平衡点 | Antoine、Raoult、泡点/露点、α、正/负偏差、恒沸 |
+| **A 气液平衡** | 切换体系、改总压与组成；切换“泡点 / 露点 / 加热全过程”，拖动加热温度；右图可看 x–y 或 α 随组成 | 泡点（Σxᵢγᵢpᵢ* = P、第一个气泡）、露点（Σyᵢ/Kᵢ = 1、第一滴液体）、沸程、两相区连结线与杠杆规则、K 值与 α = K₁/K₂、理想溶液 α = p₁*/p₂*、α 与 N_min、正/负偏差与恒沸（α = 1） |
 | **B 闪蒸与简单蒸馏** | 调汽化分率，对比分离罐与圆底烧瓶两套装置 | 单级平衡、杠杆规则、Rayleigh 方程、单级的纯度上限 |
 | **C 连续精馏：McCabe–Thiele** | 调 xF、q、xD、xW、R/Rmin 与进料位置；悬停动画塔板，右侧台阶同步高亮 | 操作线、q 线、理论级、Rmin 夹紧、全回流 Nmin、最优进料 |
 | **D 回流比、能耗与简捷法** | 拖动 R/Rmin，看级数曲线与成本 U 形曲线；改能源价格与设备费权重 | Fenske、Underwood、Gilliland（Eduljee）、再沸器负荷、最优回流比 |
@@ -43,7 +43,7 @@ python3 -m http.server 8766 --bind 127.0.0.1   # 或直接双击 index.html
 | **I 原油常压蒸馏** | 切换轻/中/重质原油，拖动 5 个切割点与分馏精度 | TBP 曲线、侧线抽出与汽提、收率、产品重叠、渣油去减压塔 |
 | **J 同步对比实验室** | 9 组并排实验：回流、进料热状态、α、进料位置、板效率、恒沸体系、闪蒸 vs 简单蒸馏、常压 vs 减压、简化模型 vs Aspen 严格模拟 | 同一起点只改一个变量；最后一组看恒摩尔流模型差在哪里 |
 
-每个模块有 6–9 幕自动讲解、可暂停/上一幕/下一幕/重播和中文旁白（可选）。**任何手动操作都会立即接管并暂停自动讲解**。这是纯科普项目：不设测验、提问或打分，讲解只陈述现象和原因，邀请读者动手看结果。
+每个模块有 6–13 幕自动讲解（模块 A 最详细，13 幕专讲泡点、露点与相对挥发度）、可暂停/上一幕/下一幕/重播和中文旁白（可选）。**任何手动操作都会立即接管并暂停自动讲解**。这是纯科普项目：不设测验、提问、打分或学习进度，讲解只陈述现象和原因，邀请读者动手看结果。
 
 ---
 
@@ -148,7 +148,7 @@ distillation-lab/
     column.js           Canvas 动画精馏塔（连续/间歇）
     registry.js         模块注册、事件总线、体系选择
     modules/            A–J 十个教学模块，各含 scenes / mount
-    app.js              导航、自动导演、主题、进度、物性表、误区、导入
+    app.js              导航、自动导演、主题、物性表、误区、导入
   tests/
     check-thermo.cjs    热力学与塔计算不变量，以及与 Aspen 数据的对照容差
     check-build.cjs     单文件离线封装、主题与导航约定、模块完整性
@@ -178,7 +178,7 @@ CI 在 `.github/workflows/distillation-lab.yml` 中执行构建、语法、不�
 
 ### Modules
 
-A — vapour–liquid equilibrium (vapour pressure, T–x–y, x–y, relative volatility, azeotropes); B — flash vs simple (Rayleigh) distillation; C — continuous column with McCabe–Thiele and an animated column linked stage-by-stage; D — reflux, energy and the Fenske–Underwood–Gilliland shortcut with an illustrative cost optimum; E — batch distillation (simple, constant reflux, constant distillate composition); F — azeotropes and pressure-swing, extractive and heterogeneous azeotropic distillation; G — vacuum and steam distillation; H — tray/packing internals, operating window, Murphree efficiency and HETP; I — crude-oil atmospheric distillation, TBP curves and cut points; J — nine synchronized comparisons, the last one setting the simplified model against an Aspen RadFrac column. Each module has 6–9 guided scenes and optional speech; any manual input takes over from the guided tour. This is a popular-science lab: there are no quizzes, questions or scores.
+A — vapour–liquid equilibrium (vapour pressure; bubble and dew points with the first bubble and first drop; the two-phase region, tie lines and the lever rule; K-values, relative volatility and its effect on N_min; azeotropes); B — flash vs simple (Rayleigh) distillation; C — continuous column with McCabe–Thiele and an animated column linked stage-by-stage; D — reflux, energy and the Fenske–Underwood–Gilliland shortcut with an illustrative cost optimum; E — batch distillation (simple, constant reflux, constant distillate composition); F — azeotropes and pressure-swing, extractive and heterogeneous azeotropic distillation; G — vacuum and steam distillation; H — tray/packing internals, operating window, Murphree efficiency and HETP; I — crude-oil atmospheric distillation, TBP curves and cut points; J — nine synchronized comparisons, the last one setting the simplified model against an Aspen RadFrac column. Each module has 6–9 guided scenes and optional speech; any manual input takes over from the guided tour. This is a popular-science lab: there are no quizzes, questions, scores or progress tracking.
 
 ### Models and limits
 
@@ -190,7 +190,7 @@ The project maintainer exported reference data from Aspen Plus V15 (NRTL, APV150
 
 ```sh
 python3 build.py
-node tests/check-thermo.cjs   # 37 thermodynamic, column and Aspen-comparison invariants
+node tests/check-thermo.cjs   # 40 thermodynamic, column and Aspen-comparison invariants
 node tests/check-build.cjs    # offline packaging, shared theme/navigation, ten modules, Aspen data
 ```
 
