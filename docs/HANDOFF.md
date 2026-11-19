@@ -13,6 +13,13 @@
 
 PR #8 is merged (`5e9d7b2`) and its Pages run succeeded. PR #9 (the stellarator scene b6) was merged on 2026-11-13 as `94f1ed7`, and the Pages run for that commit succeeded, so organization `main` and the live site are at `94f1ed7`. A live check on 2026-11-16 (HTTP content level) opened the catalog and all four labs: the catalog lists four projects with Fusion at 42 scenes, the Fusion page carries the stellarator boundary wording, and shared navigation, theme buttons and the footer directory with the current page marked are present, closing the outstanding route check from PR #8. Limits: this was a content fetch, not browser acceptance testing; theme switching, the Desalination 3D views and stellarator interaction were not exercised in a real browser. The local tree is on `main`; commits from `feat/fusion-stellarator` are fully merged and should not be developed further. The user keeps merge and release decisions and approved this documentation hotfix directly on `main`; do not change organization permissions or branch protection.
 
+## 文档幕数修正 / Scene-count fix (2026-11-19)
+
+- 经用户授权以 hotfix 直接推送 `main`（无 PR）：海水淡化 25 → 29 幕（根 README、项目 README、`site/projects.json`），根 README 英文段 Fusion 41 → 42 幕；CHANGELOG 加未发布条目。只改文档与目录元数据，未改运行代码，因此只跑了 `git diff --check` 与 JSON 解析。
+- 核对方法：各模块 `scenes` 中 `guide:` 与 `patch:` 计数一致（4+4+5+4+4+4+4），加载模块定义复核 6 个模块合计 25、f-energy 4。用户决定：文档类 hotfix 统一直接推送 `main`。
+
+A hotfix pushed directly to `main` with the user's authorization (no PR) corrects Desalination from 25 to 29 scenes in the root README, project README and `site/projects.json`, and Fusion from 41 to 42 in the root README's English paragraph, with an Unreleased CHANGELOG entry. Documentation and catalog metadata only; runtime code is unchanged, so only `git diff --check` and a JSON parse were run. Counts were taken from matching `guide:`/`patch:` fields per module and confirmed by loading the module definitions. The user decided that documentation hotfixes go straight to `main`.
+
 ## 仿星器 / Stellarator (Fusion Lab b6)
 
 - 状态：随 PR #9 合并并已上线（见上）；2026-11-16 线上内容级核对确认该幕已在页面中，浏览器交互仍未实测。

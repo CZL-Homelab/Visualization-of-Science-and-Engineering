@@ -1,5 +1,12 @@
 # 更新记录 / Changelog
 
+## 未发布 / Unreleased · 修正文档中的幕数
+
+- 海水淡化实验室实际为 29 幕（A 4、B 4、C 5、D 4、E 4、F 4、G 4），根 README、项目 README 与目录 `site/projects.json` 原写 25 幕，自 2026-11-12 首次加入起即未与源码一致；现改为 29。下方 2026-11-12 的历史条目保留原文。
+- 根 README 英文段落的 Fusion Lab 仍写 41 幕（加入仿星器 b6 之前的数字），改为 42。
+
+English: Correct scene counts in the documentation. Desalination Lab has 29 scenes (A 4, B 4, C 5, D 4, E 4, F 4, G 4); the root README, its project README and the catalog `site/projects.json` said 25, which never matched the source since the lab was added on 2026-11-12. The historical entry below is left as written. The root README's English paragraph still said 41 scenes for Fusion Lab (the count before stellarator scene b6); it now says 42.
+
 ## 2026-11-13 · Fusion Lab 增加仿星器一幕
 
 - 第 02 章“磁约束”新增 b6「另一种拧法：仿星器」，全课变为 42 幕：旋转椭圆磁面、可调旋转变换 ι 的磁力线、50 个非平面与 20 个平面线圈（剖开 / 全部 / 隐藏），以及托卡马克与仿星器对照表。
