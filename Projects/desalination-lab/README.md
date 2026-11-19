@@ -2,7 +2,7 @@
 
 一个可离线运行的海水淡化教学实验台：从含盐阶梯与渗透压出发，逐层拆到反渗透单段质量守恒、多级闪蒸、膜污染、能耗口径与整厂浓盐水平衡。7 个模块、29 幕自动讲解，全部资源内嵌在单个 `index.html` 里，断网、直接双击也能运行。
 
-中文为主，英文技术术语以小号标签出现。所有数值要么来自带核对日期的公开资料，要么明确标注为教学模型。
+中文为主，英文技术术语以小号标签出现。全部物理计算集中在 `src/core.js`，由 23 项物理不变量测试锁定。所有数值要么来自带核对日期的公开资料，要么明确标注为教学模型。
 
 ## 运行与构建
 
@@ -50,7 +50,7 @@ python -m http.server 8766 --bind 127.0.0.1   # 在此项目目录运行时，�
 
 ## English
 
-Desalination Lab is a single-file, fully offline teaching bench for seawater desalination: seven modules covering the salinity ladder, osmotic pressure, a parameter-driven single-pass RO stage (mass balance and energy in sync), MSF flash cascades, membrane fouling, energy-accounting comparisons and a whole-plant balance with remineralisation and brine disposal. All physics math lives in `src/core.js` and is pinned by 23 invariant tests; literature values carry a verification date and source links. Animations are teaching models, not engineering simulations.
+Desalination Lab is a single-file, fully offline teaching bench for seawater desalination: seven modules with 29 guided scenes covering the salinity ladder, osmotic pressure, a parameter-driven single-pass RO stage (mass balance and energy in sync), MSF flash cascades, membrane fouling, energy-accounting comparisons and a whole-plant balance with remineralisation and brine disposal. All physics math lives in `src/core.js` and is pinned by 23 invariant tests; literature values carry a verification date (the calibration page was checked on 2026-11-10) and source links. Animations are teaching models, not engineering simulations.
 
 Read [AGENTS.md](AGENTS.md) and the [current handoff](../../docs/HANDOFF.md) before maintenance. Build and verify: `python3 build.py`, `node --check` on all sources, `node tests/check-physics.cjs`, `node tests/check-scenes.cjs`, `node tests/check-build.cjs`. Commit the generated `index.html` with source changes.
 

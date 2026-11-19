@@ -159,7 +159,7 @@ An open collection of interactive science and engineering explanations maintaine
 
 - Canonical repository: [CZL-Homelab/Visualization-of-Science-and-Engineering](https://github.com/CZL-Homelab/Visualization-of-Science-and-Engineering).
 - Project directory: [GitHub Pages](https://czl-homelab.github.io/Visualization-of-Science-and-Engineering/).
-- This branch contains four labs: [Motor Lab](Projects/motor-lab/README.md) (six motor types), [Stock Market Lab](Projects/stock-market-lab/README.md) (ten modules), [Desalination Lab](Projects/desalination-lab/README.md) (seven modules and three annotated 3D views), and [Fusion Lab](Projects/fusion-lab/README.md) (seven chapters and 42 scenes). Production reflects merged `main` and a successful Pages deployment, not an open PR. See [CHANGELOG.md](CHANGELOG.md) for unreleased changes and [docs/HANDOFF.md](docs/HANDOFF.md) for current work and release status.
+- This branch contains four labs: [Motor Lab](Projects/motor-lab/README.md) (six motor types, 48 scenes), [Stock Market Lab](Projects/stock-market-lab/README.md) (ten modules and 60+ scenes), [Desalination Lab](Projects/desalination-lab/README.md) (seven modules, 29 scenes and three annotated 3D views), and [Fusion Lab](Projects/fusion-lab/README.md) (seven chapters and 42 scenes). Production reflects merged `main` and a successful Pages deployment, not an open PR. See [CHANGELOG.md](CHANGELOG.md) for unreleased changes and [docs/HANDOFF.md](docs/HANDOFF.md) for current work and release status.
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) and the applicable [AGENTS.md](AGENTS.md) before contributing. Personal historical repositories and sites are not synchronization or deployment targets.
 
 ### Entrance experience
@@ -172,7 +172,7 @@ The catalog and all labs share one theme preference. Each page reads `czl-lab-th
 
 Each lab header starts with a link back to the `Lab Projects` catalog. Before the footer, a "Lab projects" directory lists every lab, marks the current page, and links back to the catalog. Relative paths keep `/motor-lab/`, `/stock-market-lab/`, `/desalination-lab/`, `/fusion-lab/` and `file://` previews working. Labs also show a floating “top” button after scrolling. A new lab must update every lab directory and `site/projects.json`.
 
-The theme control is a real `<button>` with an accessible name and `aria-pressed`; switching must not reload the page or flash the wrong palette. Check contrast, chart grids, focus rings and narrow layouts in both themes. See [AGENTS.md](AGENTS.md) for implementation rules and [CONTRIBUTING.md](CONTRIBUTING.md) for the review flow.
+The theme control is a real `<button>` with an accessible name and `aria-pressed`; switching must not reload the page or flash the wrong palette. Check contrast, chart grids, focus rings and narrow layouts at 390px in both themes. See [AGENTS.md](AGENTS.md) for implementation rules and [CONTRIBUTING.md](CONTRIBUTING.md) for the review flow.
 
 ### Run and build
 

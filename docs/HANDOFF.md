@@ -20,6 +20,12 @@ PR #8 is merged (`5e9d7b2`) and its Pages run succeeded. PR #9 (the stellarator 
 
 A hotfix pushed directly to `main` with the user's authorization (no PR) corrects Desalination from 25 to 29 scenes in the root README, project README and `site/projects.json`, and Fusion from 41 to 42 in the root README's English paragraph, with an Unreleased CHANGELOG entry. Documentation and catalog metadata only; runtime code is unchanged, so only `git diff --check` and a JSON parse were run. Counts were taken from matching `guide:`/`patch:` fields per module and confirmed by loading the module definitions. The user decided that documentation hotfixes go straight to `main`.
 
+## 双语事实补齐 / Bilingual fact parity (2026-11-19)
+
+- 以 hotfix 直接推送 `main`：补齐只在一种语言出现的事实（各 Lab 幕数、390px、600px 回顶按钮、直接推送 main 的发布条件、海水淡化核对日期与 23 项测试），并为 `Projects/stock-market-lab/AGENTS.md` 补全中文。只改文档；运行了 `git diff --check` 与 `scripts/check_site.py`。
+
+A hotfix pushed to `main` adds facts that appeared in only one language (lab scene counts, the 390px width, the 600px back-to-top threshold, the direct-push publishing condition, the Desalination check date and its 23 tests) and a full Chinese section for `Projects/stock-market-lab/AGENTS.md`. Documentation only; `git diff --check` and `scripts/check_site.py` were run.
+
 ## 仿星器 / Stellarator (Fusion Lab b6)
 
 - 状态：随 PR #9 合并并已上线（见上）；2026-11-16 线上内容级核对确认该幕已在页面中，浏览器交互仍未实测。

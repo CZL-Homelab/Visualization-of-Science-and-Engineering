@@ -78,7 +78,7 @@ PR 合并到组织仓库 main（或在明确授权下推送 main）后，`.githu
 ## 主题与项目导航
 
 - 右上角按钮在深色与浅色之间切换；首次访问跟随系统 `prefers-color-scheme`，选择会写入 `localStorage` 的共享键 `czl-lab-theme`，并同步 `meta[name="theme-color"]`。两套主题都内联在 `index.html` 中，离线可用，不请求远程字体或样式。
-- 顶栏左侧的 `Lab Projects` 返回项目目录；页脚前的“换一个实验室”目录列出全部实验室、标记当前页，并提供返回目录的链接；滚动后右下角有“↑ 顶部”。链接使用相对路径，Pages 子路径与 `_site` 的本地 `file://` 预览可解析；把单个文件复制到别处时，目录链接需要保持同样的站点结构。
+- 顶栏左侧的 `Lab Projects` 返回项目目录；页脚前的“换一个实验室”目录列出全部实验室、标记当前页，并提供返回目录的链接；滚动超过 600px 后右下角有“↑ 顶部”，页面较短时不显示。链接使用相对路径，Pages 子路径与 `_site` 的本地 `file://` 预览可解析；把单个文件复制到别处时，目录链接需要保持同样的站点结构。
 - 主题切换会通知三维引擎调整网格与坐标轴透明度；浅色为暖纸色舞台，深色维持石墨舞台。两种主题下都应检查标签、网格、焦点环与窄屏布局。
 
 ## 教学边界
@@ -157,9 +157,9 @@ Motion uses simplified steady-state operating points rather than startup inertia
 
 ### Maintain and publish
 
-Edit src/ and run python build.py. Run node tests/check-model.cjs and the syntax commands in AGENTS.md; commit the generated index.html. No npm installation is needed. core.js handles the inherited lessons and operating points; courses.js contains scene content; engine.js builds the models; app.js controls interaction and diagrams; director.js directs tours and comparisons. Shared identity is embedded from ../../assets/icon.svg. vendor/three.min.js is Three.js 0.160.1 under the preserved MIT license. Historical v2 files under work/ are backups.
+Edit src/ and run python build.py. Run node tests/check-model.cjs and the syntax commands in AGENTS.md; commit the generated index.html. No npm installation is needed. core.js handles the inherited lessons and operating points; courses.js contains scene content for the 48 steps; engine.js builds the models; app.js controls interaction and diagrams; director.js directs tours and comparisons. Shared identity is embedded from ../../assets/icon.svg. vendor/three.min.js is Three.js 0.160.1 under the preserved MIT license. Historical v2 files under work/ are backups.
 
-Merging to the organization repository's main triggers Pages validation and publishing. Source, build and route guidance is in the root README. Manufacturer references above include Microchip BLDC commutation, Oriental Motor induction/PSC structure, and Nidec capacitor-run and DC back-EMF explanations. Their links are shared by both language versions.
+Merging to the organization repository's main (or a direct push to main when explicitly authorised) triggers Pages validation and publishing. Source, build and route guidance is in the root README. Manufacturer references above include Microchip BLDC commutation, Oriental Motor induction/PSC structure, and Nidec capacitor-run and DC back-EMF explanations. Their links are shared by both language versions.
 
 ## 入场与主题特性 / Entrance and theme features
 
